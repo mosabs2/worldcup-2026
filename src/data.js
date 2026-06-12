@@ -3108,6 +3108,23 @@ const WC_DATA = {
     "tg": 208,
     "n": "Ahmed Mubarak Al Sabah",
     "locked": "2026-06-12"
+   },
+   {
+    "gb": {
+     "p": "Dembele",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Vitinha",
+     "t": "POR"
+    },
+    "cards": "SEN",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "CAN",
+    "tg": 86,
+    "n": "Saleh Boareki",
+    "locked": "2026-06-12"
    }
   ],
   "propsDeadline": "16 June 2026"
