@@ -26,6 +26,23 @@ function verdict(e) {
   return problems;
 }
 
+// --- props codes (v2): validated via `node scripts/validate_entry.js --props <code>` ---
+if (process.argv[2] === '--props' && process.argv[3]) {
+  const e = JSON.parse(Buffer.from(process.argv[3].trim(), 'base64').toString('utf8'));
+  const problems = [];
+  if (e.t !== 'props') problems.push('not a props code');
+  if (!e.n || !e.n.trim()) problems.push('missing name');
+  for (const [k, label] of [['gb', 'golden boot'], ['as', 'assists']]) {
+    if (!e[k] || !e[k].p || !teams[e[k].t]) problems.push(label + ' pick invalid');
+  }
+  for (const k of ['cards', 'goals']) if (!teams[e[k]]) problems.push(k + ' team invalid');
+  if (!WC_DATA.mena.includes(e.mena)) problems.push('mena pick not a MENA side');
+  if (!['MEX', 'USA', 'CAN'].includes(e.host)) problems.push('host pick invalid');
+  if (!(e.tg >= 50 && e.tg <= 400)) problems.push('total goals out of range');
+  console.log(`${e.n} (props): ${problems.length ? 'REJECT — ' + problems.join('; ') : 'VALID'}`);
+  process.exit(problems.length ? 2 : 0);
+}
+
 const arg = process.argv[2];
 if (!arg) { console.error('pass a code or --baked'); process.exit(1); }
 const entries = arg === '--baked'

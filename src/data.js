@@ -2580,7 +2580,9 @@ const WC_DATA = {
    "groupWinner": 2,
    "finalist": 4,
    "champion": 10
-  }
+  },
+  "props": [],
+  "propsDeadline": "16 June 2026"
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };
