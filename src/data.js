@@ -2344,6 +2344,29 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Fahad Ali",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "CRO"
+    },
+    "f": [
+     "NED",
+     "POR"
+    ],
+    "c": "NED",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
