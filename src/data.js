@@ -2781,6 +2781,30 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "MoSabs",
+    "w": {
+     "A": "MEX",
+     "B": "CAN",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ENG",
+     "NED"
+    ],
+    "c": "NED",
+    "locked": "2026-06-12",
+    "exhibition": true
    }
   ],
   "scoring": {

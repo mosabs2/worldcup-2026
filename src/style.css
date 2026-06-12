@@ -194,6 +194,10 @@ footer .mono-foot { width: 16px; height: 21px; opacity: .8; }
 
 td.pick-hit { background: #E8F0E9; }
 td.pick-miss { background: #FDE9E7; }
+tr.exhibition-row td { background: #FBF6E3; }
+tr.exhibition-row td:first-child { box-shadow: inset 3px 0 0 #C7A234; color: #9A6B00; }
+.exh-badge { display: inline-block; margin-left: 7px; font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #9A6B00; background: #F3E6BC; padding: 1px 6px; border-radius: 99px; vertical-align: middle; }
+.selections th.exh-col { color: #9A6B00; background: #FBF6E3; }
 .selections th { white-space: nowrap; }
 .selections td { white-space: nowrap; }
 

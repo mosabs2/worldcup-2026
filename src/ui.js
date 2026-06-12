@@ -537,22 +537,28 @@
       if (e.c && T[e.c]) { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
       return { e, pts, exp, max };
     }).sort((a, b) => b.pts - a.pts || b.exp - a.exp);
-
+    // exhibition entries (the commissioner) are ranked for display but carry no prize position
+    let rankNo = 0;
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
       el('h3', null, 'Leaderboard', el('span', { class: 'right' }, Object.keys(resolved.groupWinners).length + ' of 12 groups resolved')),
       el('table', null,
         el('tr', null,
           el('th', null, '#'), el('th', null, 'Name'), el('th', null, 'Champion pick'),
           el('th', { class: 'num' }, 'Points'), el('th', { class: 'num' }, 'Expected'), el('th', { class: 'num' }, 'Max')),
-        rows.map((r, i) => el('tr', null,
-          el('td', null, i + 1),
-          el('td', null, el('b', null, r.e.n), r.e.src === 'local' ? el('span', { class: 'tiny' }, ' (local)') : ''),
-          el('td', null, el('span', { class: 'teamcell' }, T[r.e.c] ? el('span', { class: 'fl' }, T[r.e.c].flag) : '', el('span', { class: 'nm' }, T[r.e.c] ? T[r.e.c].name : '—'))),
-          el('td', { class: 'num' }, el('b', null, r.pts)),
-          el('td', { class: 'num' }, r.exp.toFixed(1)),
-          el('td', { class: 'num' }, r.max)))),
+        rows.map(r => {
+          const exh = r.e.exhibition;
+          if (!exh) rankNo++;
+          return el('tr', { class: exh ? 'exhibition-row' : '' },
+            el('td', null, exh ? '★' : rankNo),
+            el('td', null, el('b', null, r.e.n),
+              exh ? el('span', { class: 'exh-badge' }, 'EXHIBITION') : (r.e.src === 'local' ? el('span', { class: 'tiny' }, ' (local)') : '')),
+            el('td', null, el('span', { class: 'teamcell' }, T[r.e.c] ? el('span', { class: 'fl' }, T[r.e.c].flag) : '', el('span', { class: 'nm' }, T[r.e.c] ? T[r.e.c].name : '—'))),
+            el('td', { class: 'num' }, el('b', null, r.pts)),
+            el('td', { class: 'num' }, r.exp.toFixed(1)),
+            el('td', { class: 'num' }, r.max));
+        })),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Points: locked in from resolved outcomes. Expected: the model weighs every pick by its current probability; this number moves with each result. Max: the ceiling if every still-alive pick lands.')));
+        'Points: locked in from resolved outcomes. Expected: the model weighs every pick by its current probability; this number moves with each result. Max: the ceiling if every still-alive pick lands. ★ The commissioner’s exhibition entry is shown for interest only and does not compete for prizes.')));
 
     // selections board: everyone's picks side by side
     const cell = (code, win) => {
@@ -563,9 +569,10 @@
     root.append(el('div', { class: 'card' },
       el('h3', null, 'The selections board'),
       el('div', { class: 'chart-wrap' }, el('table', { class: 'selections' },
-        el('tr', null, el('th', null, ''), rows.map(r => el('th', null, r.e.n,
+        el('tr', null, el('th', null, ''), rows.map(r => el('th', { class: r.e.exhibition ? 'exh-col' : '' },
+          (r.e.exhibition ? '★ ' : '') + r.e.n,
           el('span', { class: 'tiny', style: 'display:block;font-weight:400;text-transform:none;letter-spacing:0' },
-            r.e.locked ? 'locked ' + r.e.locked : (r.e.src === 'local' ? 'local' : ''))))),
+            r.e.exhibition ? 'exhibition' : (r.e.locked ? 'locked ' + r.e.locked : (r.e.src === 'local' ? 'local' : '')))))),
         GROUPS.map(g => el('tr', null,
           el('td', { class: 'muted', style: 'white-space:nowrap' }, 'Group ' + g),
           rows.map(r => cell(r.e.w && r.e.w[g], resolved.groupWinners[g])))),
