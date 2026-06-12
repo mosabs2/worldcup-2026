@@ -2712,6 +2712,29 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Jogs Bonito",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "JPN",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ESP",
+     "POR"
+    ],
+    "c": "POR",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
