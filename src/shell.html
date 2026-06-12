@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 — Probability Centre</title>
+<meta name="description" content="Live match-winner and title probabilities for the 2026 World Cup, from a 10,000-run Monte Carlo model. An MAS analytics project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,{{FAVICON}}">
+<style>
+{{CSS}}
+</style>
+</head>
+<body>
+<header>
+  <div class="masthead">
+    <div class="mono">{{MONOGRAM_WHITE}}</div>
+    <div>
+      <h1>World Cup 2026</h1>
+      <div class="sub">Probability Centre</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="asof" id="asof"></div>
+    <button class="whatif-pill off" id="whatif">What-if</button>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<div id="banner" class="banner" style="display:none"></div>
+<main id="view"></main>
+<footer>
+  <div class="inner">
+    <div class="mono-foot">{{MONOGRAM_BLUE}}</div>
+    <span>An MAS analytics project · model estimates, not betting advice · unofficial and unaffiliated with FIFA</span>
+  </div>
+</footer>
+<script>
+{{DATA}}
+</script>
+<script>
+const WC_HISTORY = {{HISTORY}};
+</script>
+<script>
+{{ENGINE}}
+</script>
+<script>
+{{UI}}
+</script>
+</body>
+</html>
