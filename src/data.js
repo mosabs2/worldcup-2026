@@ -2482,6 +2482,29 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "AMAS",
+    "w": {
+     "A": "MEX",
+     "B": "QAT",
+     "C": "MAR",
+     "D": "TUR",
+     "E": "CIV",
+     "F": "TUN",
+     "G": "EGY",
+     "H": "KSA",
+     "I": "SEN",
+     "J": "ARG",
+     "K": "UZB",
+     "L": "GHA"
+    },
+    "f": [
+     "SEN",
+     "ARG"
+    ],
+    "c": "SEN",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
