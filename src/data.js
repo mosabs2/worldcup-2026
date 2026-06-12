@@ -2436,6 +2436,29 @@ const WC_DATA = {
     ],
     "c": "ENG",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Saleh Boareki",
+    "w": {
+     "A": "KOR",
+     "B": "SUI",
+     "C": "MAR",
+     "D": "TUR",
+     "E": "ECU",
+     "F": "NED",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "FRA",
+     "ENG"
+    ],
+    "c": "ENG",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
