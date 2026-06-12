@@ -2413,6 +2413,29 @@ const WC_DATA = {
     ],
     "c": "FRA",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "JMAMS",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "ECU",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ENG",
+     "FRA"
+    ],
+    "c": "ENG",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
