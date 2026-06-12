@@ -2137,6 +2137,29 @@ const WC_DATA = {
     ],
     "c": "ARG",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Nasser Talal",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ENG",
+     "ESP"
+    ],
+    "c": "ENG",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
