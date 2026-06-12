@@ -21,6 +21,7 @@ html = (shell
     .replace("{{CSS}}", (SRC / "style.css").read_text())
     .replace("{{DATA}}", (SRC / "data.js").read_text())
     .replace("{{HISTORY}}", (SRC / "history.json").read_text())
+    .replace("{{ESPNMAP}}", (SRC / "espn-map.json").read_text())
     .replace("{{ENGINE}}", (SRC / "engine.js").read_text())
     .replace("{{UI}}", (SRC / "ui.js").read_text())
     .replace("{{MONOGRAM_WHITE}}", svg_body(mono_w))

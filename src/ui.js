@@ -614,6 +614,55 @@
         D.meta.sources.map((s, i) => el('span', null, i ? ' · ' : '', el('a', { href: s.url, target: '_blank' }, s.name))))));
   }
 
+  // ---------- live score refresh (ESPN public feed, CORS-open) ----------
+  let toastTimer = null;
+  function toast(msg) {
+    document.querySelectorAll('.toast').forEach(n => n.remove());
+    const t = el('div', { class: 'toast' }, msg);
+    document.body.append(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4200);
+  }
+
+  async function refreshScores() {
+    const btn = document.getElementById('refresh');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      const now = new Date();
+      const pending = D.matches.filter(m => m.status !== 'completed' && !localOv[m.id] &&
+        new Date(m.dateET) <= now && (now - new Date(m.dateET)) < 96 * 3600e3);
+      if (!pending.length) { toast('No matches awaiting results right now.'); return; }
+      const days = [...new Set(pending.map(m => new Date(m.dateET).toISOString().slice(0, 10).replace(/-/g, '')))].sort();
+      const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
+      const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
+      const js = await r.json();
+      const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
+      let n = 0;
+      for (const e of (js.events || [])) {
+        const st = e.status && e.status.type;
+        if (!st || st.name !== 'STATUS_FULL_TIME' || !st.completed) continue;
+        const sc = {};
+        for (const c of e.competitions[0].competitors) {
+          const code = ids[String(c.team.id)] || c.team.abbreviation;
+          sc[code] = parseInt(c.score, 10);
+        }
+        const match = pending.find(m => sc[m.team1] != null && sc[m.team2] != null);
+        if (!match) continue;
+        const g1 = sc[match.team1], g2 = sc[match.team2];
+        if (!(g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15)) continue;
+        localOv[match.id] = [g1, g2]; n++;
+      }
+      if (n) { lsSet(LS.ov, localOv); refresh(); }
+      toast(n ? n + ' new result' + (n === 1 ? '' : 's') + ' pulled; all probabilities recomputed.'
+              : 'Feed reached; no new final scores yet.');
+    } catch (err) {
+      toast('Could not reach the scores feed; try again in a minute.');
+    } finally {
+      btn.disabled = false; btn.textContent = '↻ Scores';
+    }
+  }
+
   // ---------- shell ----------
   function refresh() {
     recompute();
@@ -655,6 +704,7 @@
     tabs.forEach(([id, label]) => nav.append(el('button', {
       'data-tab': id, onclick: () => { activeTab = id; lsSet(LS.tab, id); renderTab(); }
     }, label)));
+    document.getElementById('refresh').addEventListener('click', refreshScores);
     document.getElementById('whatif').addEventListener('click', () => {
       whatIf.on = !whatIf.on;
       if (!whatIf.on) whatIf.ov = {};

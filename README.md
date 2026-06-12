@@ -17,16 +17,23 @@ the Prestige Analytics site), keeping the Lab's engine and the best features of 
 - `src/ui.js`, `src/style.css`, `src/shell.html` — interface.
 - `src/history.json` — published snapshots of title probabilities (the Timeline tab).
 
-## Update routine (after results)
+## How results flow in
 
-1. Patch scores into `src/data.js` (`status: "completed"`, `score: {team1, team2}`)
-   and bump `meta.asOf`.
-2. `node update.js --date YYYY-MM-DD` — recomputes the model, appends the timeline snapshot.
-3. `python3 build.py` — rebuilds `index.html`.
-4. Commit and push; GitHub Pages refreshes for everyone.
+**Automatic (primary).** `.github/workflows/auto-update.yml` runs every two hours during
+the North American match window (16:00-06:00 UTC only; matches kick off 16:00-03:00 UTC,
+so nothing runs in the quiet hours). It calls `scripts/fetch_scores.py`, which pulls
+completed matches from ESPN's open JSON feed, validates them against the fixture list
+(known matches only, full-time only, sane scores only), patches `src/data.js`, re-runs
+the model, rebuilds, and pushes. No key, no cost; if the feed is unreachable or returns
+nothing new, the run is a no-op.
 
-Viewers can also enter results or run what-ifs in the page itself; those apply locally in
-their browser only.
+**In-page refresh.** The "(refresh) Scores" button pulls the same feed in the visitor's
+browser (it is CORS-open) and applies new finals as a local overlay with a full recompute.
+Local to that browser; the published build catches up on the next workflow run.
+
+**Manual (fallback).** Patch scores into `src/data.js`, then
+`node update.js --date YYYY-MM-DD && python3 build.py`, commit and push. This is the
+editorial path if the ESPN feed changes shape mid-tournament.
 
 ## Honesty notes
 

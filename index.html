@@ -190,6 +190,14 @@ footer .mono-foot { width: 16px; height: 21px; opacity: .8; }
 
 .spin { text-align: center; color: var(--gray); padding: 40px 0; font-size: 13px; }
 
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: var(--blue-dark); color: #fff; font-size: 13px; padding: 10px 18px;
+  border-radius: 99px; box-shadow: 0 6px 24px rgba(22,46,104,.35); z-index: 200;
+  opacity: 0; transition: opacity .25s; max-width: 90vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+
 @media (max-width: 640px) {
   .masthead h1 { font-size: 15px; }
   .masthead .sub { display: none; }
@@ -221,6 +229,7 @@ footer .mono-foot { width: 16px; height: 21px; opacity: .8; }
     </div>
     <div class="spacer"></div>
     <div class="asof" id="asof"></div>
+    <button class="whatif-pill off" id="refresh" title="Pull the latest final scores from the public feed">↻ Scores</button>
     <button class="whatif-pill off" id="whatif">What-if</button>
   </div>
   <nav id="nav"></nav>
@@ -968,7 +977,7 @@ const WC_DATA = {
    "id": "M001",
    "stage": "group",
    "group": "A",
-   "dateET": "2026-06-11T16:00:00-04:00",
+   "dateET": "2026-06-11T15:00:00-04:00",
    "team1": "MEX",
    "team2": "RSA",
    "venueId": "MEX",
@@ -1106,7 +1115,7 @@ const WC_DATA = {
    "id": "M013",
    "stage": "group",
    "group": "H",
-   "dateET": "2026-06-15T13:00:00-04:00",
+   "dateET": "2026-06-15T12:00:00-04:00",
    "team1": "ESP",
    "team2": "CPV",
    "venueId": "ATL",
@@ -1117,7 +1126,7 @@ const WC_DATA = {
    "id": "M014",
    "stage": "group",
    "group": "G",
-   "dateET": "2026-06-15T18:00:00-04:00",
+   "dateET": "2026-06-15T15:00:00-04:00",
    "team1": "BEL",
    "team2": "EGY",
    "venueId": "SEA",
@@ -1139,7 +1148,7 @@ const WC_DATA = {
    "id": "M016",
    "stage": "group",
    "group": "G",
-   "dateET": "2026-06-16T00:00:00-04:00",
+   "dateET": "2026-06-15T21:00:00-04:00",
    "team1": "IRN",
    "team2": "NZL",
    "venueId": "LA",
@@ -1271,7 +1280,7 @@ const WC_DATA = {
    "id": "M028",
    "stage": "group",
    "group": "A",
-   "dateET": "2026-06-18T23:00:00-04:00",
+   "dateET": "2026-06-18T21:00:00-04:00",
    "team1": "MEX",
    "team2": "KOR",
    "venueId": "GDL",
@@ -1304,7 +1313,7 @@ const WC_DATA = {
    "id": "M031",
    "stage": "group",
    "group": "C",
-   "dateET": "2026-06-19T21:00:00-04:00",
+   "dateET": "2026-06-19T20:30:00-04:00",
    "team1": "BRA",
    "team2": "HAI",
    "venueId": "PHI",
@@ -1315,7 +1324,7 @@ const WC_DATA = {
    "id": "M032",
    "stage": "group",
    "group": "D",
-   "dateET": "2026-06-20T00:00:00-04:00",
+   "dateET": "2026-06-19T23:00:00-04:00",
    "team1": "TUR",
    "team2": "PAR",
    "venueId": "SF",
@@ -2319,6 +2328,59 @@ const WC_HISTORY = [
   }
  }
 ];
+const WC_ESPNMAP = {
+ "teamIds": {
+  "451": "KOR",
+  "450": "CZE",
+  "206": "CAN",
+  "452": "BIH",
+  "660": "USA",
+  "210": "PAR",
+  "4398": "QAT",
+  "475": "SUI",
+  "205": "BRA",
+  "2869": "MAR",
+  "2654": "HAI",
+  "580": "SCO",
+  "628": "AUS",
+  "465": "TUR",
+  "481": "GER",
+  "11678": "CUW",
+  "449": "NED",
+  "627": "JPN",
+  "4789": "CIV",
+  "209": "ECU",
+  "466": "SWE",
+  "659": "TUN",
+  "655": "KSA",
+  "212": "URU",
+  "478": "FRA",
+  "654": "SEN",
+  "4375": "IRQ",
+  "464": "NOR",
+  "202": "ARG",
+  "624": "ALG",
+  "474": "AUT",
+  "2917": "JOR",
+  "482": "POR",
+  "2850": "COD",
+  "448": "ENG",
+  "477": "CRO",
+  "4469": "GHA",
+  "2659": "PAN",
+  "2570": "UZB",
+  "208": "COL",
+  "467": "RSA",
+  "164": "ESP",
+  "459": "BEL",
+  "469": "IRN",
+  "2597": "CPV",
+  "2666": "NZL",
+  "2620": "EGY",
+  "203": "MEX"
+ },
+ "note": "ESPN team id -> WC_DATA code, verified against group fixtures by kickoff UTC, 12 June 2026"
+};
 </script>
 <script>
 // World Cup 2026 probability engine.
@@ -3245,6 +3307,55 @@ const WC_HISTORY = [
         D.meta.sources.map((s, i) => el('span', null, i ? ' · ' : '', el('a', { href: s.url, target: '_blank' }, s.name))))));
   }
 
+  // ---------- live score refresh (ESPN public feed, CORS-open) ----------
+  let toastTimer = null;
+  function toast(msg) {
+    document.querySelectorAll('.toast').forEach(n => n.remove());
+    const t = el('div', { class: 'toast' }, msg);
+    document.body.append(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4200);
+  }
+
+  async function refreshScores() {
+    const btn = document.getElementById('refresh');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      const now = new Date();
+      const pending = D.matches.filter(m => m.status !== 'completed' && !localOv[m.id] &&
+        new Date(m.dateET) <= now && (now - new Date(m.dateET)) < 96 * 3600e3);
+      if (!pending.length) { toast('No matches awaiting results right now.'); return; }
+      const days = [...new Set(pending.map(m => new Date(m.dateET).toISOString().slice(0, 10).replace(/-/g, '')))].sort();
+      const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
+      const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
+      const js = await r.json();
+      const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
+      let n = 0;
+      for (const e of (js.events || [])) {
+        const st = e.status && e.status.type;
+        if (!st || st.name !== 'STATUS_FULL_TIME' || !st.completed) continue;
+        const sc = {};
+        for (const c of e.competitions[0].competitors) {
+          const code = ids[String(c.team.id)] || c.team.abbreviation;
+          sc[code] = parseInt(c.score, 10);
+        }
+        const match = pending.find(m => sc[m.team1] != null && sc[m.team2] != null);
+        if (!match) continue;
+        const g1 = sc[match.team1], g2 = sc[match.team2];
+        if (!(g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15)) continue;
+        localOv[match.id] = [g1, g2]; n++;
+      }
+      if (n) { lsSet(LS.ov, localOv); refresh(); }
+      toast(n ? n + ' new result' + (n === 1 ? '' : 's') + ' pulled; all probabilities recomputed.'
+              : 'Feed reached; no new final scores yet.');
+    } catch (err) {
+      toast('Could not reach the scores feed; try again in a minute.');
+    } finally {
+      btn.disabled = false; btn.textContent = '↻ Scores';
+    }
+  }
+
   // ---------- shell ----------
   function refresh() {
     recompute();
@@ -3286,6 +3397,7 @@ const WC_HISTORY = [
     tabs.forEach(([id, label]) => nav.append(el('button', {
       'data-tab': id, onclick: () => { activeTab = id; lsSet(LS.tab, id); renderTab(); }
     }, label)));
+    document.getElementById('refresh').addEventListener('click', refreshScores);
     document.getElementById('whatif').addEventListener('click', () => {
       whatIf.on = !whatIf.on;
       if (!whatIf.on) whatIf.ov = {};
