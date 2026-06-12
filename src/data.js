@@ -2832,6 +2832,23 @@ const WC_DATA = {
     "tg": 178,
     "n": "Khaled Fahad",
     "locked": "2026-06-12"
+   },
+   {
+    "gb": {
+     "p": "Vinicius",
+     "t": "BRA"
+    },
+    "as": {
+     "p": "Vinicius",
+     "t": "BRA"
+    },
+    "cards": "IRQ",
+    "goals": "FRA",
+    "mena": "EGY",
+    "host": "MEX",
+    "tg": 179,
+    "n": "Essa",
+    "locked": "2026-06-12"
    }
   ],
   "propsDeadline": "16 June 2026"
