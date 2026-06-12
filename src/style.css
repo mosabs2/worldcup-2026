@@ -172,6 +172,13 @@ code.codebox {
 .vmap { width: 100%; height: auto; background: #F2F5FB; border-radius: 10px; border: 1px solid var(--line); }
 .vmap circle { fill: var(--blue); }
 .vmap text { font-size: 9px; fill: var(--gray); font-family: Inter, sans-serif; }
+.geomap { width: 100%; height: auto; background: linear-gradient(180deg, #F7F9FE 0%, #EDF1FA 100%); border-radius: 12px; border: 1px solid var(--line); }
+.geomap .land { fill: #E3E9F7; stroke: #B9C5E6; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.geomap .venue { fill: var(--blue); stroke: #fff; stroke-width: 1.5; cursor: pointer; vector-effect: non-scaling-stroke; }
+.geomap .venue:hover { fill: var(--blue-light); }
+.geomap .vlabel { font-size: 10px; fill: var(--ink); font-family: Inter, sans-serif; font-weight: 600; paint-order: stroke; stroke: rgba(255,255,255,.85); stroke-width: 3px; pointer-events: none; }
+.geomap .today-ring { fill: none; stroke: var(--blue); stroke-width: 2; vector-effect: non-scaling-stroke; animation: vpulse 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes vpulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.2); opacity: 0; } }
 
 /* MENA */
 .mena-strip { display: flex; gap: 8px; flex-wrap: wrap; }

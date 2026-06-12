@@ -617,26 +617,83 @@
         el('td', { class: 'num' }, Object.entries(p.probs).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c, v]) => T[c].flag + ' ' + v.toFixed(1) + '%').join('  ')))))));
   }
 
+  function venueModal(v) {
+    const fixtures = D.matches.filter(m => m.venueId === v.id).sort((a, b) => a.dateET.localeCompare(b.dateET));
+    openModal(
+      el('h2', null, v.name),
+      el('div', { class: 'muted', style: 'margin-bottom:12px' },
+        v.city + ', ' + v.country + ' · ' + v.capacity.toLocaleString() + ' capacity' +
+        (v.elev > 500 ? ' · ' + v.elev + ' m altitude' + (v.elev > 2000 ? ' (the thin-air venue)' : '') : '')),
+      el('h2', { class: 'section' }, 'Matches here'),
+      el('table', null, fixtures.map(m => {
+        const sc = effScore(m);
+        return el('tr', { class: 'click', onclick: () => matchModal(m) },
+          el('td', { style: 'white-space:nowrap' }, fmtD(m.dateET, KWT)),
+          el('td', null, el('span', { class: 'teamcell', style: 'font-weight:500' },
+            T[m.team1].flag + ' ' + T[m.team1].code + (sc ? ' ' + sc.team1 + '–' + sc.team2 + ' ' : ' v ') + T[m.team2].code + ' ' + T[m.team2].flag)),
+          el('td', { class: 'num tiny' }, sc ? 'FT' : fmtT(m.dateET, KWT) + ' KWT'));
+      })));
+  }
+
   function renderVenues(root) {
-    const lats = D.venues.map(v => v.lat), lons = D.venues.map(v => v.lon);
-    const la = [Math.min(...lats) - 2, Math.max(...lats) + 2], lo = [Math.min(...lons) - 2, Math.max(...lons) + 2];
-    const W = 720, Hh = 420;
-    const px = lon => (lon - lo[0]) / (lo[1] - lo[0]) * (W - 40) + 20;
-    const py = lat => Hh - ((lat - la[0]) / (la[1] - la[0]) * (Hh - 40) + 20);
-    let svg = '<svg class="vmap" viewBox="0 0 ' + W + ' ' + Hh + '">';
+    const P = WC_MAP.proj;
+    const px = lon => (lon - P.lon0) * P.k * P.scale;
+    const py = lat => (P.lat0 - lat) * P.scale;
+    const xs = D.venues.map(v => px(v.lon)), ys = D.venues.map(v => py(v.lat));
+    const M = 58;
+    const x0 = Math.min(...xs) - M, y0 = Math.min(...ys) - M;
+    const w = Math.max(...xs) - x0 + 2 * M, h = Math.max(...ys) - y0 + 2 * M;
+    const shortCity = v => {
+      const seg = v.city.split('/').map(s => s.trim());
+      const name = (seg.length > 1 ? seg[1] : seg[0]).replace(' Bay Area', '').replace(' New Jersey', '');
+      return name;
+    };
+    const today = todayKWT();
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'geomap');
+    svg.setAttribute('viewBox', [x0, y0, w, h].join(' '));
+    svg.style.aspectRatio = (w / h).toFixed(3);
+    svg.innerHTML = WC_MAP.paths.map(d => '<path class="land" d="' + d + '"/>').join('');
     D.venues.forEach(v => {
-      svg += '<circle cx="' + px(v.lon) + '" cy="' + py(v.lat) + '" r="5"/>' +
-        '<text x="' + (px(v.lon) + 8) + '" y="' + (py(v.lat) + 3) + '">' + v.city + '</text>';
+      const n = D.matches.filter(m => m.venueId === v.id).length;
+      const playingToday = D.matches.some(m => m.venueId === v.id && dayKWT(m.dateET) === today);
+      const cx = px(v.lon), cy = py(v.lat);
+      if (playingToday) {
+        const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        ring.setAttribute('class', 'today-ring'); ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', 7);
+        svg.append(ring);
+      }
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('class', 'venue'); c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+      c.setAttribute('r', 3.5 + n * 0.45);
+      c.addEventListener('click', () => venueModal(v));
+      const tip = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      tip.textContent = v.name + ' — ' + v.city + ' (' + n + ' matches)';
+      c.append(tip);
+      svg.append(c);
+      const label = shortCity(v);
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('class', 'vlabel');
+      const left = ['Vancouver', 'Los Angeles', 'Boston', 'Philadelphia'].includes(label);
+      t.setAttribute('x', cx + (left ? -8 : 8)); t.setAttribute('y', cy + 3);
+      t.setAttribute('text-anchor', left ? 'end' : 'start');
+      t.textContent = label;
+      svg.append(t);
     });
-    svg += '</svg>';
-    root.append(el('div', { class: 'card', html: svg }),
+    root.append(
+      el('div', { class: 'card' },
+        el('h3', null, 'The sixteen stadiums', el('span', { class: 'right' }, 'marker size = matches hosted · pulse = playing today')),
+        svg,
+        el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Tap any marker for the venue’s full fixture list. Times in Kuwait time.')),
       el('div', { class: 'grid g3', style: 'margin-top:14px' }, D.venues.map(v => {
-        const n = D.matches.filter(m => m.venueId === v.id).length;
-        return el('div', { class: 'card' },
+        const fixtures = D.matches.filter(m => m.venueId === v.id);
+        const next = fixtures.filter(m => !effScore(m)).sort((a, b) => a.dateET.localeCompare(b.dateET))[0];
+        return el('div', { class: 'card click', onclick: () => venueModal(v) },
           el('h3', null, v.city, el('span', { class: 'right' }, v.country)),
           el('div', null, el('b', null, v.name)),
           el('div', { class: 'muted' }, v.capacity.toLocaleString() + ' capacity' + (v.elev > 500 ? ' · ' + v.elev + ' m altitude' : '')),
-          el('div', { class: 'tiny', style: 'margin-top:4px' }, n + ' group matches'));
+          el('div', { class: 'tiny', style: 'margin-top:4px' }, fixtures.length + ' matches' +
+            (next ? ' · next: ' + T[next.team1].code + ' v ' + T[next.team2].code + ', ' + fmtD(next.dateET, KWT) : '')));
       })));
   }
 
