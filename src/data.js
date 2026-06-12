@@ -2655,6 +2655,23 @@ const WC_DATA = {
     "tg": 274,
     "n": "Ali Ahmed Hmoud Mohammed",
     "locked": "2026-06-12"
+   },
+   {
+    "gb": {
+     "p": "Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Lamine yamal",
+     "t": "ESP"
+    },
+    "cards": "BRA",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "MEX",
+    "tg": 263,
+    "n": "Feras Al Qenaei",
+    "locked": "2026-06-12"
    }
   ],
   "propsDeadline": "16 June 2026"
