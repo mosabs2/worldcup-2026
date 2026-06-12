@@ -38,12 +38,15 @@ for m in data['matches']:
     if m['status'] == 'completed':
         continue
     ko = datetime.datetime.fromisoformat(m['dateET'])
+    if ko.tzinfo is None:
+        ko = ko.replace(tzinfo=datetime.timezone(datetime.timedelta(hours=-4)))
     if datetime.timedelta(0) <= now - ko <= datetime.timedelta(hours=LOOKBACK_HOURS):
         pending.append(m)
 if not pending:
     out(False, "No pending matches in the lookback window; feed not fetched.")
 
-dates = sorted({datetime.datetime.fromisoformat(m['dateET']).astimezone(datetime.timezone.utc).strftime('%Y%m%d') for m in pending})
+# ESPN buckets the dates param by US Eastern; dateET already carries the Eastern date
+dates = sorted({m['dateET'][:10].replace('-', '') for m in pending})
 rng = dates[0] if len(dates) == 1 else f"{dates[0]}-{dates[-1]}"
 try:
     req = urllib.request.Request(FEED.format(d=rng), headers={'User-Agent': 'worldcup-2026-auto-update'})
@@ -59,10 +62,12 @@ for e in evs:
         if st['name'] != 'STATUS_FULL_TIME' or not st.get('completed'):
             continue
         comp = e['competitions'][0]
-        scores = {}
+        scores, shootout_winner = {}, None
         for c in comp['competitors']:
             code = idmap.get(str(c['team']['id'])) or c['team'].get('abbreviation')
             scores[code] = int(c['score'])
+            if c.get('winner'):
+                shootout_winner = code
         match = bypair.get(frozenset(scores.keys()))
         if not match:
             continue
@@ -72,6 +77,9 @@ for e in evs:
             continue
         match['status'] = 'completed'
         match['score'] = {'team1': s1, 'team2': s2}
+        # knockout draw decided on penalties: record the winner so the bracket pins correctly
+        if match.get('stage') != 'group' and s1 == s2 and shootout_winner:
+            match['score']['winner'] = shootout_winner
         applied.append(f"{match['id']} {match['team1']} {s1}-{s2} {match['team2']}")
     except Exception as ex:
         print(f"Skipped one event on parse error: {ex}")

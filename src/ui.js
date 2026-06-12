@@ -27,10 +27,20 @@
     if (!Object.keys(ov).length) return D;
     return Object.assign({}, D, {
       matches: D.matches.map(m => ov[m.id]
-        ? Object.assign({}, m, { status: 'completed', score: { team1: ov[m.id][0], team2: ov[m.id][1] } })
+        ? Object.assign({}, m, { status: 'completed', score: { team1: ov[m.id][0], team2: ov[m.id][1], winner: ov[m.id][2] } })
         : m),
     });
   }
+
+  // drop local overrides once the published data carries the same match as completed
+  (function pruneOverrides() {
+    let changed = false;
+    for (const id in localOv) {
+      const m = D.matches.find(x => x.id === id);
+      if (m && m.status === 'completed') { delete localOv[id]; changed = true; }
+    }
+    if (changed) lsSet(LS.ov, localOv);
+  })();
 
   function recompute() {
     const data = effData();
@@ -87,15 +97,19 @@
 
   function matchCard(m, opts) {
     const sc = effScore(m);
+    const live = !sc && liveNow[m.id];
     const p = odds(m);
     const tag = sc ? el('span', { class: 'tag ' + (sc.local ? 'whatif' : 'ft') }, sc.local ? (whatIf.on ? 'what-if' : 'local') : 'FT')
+                   : live ? el('span', { class: 'tag live' }, 'LIVE ' + (live.clock || ''))
                    : el('span', { class: 'tag up' }, 'upcoming');
     const card = el('div', { class: 'card match click', onclick: () => matchModal(m) },
       el('div', { class: 'row' },
         el('div', { class: 'team' }, el('span', { class: 'fl' }, T[m.team1].flag), T[m.team1].name),
-        sc ? el('div', { class: 'score' }, sc.team1 + ' – ' + sc.team2) : el('div', { class: 'vs' }, 'v'),
+        sc ? el('div', { class: 'score' }, sc.team1 + ' – ' + sc.team2)
+           : live ? el('div', { class: 'score' }, live.g1 + ' – ' + live.g2)
+           : el('div', { class: 'vs' }, 'v'),
         el('div', { class: 'team away' }, T[m.team2].name, el('span', { class: 'fl' }, T[m.team2].flag))),
-      sc ? null : pbarRow(p),
+      (sc || live) ? null : pbarRow(p),
       el('div', { class: 'meta' }, tag,
         el('span', null, 'Group ' + m.group),
         el('span', null, V[m.venueId].city),
@@ -135,12 +149,25 @@
       el('h2', { class: 'section' }, whatIf.on ? 'Enter what-if result' : 'Enter result (local until published)'),
       el('div', { class: 'formrow' },
         el('span', null, T[m.team1].code), s1, el('span', null, '–'), s2, el('span', null, T[m.team2].code),
+        m.stage !== 'group' ? (function () {
+          const w = el('select', null,
+            el('option', { value: '' }, 'pens: winner…'),
+            el('option', { value: m.team1 }, T[m.team1].code), el('option', { value: m.team2 }, T[m.team2].code));
+          w.id = 'koWinnerSel';
+          return w;
+        })() : null,
         el('button', {
           class: 'btn small', onclick: () => {
             const a = parseInt(s1.value, 10), b = parseInt(s2.value, 10);
             if (isNaN(a) || isNaN(b)) return;
-            if (whatIf.on) whatIf.ov[m.id] = [a, b];
-            else { localOv[m.id] = [a, b]; lsSet(LS.ov, localOv); }
+            const wSel = document.getElementById('koWinnerSel');
+            const entry = [a, b];
+            if (m.stage !== 'group' && a === b) {
+              if (!wSel || !wSel.value) { toast('Level knockout score: pick the shootout winner.'); return; }
+              entry.push(wSel.value);
+            }
+            if (whatIf.on) whatIf.ov[m.id] = entry;
+            else { localOv[m.id] = entry; lsSet(LS.ov, localOv); }
             closeModal(); refresh();
           }
         }, 'Apply'),
@@ -194,19 +221,19 @@
     const done = D.matches.filter(m => effScore(m) && dayKWT(m.dateET) < today).sort((a, b) => b.dateET.localeCompare(a.dateET)).slice(0, 6);
     const next = D.matches.filter(m => !effScore(m) && dayKWT(m.dateET) > today).sort((a, b) => a.dateET.localeCompare(b.dateET));
 
-    // headline: top contenders
+    root.append(el('h2', { class: 'section' }, 'Today — ' + new Intl.DateTimeFormat('en-GB', { timeZone: KWT, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())));
+    if (todays.length) root.append(el('div', { class: 'grid g2' }, todays.map(m => matchCard(m))));
+    else root.append(el('p', { class: 'muted' }, 'No matches today.'),
+      el('h2', { class: 'section' }, 'Next matchday'),
+      el('div', { class: 'grid g2' }, next.slice(0, 6).map(m => matchCard(m))));
+
+    // title race
     const top = Object.entries(SIM.teams).sort((a, b) => b[1].champ - a[1].champ).slice(0, 8);
     root.append(el('h2', { class: 'section' }, 'Title race — live model'),
       el('div', { class: 'card' }, el('div', { class: 'funnel' }, top.map(([c, s]) => el('div', { class: 'frow' },
         el('span', { class: 'fl-label' }, T[c].flag + ' ' + T[c].name),
         el('div', { class: 'hbar' }, el('div', { style: 'width:' + (s.champ / top[0][1].champ * 100) + '%' })),
         el('span', { class: 'num' }, pct(s.champ)))))));
-
-    root.append(el('h2', { class: 'section' }, 'Today — ' + new Intl.DateTimeFormat('en-GB', { timeZone: KWT, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())));
-    if (todays.length) root.append(el('div', { class: 'grid g2' }, todays.map(m => matchCard(m))));
-    else root.append(el('p', { class: 'muted' }, 'No matches today.'),
-      el('h2', { class: 'section' }, 'Next matchday'),
-      el('div', { class: 'grid g2' }, next.slice(0, 6).map(m => matchCard(m))));
 
     if (done.length) root.append(el('h2', { class: 'section' }, 'Latest results'),
       el('div', { class: 'grid g2' }, done.map(m => matchCard(m))));
@@ -287,7 +314,9 @@
         if (side.type === 'group') return rank[side.group][side.place - 1];
         const oppSide = slot.a.type === 'group' ? rank[slot.a.group][slot.a.place - 1] : null;
         const og = oppSide ? T[oppSide].group : null;
-        let i = pool.findIndex(c => T[c].group !== og); if (i < 0) i = 0;
+        let i = pool.findIndex(c => (!side.groups || side.groups.indexOf(T[c].group) !== -1) && T[c].group !== og);
+        if (i < 0) i = pool.findIndex(c => T[c].group !== og);
+        if (i < 0) i = 0;
         return pool.splice(i, 1)[0];
       };
       const a = pick(slot.a), b = pick(slot.b);
@@ -407,7 +436,9 @@
     const name = el('input', { placeholder: 'Your name', style: 'min-width:180px' });
     const gSel = {};
     const pickGrid = el('div', { class: 'picks-grid' }, GROUPS.map(g => {
-      gSel[g] = el('select', null, D.teams.filter(t => t.group === g).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
+      gSel[g] = el('select', null,
+        el('option', { value: '' }, '— choose —'),
+        D.teams.filter(t => t.group === g).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
       return el('div', null, el('label', null, 'Group ' + g + ' winner'), gSel[g]);
     }));
     const allOpts = () => [el('option', { value: '' }, '— choose —')]
@@ -425,6 +456,8 @@
         el('button', {
           class: 'btn', onclick: () => {
             if (!name.value.trim()) { out.replaceChildren(el('p', { class: 'muted' }, 'Add your name first.')); return; }
+            const unpicked = GROUPS.filter(g => !gSel[g].value);
+            if (unpicked.length) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick a winner for every group — still missing: ' + unpicked.join(', ') + '.')); return; }
             if (!f1.value || !f2.value || !ch.value) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick both finalists and a champion.')); return; }
             if (f1.value === f2.value) { out.replaceChildren(el('p', { class: 'muted' }, 'The two finalists must be different teams.')); return; }
             if (ch.value !== f1.value && ch.value !== f2.value) {
@@ -473,8 +506,9 @@
         }, 'Add to leaderboard'),
         leagueLocal.length ? el('button', { class: 'btn small ghost', onclick: () => { leagueLocal = []; lsSet(LS.league, leagueLocal); refresh(); } }, 'Clear local entries') : null)));
 
+    const pubNames = new Set((D.league.entries || []).map(e => e.n.toLowerCase()));
     const entries = (D.league.entries || []).map(e => ({ ...e, src: 'published' }))
-      .concat(leagueLocal.map(e => ({ ...e, src: 'local' })));
+      .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())).map(e => ({ ...e, src: 'local' })));
     if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Generate picks above and send the code round.')); return; }
     const resolved = E.resolvedOutcomes(effData());
     const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
@@ -711,8 +745,54 @@
 
       el('div', { class: 'card' },
         el('h3', null, 'Where the data comes from'),
-        P('Fixtures, rankings and venues were loaded from FIFA’s published schedule. Results flow in automatically: a small robot checks the public scores feed every couple of hours during the match window and republishes the site, and the “↻ Scores” button at the top pulls the very latest finals into your own browser any time you ask. Built and maintained by Mohammed Al-Sabah’s analytics setup, June 2026.')));
+        P('Fixtures, rankings and venues were loaded from FIFA’s published schedule. Results flow in automatically three ways: while a match is being played, the page itself checks the public scores feed every few minutes and shows a red LIVE tag with the score; when a match finishes, the final score is applied and every probability recomputes on the spot; and a small robot republishes the site for everyone every couple of hours during the match window. The “↻ Scores” button forces an immediate check any time you ask. Built and maintained by Mohammed Al-Sabah’s analytics setup, June 2026.')));
   }
+
+  // ---------- live overlay: the page keeps itself current during match windows ----------
+  let liveNow = {};   // matchId -> {g1, g2, clock} display-only; finals flow through localOv
+  const etDate = m => m.dateET.slice(0, 10).replace(/-/g, '');   // dateET already carries the Eastern offset
+
+  async function pollLive() {
+    // only bother when a fixture is near: kickoff within the last 4h or the next hour
+    const now = Date.now();
+    const near = D.matches.filter(m => {
+      if (effScore(m)) return false;
+      const ko = new Date(m.dateET).getTime();
+      return now >= ko - 3600e3 && now <= ko + 4 * 3600e3;
+    });
+    if (!near.length) { if (Object.keys(liveNow).length) { liveNow = {}; renderHeader(); renderTab(); } return; }
+    try {
+      const days = [...new Set(near.map(etDate))].sort();
+      const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
+      const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
+      const js = await r.json();
+      const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
+      const fresh = {};
+      let finals = 0;
+      for (const e of (js.events || [])) {
+        const st = e.status && e.status.type;
+        if (!st) continue;
+        const sc = {};
+        for (const c of e.competitions[0].competitors) {
+          const code = ids[String(c.team.id)] || c.team.abbreviation;
+          sc[code] = parseInt(c.score, 10);
+        }
+        const match = near.find(m => sc[m.team1] != null && sc[m.team2] != null);
+        if (!match) continue;
+        if (st.state === 'in') {
+          fresh[match.id] = { g1: sc[match.team1], g2: sc[match.team2], clock: st.shortDetail || '' };
+        } else if (st.name === 'STATUS_FULL_TIME' && st.completed && !localOv[match.id]) {
+          const g1 = sc[match.team1], g2 = sc[match.team2];
+          if (g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15) { localOv[match.id] = [g1, g2]; finals++; }
+        }
+      }
+      const changedLive = JSON.stringify(fresh) !== JSON.stringify(liveNow);
+      liveNow = fresh;
+      if (finals) { lsSet(LS.ov, localOv); refresh(); toast(finals + ' final score' + (finals === 1 ? '' : 's') + ' came in; probabilities recomputed.'); }
+      else if (changedLive) { renderHeader(); renderTab(); }
+    } catch (err) { /* silent: the live overlay is best-effort */ }
+  }
+  setInterval(pollLive, 180000);
 
   // ---------- live score refresh (ESPN public feed, CORS-open) ----------
   let toastTimer = null;
@@ -733,7 +813,7 @@
       const pending = D.matches.filter(m => m.status !== 'completed' && !localOv[m.id] &&
         new Date(m.dateET) <= now && (now - new Date(m.dateET)) < 96 * 3600e3);
       if (!pending.length) { toast('No matches awaiting results right now.'); return; }
-      const days = [...new Set(pending.map(m => new Date(m.dateET).toISOString().slice(0, 10).replace(/-/g, '')))].sort();
+      const days = [...new Set(pending.map(etDate))].sort();
       const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
       const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
       const js = await r.json();
@@ -772,9 +852,10 @@
   function renderHeader() {
     const asof = document.getElementById('asof');
     const nLocal = Object.keys(localOv).length;
+    const nLive = Object.keys(liveNow).length;
     asof.innerHTML = 'Data as of ' + D.meta.asOf +
       (nLocal && !whatIf.on ? '<br>+' + nLocal + ' local result' + (nLocal === 1 ? '' : 's') : '') +
-      '<br>10,000-run Monte Carlo';
+      (nLive ? '<br><b>● LIVE: ' + nLive + ' match' + (nLive === 1 ? '' : 'es') + '</b>' : '<br>10,000-run Monte Carlo');
     const wbtn = document.getElementById('whatif');
     wbtn.textContent = whatIf.on ? 'What-if mode ON — exit' : 'What-if';
     wbtn.className = 'whatif-pill' + (whatIf.on ? '' : ' off');
@@ -802,8 +883,16 @@
   function init() {
     const nav = document.getElementById('nav');
     tabs.forEach(([id, label]) => nav.append(el('button', {
-      'data-tab': id, onclick: () => { activeTab = id; lsSet(LS.tab, id); renderTab(); }
+      'data-tab': id, onclick: () => { activeTab = id; lsSet(LS.tab, id); history.replaceState(null, '', '#' + id); renderTab(); }
     }, label)));
+    // shareable tab links: #league opens the league directly
+    const fromHash = (location.hash || '').slice(1);
+    if (tabs.some(([id]) => id === fromHash)) activeTab = fromHash;
+    window.addEventListener('hashchange', () => {
+      const h = (location.hash || '').slice(1);
+      if (tabs.some(([id]) => id === h) && h !== activeTab) { activeTab = h; renderTab(); }
+    });
+    setTimeout(pollLive, 2500);
     document.getElementById('refresh').addEventListener('click', refreshScores);
     document.getElementById('whatif').addEventListener('click', () => {
       whatIf.on = !whatIf.on;

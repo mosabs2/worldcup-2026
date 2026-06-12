@@ -201,7 +201,12 @@ td.pick-miss { background: #FDE9E7; }
 @media (max-width: 640px) {
   .masthead h1 { font-size: 15px; }
   .masthead .sub { display: none; }
+  .masthead .lockup-divider { display: none; }
   main { padding: 16px 12px 50px; }
+  nav button { padding: 9px 10px; font-size: 12.5px; }
+  .card { overflow-x: auto; }   /* wide tables scroll inside their card instead of clipping */
+  table { font-size: 12px; }
+  .g2, .g3 { grid-template-columns: 1fr; }
 }
 
 /* Print: clean MAS-brand snapshot of the active view */

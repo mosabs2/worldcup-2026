@@ -103,6 +103,13 @@
     const rng = rngFactory(o.seed != null ? o.seed : 20260612);
     const overrides = o.overrides || {};
     const koActuals = indexKoActuals(o.koActuals || []);
+    // completed knockout matches in the data pin the bracket in every run
+    for (const m of data.matches) {
+      if (m.stage === 'group' || m.status !== 'completed' || !m.score) continue;
+      const w = m.score.winner ||
+        (m.score.team1 > m.score.team2 ? m.team1 : m.score.team2 > m.score.team1 ? m.team2 : null);
+      if (w) koActuals[pairKey(m.team1, m.team2)] = w;
+    }
     const venueCountry = {};
     data.venues.forEach(v => { venueCountry[v.id] = v.country; });
     const { ratings } = liveRatings(data, o.extraResults);
@@ -330,7 +337,18 @@
     }
     const groupWinners = {};
     for (const g in tables) if (played[g] === 6) groupWinners[g] = tables[g][0].team;
-    return { groupWinners, finalists: null, champion: null }; // finalists/champion pinned via koActuals later
+    // finalists and champion resolve from completed knockout rounds
+    const winOf = m => m.score.winner ||
+      (m.score.team1 > m.score.team2 ? m.team1 : m.score.team2 > m.score.team1 ? m.team2 : null);
+    const done = data.matches.filter(m => m.stage !== 'group' && m.status === 'completed' && m.score);
+    let finalists = null, champion = null;
+    const fin = done.find(m => m.round === 'final');
+    if (fin) { finalists = [fin.team1, fin.team2]; champion = winOf(fin); }
+    else {
+      const sfs = done.filter(m => m.round === 'sf');
+      if (sfs.length === 2) finalists = sfs.map(winOf).filter(Boolean);
+    }
+    return { groupWinners, finalists, champion };
   }
 
   return {
