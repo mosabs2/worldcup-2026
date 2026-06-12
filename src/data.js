@@ -2275,6 +2275,29 @@ const WC_DATA = {
     ],
     "c": "GER",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Thamer Fares Alnoon",
+    "w": {
+     "A": "MEX",
+     "B": "BIH",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "SWE",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ESP",
+     "BRA"
+    ],
+    "c": "BRA",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
