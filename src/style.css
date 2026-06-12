@@ -113,7 +113,11 @@ tr.click { cursor: pointer; }
 tr.click:hover td { background: #F5F7FD; }
 tr.qual td:first-child { box-shadow: inset 3px 0 0 var(--blue); }
 tr.third td:first-child { box-shadow: inset 3px 0 0 #9BB0E8; }
-.teamcell { display: flex; align-items: center; gap: 7px; font-weight: 600; white-space: nowrap; }
+.teamcell { display: flex; align-items: center; gap: 7px; font-weight: 600; white-space: nowrap; min-width: 0; }
+.teamcell .nm { overflow: hidden; text-overflow: ellipsis; }
+/* the team column absorbs spare width and truncates; numeric columns always fit */
+td:has(> .teamcell) { max-width: 0; width: 100%; overflow: hidden; }
+td.num, th.num { white-space: nowrap; }
 th.sortable { cursor: pointer; }
 th.sortable:hover { color: var(--blue); }
 th.sorted { color: var(--blue); }

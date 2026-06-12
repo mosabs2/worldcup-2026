@@ -71,7 +71,10 @@
     if (ov) return { team1: ov[0], team2: ov[1], local: true };
     return m.status === 'completed' && m.score ? m.score : null;
   }
-  function flagName(c, bold) { const t = T[c]; return el('span', { class: 'teamcell' }, el('span', { class: 'fl' }, t.flag), t.name); }
+  function flagName(c, bold) {
+    const t = T[c];
+    return el('span', { class: 'teamcell' }, el('span', { class: 'fl' }, t.flag), el('span', { class: 'nm', title: t.name }, t.name));
+  }
 
   function pbarRow(p) {
     return el('div', null,
@@ -183,7 +186,7 @@
   const tabs = [
     ['today', 'Today'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Bracket'],
     ['teams', 'Teams'], ['mena', 'MENA'], ['league', 'League'], ['timeline', 'Timeline'],
-    ['venues', 'Venues'], ['model', 'Model & Updates']];
+    ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About']];
 
   function renderToday(root) {
     const today = todayKWT();
@@ -614,6 +617,41 @@
         D.meta.sources.map((s, i) => el('span', null, i ? ' · ' : '', el('a', { href: s.url, target: '_blank' }, s.name))))));
   }
 
+  function renderAbout(root) {
+    const P = (...kids) => el('p', { class: 'muted', style: 'margin-bottom:9px' }, ...kids);
+    root.append(
+      el('div', { class: 'card', style: 'margin-bottom:14px' },
+        el('h3', null, 'What this site is'),
+        P('A live probability centre for the 2026 World Cup. Every number on it comes from one statistical model that re-runs whenever a result comes in, so the percentages you see always reflect the tournament as it actually stands. It is a personal analytics project (the MAS monogram in the corner), not an official FIFA product, and the numbers are estimates for following the tournament, not betting advice.')),
+
+      el('div', { class: 'card', style: 'margin-bottom:14px' },
+        el('h3', null, 'The tabs, in one line each'),
+        el('table', null, [
+          ['Today', 'today’s fixtures in Kuwait time, the latest results, the title race, the MENA strip and the player watch'],
+          ['Matches', 'every fixture day by day; click any match for its detailed odds and most likely scorelines'],
+          ['Groups', 'all twelve group tables: real standings plus the model’s projected points and qualification chances'],
+          ['Bracket', 'one most-likely path from the Round of 32 to the champion; the favourite in every tie'],
+          ['Teams', 'all 48 teams, sortable; click a team for its "glory funnel" from group stage to trophy'],
+          ['MENA', 'the nine Middle East and North Africa sides, tracked together'],
+          ['League', 'the family predictions game: make picks, send the code, follow the leaderboard'],
+          ['Timeline', 'how each contender’s title chance has risen and fallen across the tournament'],
+          ['Venues', 'the sixteen stadiums across the three host countries'],
+          ['Model & Updates', 'the technical description of the model, the model-versus-market table, and the console for entering results'],
+        ].map(([k, v]) => el('tr', null, el('td', { style: 'white-space:nowrap' }, el('b', null, k)), el('td', { class: 'muted' }, v))))),
+
+      el('div', { class: 'card', style: 'margin-bottom:14px' },
+        el('h3', null, 'The probabilities, explained simply'),
+        P(el('b', null, '1. Every team has a strength number. '), 'Like a chess rating: Spain’s is high, New Zealand’s is low. The starting numbers come from the FIFA world rankings. Every match changes them: win and your number goes up, lose and it goes down, and a thrashing moves it more than a narrow squeak. Beating a giant earns far more than beating a minnow. So the ratings quietly learn from the tournament as it happens; South Korea’s rating already rose for their comeback win.'),
+        P(el('b', null, '2. The gap between two strength numbers sets the odds of one match. '), 'When two teams meet, the model compares their numbers. A big gap means the stronger side wins most of the time; a small gap means it is close to a coin flip, with a healthy chance of a draw. The gap also says how many goals each side should expect to score, on average.'),
+        P(el('b', null, '3. Goals are dice rolls. '), 'Football is low-scoring and luck matters. So instead of declaring "this will finish 2-1", the model treats goals like rolls of a loaded dice: a team expected to score 1.8 goals sometimes scores 0, usually 1 or 2, occasionally 4. (The mathematical name for this is a Poisson distribution; the dice picture is honestly all you need.)'),
+        P(el('b', null, '4. Then we play the whole World Cup 10,000 times. '), 'This is the heart of it, and it is called a Monte Carlo simulation, named after the casino. Nobody can calculate the future of a 104-match tournament directly; there are too many combinations. So the computer simply plays it out: every remaining match decided by those dice rolls, group tables computed, the bracket drawn, extra time and penalty shootouts included, all the way to a champion being crowned. Then it does that again. And again, ten thousand times. Spain lifting the trophy in roughly 700 of those 10,000 imaginary tournaments is exactly what "Spain 7%" means on the Today tab. No mystery: the percentage is just counting.'),
+        P(el('b', null, '5. The small print, honestly. '), 'Host nations get a modest ratings boost when playing at home, because history says it is real. The "±" you see next to title chances is the give-or-take from running 10,000 experiments rather than infinity. And the model only knows results: it cannot see injuries, suspensions, team sheets or dressing-room moods, which is one reason its numbers differ a little from the bookmakers’ (the Model tab shows both side by side, so you can judge).')),
+
+      el('div', { class: 'card' },
+        el('h3', null, 'Where the data comes from'),
+        P('Fixtures, rankings and venues were loaded from FIFA’s published schedule. Results flow in automatically: a small robot checks the public scores feed every couple of hours during the match window and republishes the site, and the “↻ Scores” button at the top pulls the very latest finals into your own browser any time you ask. Built and maintained by Mohammed Al-Sabah’s analytics setup, June 2026.')));
+  }
+
   // ---------- live score refresh (ESPN public feed, CORS-open) ----------
   let toastTimer = null;
   function toast(msg) {
@@ -694,7 +732,7 @@
     ({
       today: renderToday, matches: renderMatches, groups: renderGroups, bracket: renderBracket,
       teams: renderTeams, mena: renderMena, league: renderLeague, timeline: renderTimeline,
-      venues: renderVenues, model: renderModel,
+      venues: renderVenues, model: renderModel, about: renderAbout,
     })[activeTab](root);
     window.scrollTo(0, 0);
   }
