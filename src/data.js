@@ -2735,6 +2735,29 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Naser AlQadiri",
+    "w": {
+     "A": "MEX",
+     "B": "BIH",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "CRO"
+    },
+    "f": [
+     "POR",
+     "ESP"
+    ],
+    "c": "POR",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
