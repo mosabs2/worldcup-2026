@@ -2975,6 +2975,23 @@ const WC_DATA = {
     "tg": 166,
     "n": "Ahmed Boareki",
     "locked": "2026-06-12"
+   },
+   {
+    "gb": {
+     "p": "Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Bruno Fernandes",
+     "t": "POR"
+    },
+    "cards": "NED",
+    "goals": "FRA",
+    "mena": "MAR",
+    "host": "MEX",
+    "tg": 208,
+    "n": "Ahmed Mubarak Al Sabah",
+    "locked": "2026-06-12"
    }
   ],
   "propsDeadline": "16 June 2026"
