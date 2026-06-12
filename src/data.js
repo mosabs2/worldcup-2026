@@ -2114,6 +2114,29 @@ const WC_DATA = {
     ],
     "c": "NED",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Wahab Bader",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ARG",
+     "ESP"
+    ],
+    "c": "ARG",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
