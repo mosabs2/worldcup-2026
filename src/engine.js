@@ -203,12 +203,48 @@
   }
 
   function takeThird(pool, rank, slot, rng) {
-    // avoid pairing a third with a team from its own group where possible
+    // honour the slot's allowed-groups list where possible, and avoid same-group pairings
+    const side = slot.a.type === 'third' ? slot.a : slot.b;
+    const grpOf = c => Object.keys(rank).find(g => rank[g].includes(c));
     const opp = slot.a.type === 'group' ? rank[slot.a.group][slot.a.place - 1] : null;
-    const oppGroup = opp ? Object.keys(rank).find(g => rank[g].includes(opp)) : null;
-    let idx = pool.findIndex(c => Object.keys(rank).find(g => rank[g].includes(c)) !== oppGroup);
+    const oppGroup = opp ? grpOf(opp) : null;
+    let idx = pool.findIndex(c => (!side.groups || side.groups.indexOf(grpOf(c)) !== -1) && grpOf(c) !== oppGroup);
+    if (idx === -1) idx = pool.findIndex(c => grpOf(c) !== oppGroup);
     if (idx === -1) idx = 0;
     return pool.splice(idx, 1)[0];
+  }
+
+  // --- bracket-half feasibility for league entries ---
+  // Which halves of the official bracket (0 = top, feeds SF1; 1 = bottom, feeds SF2)
+  // a team can occupy, given the entry's own twelve group-winner picks.
+  function entryHalves(code, entry, data) {
+    const team = data.teams.find(t => t.code === code);
+    if (!team) return [];
+    const g = team.group;
+    const pickedWinner = entry.w && entry.w[g] === code;
+    const halves = new Set();
+    data.r32Template.forEach((slot, i) => {
+      const half = i < 8 ? 0 : 1;
+      [slot.a, slot.b].forEach(sd => {
+        if (sd.type === 'group' && sd.group === g) {
+          if (sd.place === 1 && pickedWinner) halves.add(half);
+          if (sd.place === 2 && !pickedWinner) halves.add(half);
+        } else if (sd.type === 'third' && !pickedWinner) {
+          if (!sd.groups || sd.groups.indexOf(g) !== -1) halves.add(half);
+        }
+      });
+    });
+    return Array.from(halves);
+  }
+
+  // Can this entry's two finalists actually meet in the final?
+  function finalFeasible(entry, data) {
+    const f = entry.f || [];
+    if (f.length !== 2 || f[0] === f[1]) return { ok: false, h1: [], h2: [] };
+    const h1 = entryHalves(f[0], entry, data);
+    const h2 = entryHalves(f[1], entry, data);
+    const ok = h1.some(a => h2.some(b => a !== b));
+    return { ok, h1, h2 };
   }
 
   function indexKoActuals(list) {
@@ -300,6 +336,7 @@
   return {
     rngFactory, liveRatings, predict, topScorelines, poissonPmf, sampleGoals,
     simulateTournament, currentTables, scoreEntry, resolvedOutcomes, hostEdge,
+    entryHalves, finalFeasible,
     LOGISTIC_DIV, ELO_K, HOST_BONUS,
   };
 });

@@ -401,7 +401,7 @@
       el('h3', null, 'How it works'),
       el('p', { class: 'muted' },
         'Pick a winner for each of the twelve groups, two finalists, and the champion. Send the code this page generates to Mohammed on WhatsApp; the published leaderboard updates with the site. Scoring: ' +
-        sc.groupWinner + ' points per correct group winner, ' + sc.finalist + ' per correct finalist, ' + sc.champion + ' for the champion.')));
+        sc.groupWinner + ' points per correct group winner, ' + sc.finalist + ' per correct finalist, ' + sc.champion + ' for the champion. Two rules the form enforces: your champion must be one of your finalists, and your two finalists must be able to reach the final from opposite halves of the official bracket given your own group winners — the form will tell you if a pair cannot meet in the final.')));
 
     // picks form
     const name = el('input', { placeholder: 'Your name', style: 'min-width:180px' });
@@ -427,7 +427,18 @@
             if (!name.value.trim()) { out.replaceChildren(el('p', { class: 'muted' }, 'Add your name first.')); return; }
             if (!f1.value || !f2.value || !ch.value) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick both finalists and a champion.')); return; }
             if (f1.value === f2.value) { out.replaceChildren(el('p', { class: 'muted' }, 'The two finalists must be different teams.')); return; }
+            if (ch.value !== f1.value && ch.value !== f2.value) {
+              out.replaceChildren(el('p', { class: 'muted' }, 'Your champion has to be one of your two finalists — a team cannot win the cup without reaching the final.'));
+              return;
+            }
             const w = {}; GROUPS.forEach(g => w[g] = gSel[g].value);
+            const fz = E.finalFeasible({ w, f: [f1.value, f2.value] }, D);
+            if (!fz.ok) {
+              const sameHalf = (fz.h1[0] === 0 && fz.h2[0] === 0) ? 'top' : 'bottom';
+              out.replaceChildren(el('p', { class: 'muted' },
+                T[f1.value].name + ' and ' + T[f2.value].name + ' cannot meet in the final on your own picks: given your group winners, both sides of that pairing land in the ' + sameHalf + ' half of the official bracket, so they would knock each other out before the final. Change one finalist, or change a group winner so they end up on opposite sides of the draw.'));
+              return;
+            }
             const code = encodeEntry({ v: 1, n: name.value.trim(), w, f: [f1.value, f2.value], c: ch.value });
             out.replaceChildren(
               el('code', { class: 'codebox' }, code),
@@ -527,7 +538,8 @@
         el('tr', null, el('td', { class: 'muted' }, 'Finalists'),
           rows.map(r => el('td', null, (r.e.f || []).filter(fc => T[fc]).map(fc =>
             el('span', { class: 'teamcell', style: 'font-weight:500;display:inline-flex;margin-right:8px' + (elim(fc) ? ';opacity:.45;text-decoration:line-through' : '') },
-              el('span', { class: 'fl' }, T[fc].flag), T[fc].code))))),
+              el('span', { class: 'fl' }, T[fc].flag), T[fc].code)),
+            E.finalFeasible(r.e, D).ok ? null : el('span', { class: 'tiny', title: 'On this entry’s own group picks, these two finalists sit in the same half of the bracket and cannot meet in the final. The entry predates the bracket rule and stands as submitted.' }, '†')))),
         el('tr', null, el('td', { class: 'muted' }, 'Champion'),
           rows.map(r => cell(r.e.c, null))))),
       el('p', { class: 'tiny', style: 'margin-top:8px' },

@@ -274,7 +274,8 @@ const WC_DATA = {
     "name": "Base ratings: Elo-style ratings derived from FIFA rankings (11 June 2026 snapshot)",
     "url": "https://www.fifa.com/en/ranking/men"
    }
-  ]
+  ],
+  "bracketNote": "R32 slots in official bracket order (FIFA match numbers); sequential pairing reproduces the official R16/QF/SF routing to the 19 July MetLife final. Verified against the published knockout schedule, 12 June 2026."
  },
  "teams": [
   {
@@ -1786,38 +1787,6 @@ const WC_DATA = {
  ],
  "r32Template": [
   {
-   "id": "R32-1",
-   "date": "Sun Jun 28",
-   "venueId": "LA",
-   "a": {
-    "type": "group",
-    "group": "A",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "B",
-    "place": 2
-   },
-   "label": "A2 vs B2"
-  },
-  {
-   "id": "R32-2",
-   "date": "Mon Jun 29",
-   "venueId": "HOU",
-   "a": {
-    "type": "group",
-    "group": "C",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "F",
-    "place": 2
-   },
-   "label": "C1 vs F2"
-  },
-  {
    "id": "R32-3",
    "date": "Mon Jun 29",
    "venueId": "BOS",
@@ -1836,39 +1805,8 @@ const WC_DATA = {
      "F"
     ]
    },
-   "label": "E1 vs 3rd A/B/C/D/F"
-  },
-  {
-   "id": "R32-4",
-   "date": "Mon Jun 29",
-   "venueId": "MTY",
-   "a": {
-    "type": "group",
-    "group": "F",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "C",
-    "place": 2
-   },
-   "label": "F1 vs C2"
-  },
-  {
-   "id": "R32-5",
-   "date": "Tue Jun 30",
-   "venueId": "DAL",
-   "a": {
-    "type": "group",
-    "group": "E",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "I",
-    "place": 2
-   },
-   "label": "E2 vs I2"
+   "label": "E1 vs 3rd A/B/C/D/F",
+   "matchNo": 74
   },
   {
    "id": "R32-6",
@@ -1889,70 +1827,76 @@ const WC_DATA = {
      "H"
     ]
    },
-   "label": "I1 vs 3rd C/D/F/G/H"
+   "label": "I1 vs 3rd C/D/F/G/H",
+   "matchNo": 77
   },
   {
-   "id": "R32-7",
-   "date": "Tue Jun 30",
-   "venueId": "MEX",
+   "id": "R32-1",
+   "date": "Sun Jun 28",
+   "venueId": "LA",
    "a": {
     "type": "group",
     "group": "A",
+    "place": 2
+   },
+   "b": {
+    "type": "group",
+    "group": "B",
+    "place": 2
+   },
+   "label": "A2 vs B2",
+   "matchNo": 73
+  },
+  {
+   "id": "R32-4",
+   "date": "Mon Jun 29",
+   "venueId": "MTY",
+   "a": {
+    "type": "group",
+    "group": "F",
     "place": 1
    },
    "b": {
-    "type": "third",
-    "groups": [
-     "C",
-     "E",
-     "F",
-     "H",
-     "I"
-    ]
+    "type": "group",
+    "group": "C",
+    "place": 2
    },
-   "label": "A1 vs 3rd C/E/F/H/I"
+   "label": "F1 vs C2",
+   "matchNo": 75
   },
   {
-   "id": "R32-8",
-   "date": "Wed Jul 1",
-   "venueId": "ATL",
+   "id": "R32-12",
+   "date": "Thu Jul 2",
+   "venueId": "TOR",
    "a": {
+    "type": "group",
+    "group": "K",
+    "place": 2
+   },
+   "b": {
     "type": "group",
     "group": "L",
-    "place": 1
+    "place": 2
    },
-   "b": {
-    "type": "third",
-    "groups": [
-     "E",
-     "H",
-     "I",
-     "J",
-     "K"
-    ]
-   },
-   "label": "L1 vs 3rd E/H/I/J/K"
+   "label": "K2 vs L2",
+   "matchNo": 83
   },
   {
-   "id": "R32-9",
-   "date": "Wed Jul 1",
-   "venueId": "SEA",
+   "id": "R32-11",
+   "date": "Thu Jul 2",
+   "venueId": "LA",
    "a": {
     "type": "group",
-    "group": "G",
+    "group": "H",
     "place": 1
    },
    "b": {
-    "type": "third",
-    "groups": [
-     "A",
-     "E",
-     "H",
-     "I",
-     "J"
-    ]
+    "type": "group",
+    "group": "J",
+    "place": 2
    },
-   "label": "G1 vs 3rd A/E/H/I/J"
+   "label": "H1 vs J2",
+   "matchNo": 84
   },
   {
    "id": "R32-10",
@@ -1973,39 +1917,142 @@ const WC_DATA = {
      "J"
     ]
    },
-   "label": "D1 vs 3rd B/E/F/I/J"
+   "label": "D1 vs 3rd B/E/F/I/J",
+   "matchNo": 81
   },
   {
-   "id": "R32-11",
-   "date": "Thu Jul 2",
-   "venueId": "LA",
+   "id": "R32-9",
+   "date": "Wed Jul 1",
+   "venueId": "SEA",
    "a": {
     "type": "group",
-    "group": "H",
+    "group": "G",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "A",
+     "E",
+     "H",
+     "I",
+     "J"
+    ]
+   },
+   "label": "G1 vs 3rd A/E/H/I/J",
+   "matchNo": 82
+  },
+  {
+   "id": "R32-2",
+   "date": "Mon Jun 29",
+   "venueId": "HOU",
+   "a": {
+    "type": "group",
+    "group": "C",
     "place": 1
    },
    "b": {
     "type": "group",
-    "group": "J",
+    "group": "F",
     "place": 2
    },
-   "label": "H1 vs J2"
+   "label": "C1 vs F2",
+   "matchNo": 76
   },
   {
-   "id": "R32-12",
-   "date": "Thu Jul 2",
-   "venueId": "TOR",
+   "id": "R32-5",
+   "date": "Tue Jun 30",
+   "venueId": "DAL",
    "a": {
     "type": "group",
-    "group": "K",
+    "group": "E",
     "place": 2
    },
    "b": {
     "type": "group",
-    "group": "L",
+    "group": "I",
     "place": 2
    },
-   "label": "K2 vs L2"
+   "label": "E2 vs I2",
+   "matchNo": 78
+  },
+  {
+   "id": "R32-7",
+   "date": "Tue Jun 30",
+   "venueId": "MEX",
+   "a": {
+    "type": "group",
+    "group": "A",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "C",
+     "E",
+     "F",
+     "H",
+     "I"
+    ]
+   },
+   "label": "A1 vs 3rd C/E/F/H/I",
+   "matchNo": 79
+  },
+  {
+   "id": "R32-8",
+   "date": "Wed Jul 1",
+   "venueId": "ATL",
+   "a": {
+    "type": "group",
+    "group": "L",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "E",
+     "H",
+     "I",
+     "J",
+     "K"
+    ]
+   },
+   "label": "L1 vs 3rd E/H/I/J/K",
+   "matchNo": 80
+  },
+  {
+   "id": "R32-15",
+   "date": "Fri Jul 3",
+   "venueId": "MIA",
+   "a": {
+    "type": "group",
+    "group": "J",
+    "place": 1
+   },
+   "b": {
+    "type": "group",
+    "group": "H",
+    "place": 2
+   },
+   "label": "J1 vs H2",
+   "matchNo": 86
+  },
+  {
+   "id": "R32-14",
+   "date": "Fri Jul 3",
+   "venueId": "DAL",
+   "a": {
+    "type": "group",
+    "group": "D",
+    "place": 2
+   },
+   "b": {
+    "type": "group",
+    "group": "G",
+    "place": 2
+   },
+   "label": "D2 vs G2",
+   "matchNo": 88
   },
   {
    "id": "R32-13",
@@ -2026,39 +2073,8 @@ const WC_DATA = {
      "J"
     ]
    },
-   "label": "B1 vs 3rd E/F/G/I/J"
-  },
-  {
-   "id": "R32-14",
-   "date": "Fri Jul 3",
-   "venueId": "DAL",
-   "a": {
-    "type": "group",
-    "group": "D",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "G",
-    "place": 2
-   },
-   "label": "D2 vs G2"
-  },
-  {
-   "id": "R32-15",
-   "date": "Fri Jul 3",
-   "venueId": "MIA",
-   "a": {
-    "type": "group",
-    "group": "J",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "H",
-    "place": 2
-   },
-   "label": "J1 vs H2"
+   "label": "B1 vs 3rd E/F/G/I/J",
+   "matchNo": 85
   },
   {
    "id": "R32-16",
@@ -2079,7 +2095,8 @@ const WC_DATA = {
      "L"
     ]
    },
-   "label": "K1 vs 3rd D/E/I/J/L"
+   "label": "K1 vs 3rd D/E/I/J/L",
+   "matchNo": 87
   }
  ],
  "koSchedule": [
@@ -2406,22 +2423,22 @@ const WC_HISTORY = [
   "date": "2026-06-12",
   "label": "Model v1.0 · after 2 matches",
   "probs": {
-   "ESP": 7.49,
-   "FRA": 6.63,
-   "ARG": 6.49,
-   "ENG": 5.97,
-   "POR": 5.69,
-   "BRA": 5.48,
-   "MEX": 4.36,
-   "NED": 4.16,
-   "GER": 4.04,
-   "BEL": 3.97,
-   "MAR": 3.45,
-   "USA": 3.26,
-   "COL": 3.23,
-   "URU": 2.77,
-   "CRO": 2.54,
-   "JPN": 2.32
+   "ESP": 7.6,
+   "FRA": 6.57,
+   "ARG": 6.37,
+   "ENG": 6.33,
+   "POR": 5.77,
+   "BRA": 5.1,
+   "GER": 4.62,
+   "MEX": 4.29,
+   "NED": 3.99,
+   "BEL": 3.6,
+   "MAR": 3.44,
+   "USA": 3.05,
+   "COL": 2.71,
+   "CRO": 2.64,
+   "SUI": 2.54,
+   "SEN": 2.42
   }
  }
 ];
@@ -2685,12 +2702,48 @@ const WC_ESPNMAP = {
   }
 
   function takeThird(pool, rank, slot, rng) {
-    // avoid pairing a third with a team from its own group where possible
+    // honour the slot's allowed-groups list where possible, and avoid same-group pairings
+    const side = slot.a.type === 'third' ? slot.a : slot.b;
+    const grpOf = c => Object.keys(rank).find(g => rank[g].includes(c));
     const opp = slot.a.type === 'group' ? rank[slot.a.group][slot.a.place - 1] : null;
-    const oppGroup = opp ? Object.keys(rank).find(g => rank[g].includes(opp)) : null;
-    let idx = pool.findIndex(c => Object.keys(rank).find(g => rank[g].includes(c)) !== oppGroup);
+    const oppGroup = opp ? grpOf(opp) : null;
+    let idx = pool.findIndex(c => (!side.groups || side.groups.indexOf(grpOf(c)) !== -1) && grpOf(c) !== oppGroup);
+    if (idx === -1) idx = pool.findIndex(c => grpOf(c) !== oppGroup);
     if (idx === -1) idx = 0;
     return pool.splice(idx, 1)[0];
+  }
+
+  // --- bracket-half feasibility for league entries ---
+  // Which halves of the official bracket (0 = top, feeds SF1; 1 = bottom, feeds SF2)
+  // a team can occupy, given the entry's own twelve group-winner picks.
+  function entryHalves(code, entry, data) {
+    const team = data.teams.find(t => t.code === code);
+    if (!team) return [];
+    const g = team.group;
+    const pickedWinner = entry.w && entry.w[g] === code;
+    const halves = new Set();
+    data.r32Template.forEach((slot, i) => {
+      const half = i < 8 ? 0 : 1;
+      [slot.a, slot.b].forEach(sd => {
+        if (sd.type === 'group' && sd.group === g) {
+          if (sd.place === 1 && pickedWinner) halves.add(half);
+          if (sd.place === 2 && !pickedWinner) halves.add(half);
+        } else if (sd.type === 'third' && !pickedWinner) {
+          if (!sd.groups || sd.groups.indexOf(g) !== -1) halves.add(half);
+        }
+      });
+    });
+    return Array.from(halves);
+  }
+
+  // Can this entry's two finalists actually meet in the final?
+  function finalFeasible(entry, data) {
+    const f = entry.f || [];
+    if (f.length !== 2 || f[0] === f[1]) return { ok: false, h1: [], h2: [] };
+    const h1 = entryHalves(f[0], entry, data);
+    const h2 = entryHalves(f[1], entry, data);
+    const ok = h1.some(a => h2.some(b => a !== b));
+    return { ok, h1, h2 };
   }
 
   function indexKoActuals(list) {
@@ -2782,6 +2835,7 @@ const WC_ESPNMAP = {
   return {
     rngFactory, liveRatings, predict, topScorelines, poissonPmf, sampleGoals,
     simulateTournament, currentTables, scoreEntry, resolvedOutcomes, hostEdge,
+    entryHalves, finalFeasible,
     LOGISTIC_DIV, ELO_K, HOST_BONUS,
   };
 });
@@ -3191,7 +3245,7 @@ const WC_ESPNMAP = {
       el('h3', null, 'How it works'),
       el('p', { class: 'muted' },
         'Pick a winner for each of the twelve groups, two finalists, and the champion. Send the code this page generates to Mohammed on WhatsApp; the published leaderboard updates with the site. Scoring: ' +
-        sc.groupWinner + ' points per correct group winner, ' + sc.finalist + ' per correct finalist, ' + sc.champion + ' for the champion.')));
+        sc.groupWinner + ' points per correct group winner, ' + sc.finalist + ' per correct finalist, ' + sc.champion + ' for the champion. Two rules the form enforces: your champion must be one of your finalists, and your two finalists must be able to reach the final from opposite halves of the official bracket given your own group winners — the form will tell you if a pair cannot meet in the final.')));
 
     // picks form
     const name = el('input', { placeholder: 'Your name', style: 'min-width:180px' });
@@ -3217,7 +3271,18 @@ const WC_ESPNMAP = {
             if (!name.value.trim()) { out.replaceChildren(el('p', { class: 'muted' }, 'Add your name first.')); return; }
             if (!f1.value || !f2.value || !ch.value) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick both finalists and a champion.')); return; }
             if (f1.value === f2.value) { out.replaceChildren(el('p', { class: 'muted' }, 'The two finalists must be different teams.')); return; }
+            if (ch.value !== f1.value && ch.value !== f2.value) {
+              out.replaceChildren(el('p', { class: 'muted' }, 'Your champion has to be one of your two finalists — a team cannot win the cup without reaching the final.'));
+              return;
+            }
             const w = {}; GROUPS.forEach(g => w[g] = gSel[g].value);
+            const fz = E.finalFeasible({ w, f: [f1.value, f2.value] }, D);
+            if (!fz.ok) {
+              const sameHalf = (fz.h1[0] === 0 && fz.h2[0] === 0) ? 'top' : 'bottom';
+              out.replaceChildren(el('p', { class: 'muted' },
+                T[f1.value].name + ' and ' + T[f2.value].name + ' cannot meet in the final on your own picks: given your group winners, both sides of that pairing land in the ' + sameHalf + ' half of the official bracket, so they would knock each other out before the final. Change one finalist, or change a group winner so they end up on opposite sides of the draw.'));
+              return;
+            }
             const code = encodeEntry({ v: 1, n: name.value.trim(), w, f: [f1.value, f2.value], c: ch.value });
             out.replaceChildren(
               el('code', { class: 'codebox' }, code),
@@ -3317,7 +3382,8 @@ const WC_ESPNMAP = {
         el('tr', null, el('td', { class: 'muted' }, 'Finalists'),
           rows.map(r => el('td', null, (r.e.f || []).filter(fc => T[fc]).map(fc =>
             el('span', { class: 'teamcell', style: 'font-weight:500;display:inline-flex;margin-right:8px' + (elim(fc) ? ';opacity:.45;text-decoration:line-through' : '') },
-              el('span', { class: 'fl' }, T[fc].flag), T[fc].code))))),
+              el('span', { class: 'fl' }, T[fc].flag), T[fc].code)),
+            E.finalFeasible(r.e, D).ok ? null : el('span', { class: 'tiny', title: 'On this entry’s own group picks, these two finalists sit in the same half of the bracket and cannot meet in the final. The entry predates the bracket rule and stands as submitted.' }, '†')))),
         el('tr', null, el('td', { class: 'muted' }, 'Champion'),
           rows.map(r => cell(r.e.c, null))))),
       el('p', { class: 'tiny', style: 'margin-top:8px' },

@@ -14,7 +14,8 @@ const WC_DATA = {
     "name": "Base ratings: Elo-style ratings derived from FIFA rankings (11 June 2026 snapshot)",
     "url": "https://www.fifa.com/en/ranking/men"
    }
-  ]
+  ],
+  "bracketNote": "R32 slots in official bracket order (FIFA match numbers); sequential pairing reproduces the official R16/QF/SF routing to the 19 July MetLife final. Verified against the published knockout schedule, 12 June 2026."
  },
  "teams": [
   {
@@ -1526,38 +1527,6 @@ const WC_DATA = {
  ],
  "r32Template": [
   {
-   "id": "R32-1",
-   "date": "Sun Jun 28",
-   "venueId": "LA",
-   "a": {
-    "type": "group",
-    "group": "A",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "B",
-    "place": 2
-   },
-   "label": "A2 vs B2"
-  },
-  {
-   "id": "R32-2",
-   "date": "Mon Jun 29",
-   "venueId": "HOU",
-   "a": {
-    "type": "group",
-    "group": "C",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "F",
-    "place": 2
-   },
-   "label": "C1 vs F2"
-  },
-  {
    "id": "R32-3",
    "date": "Mon Jun 29",
    "venueId": "BOS",
@@ -1576,39 +1545,8 @@ const WC_DATA = {
      "F"
     ]
    },
-   "label": "E1 vs 3rd A/B/C/D/F"
-  },
-  {
-   "id": "R32-4",
-   "date": "Mon Jun 29",
-   "venueId": "MTY",
-   "a": {
-    "type": "group",
-    "group": "F",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "C",
-    "place": 2
-   },
-   "label": "F1 vs C2"
-  },
-  {
-   "id": "R32-5",
-   "date": "Tue Jun 30",
-   "venueId": "DAL",
-   "a": {
-    "type": "group",
-    "group": "E",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "I",
-    "place": 2
-   },
-   "label": "E2 vs I2"
+   "label": "E1 vs 3rd A/B/C/D/F",
+   "matchNo": 74
   },
   {
    "id": "R32-6",
@@ -1629,70 +1567,76 @@ const WC_DATA = {
      "H"
     ]
    },
-   "label": "I1 vs 3rd C/D/F/G/H"
+   "label": "I1 vs 3rd C/D/F/G/H",
+   "matchNo": 77
   },
   {
-   "id": "R32-7",
-   "date": "Tue Jun 30",
-   "venueId": "MEX",
+   "id": "R32-1",
+   "date": "Sun Jun 28",
+   "venueId": "LA",
    "a": {
     "type": "group",
     "group": "A",
+    "place": 2
+   },
+   "b": {
+    "type": "group",
+    "group": "B",
+    "place": 2
+   },
+   "label": "A2 vs B2",
+   "matchNo": 73
+  },
+  {
+   "id": "R32-4",
+   "date": "Mon Jun 29",
+   "venueId": "MTY",
+   "a": {
+    "type": "group",
+    "group": "F",
     "place": 1
    },
    "b": {
-    "type": "third",
-    "groups": [
-     "C",
-     "E",
-     "F",
-     "H",
-     "I"
-    ]
+    "type": "group",
+    "group": "C",
+    "place": 2
    },
-   "label": "A1 vs 3rd C/E/F/H/I"
+   "label": "F1 vs C2",
+   "matchNo": 75
   },
   {
-   "id": "R32-8",
-   "date": "Wed Jul 1",
-   "venueId": "ATL",
+   "id": "R32-12",
+   "date": "Thu Jul 2",
+   "venueId": "TOR",
    "a": {
+    "type": "group",
+    "group": "K",
+    "place": 2
+   },
+   "b": {
     "type": "group",
     "group": "L",
-    "place": 1
+    "place": 2
    },
-   "b": {
-    "type": "third",
-    "groups": [
-     "E",
-     "H",
-     "I",
-     "J",
-     "K"
-    ]
-   },
-   "label": "L1 vs 3rd E/H/I/J/K"
+   "label": "K2 vs L2",
+   "matchNo": 83
   },
   {
-   "id": "R32-9",
-   "date": "Wed Jul 1",
-   "venueId": "SEA",
+   "id": "R32-11",
+   "date": "Thu Jul 2",
+   "venueId": "LA",
    "a": {
     "type": "group",
-    "group": "G",
+    "group": "H",
     "place": 1
    },
    "b": {
-    "type": "third",
-    "groups": [
-     "A",
-     "E",
-     "H",
-     "I",
-     "J"
-    ]
+    "type": "group",
+    "group": "J",
+    "place": 2
    },
-   "label": "G1 vs 3rd A/E/H/I/J"
+   "label": "H1 vs J2",
+   "matchNo": 84
   },
   {
    "id": "R32-10",
@@ -1713,39 +1657,142 @@ const WC_DATA = {
      "J"
     ]
    },
-   "label": "D1 vs 3rd B/E/F/I/J"
+   "label": "D1 vs 3rd B/E/F/I/J",
+   "matchNo": 81
   },
   {
-   "id": "R32-11",
-   "date": "Thu Jul 2",
-   "venueId": "LA",
+   "id": "R32-9",
+   "date": "Wed Jul 1",
+   "venueId": "SEA",
    "a": {
     "type": "group",
-    "group": "H",
+    "group": "G",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "A",
+     "E",
+     "H",
+     "I",
+     "J"
+    ]
+   },
+   "label": "G1 vs 3rd A/E/H/I/J",
+   "matchNo": 82
+  },
+  {
+   "id": "R32-2",
+   "date": "Mon Jun 29",
+   "venueId": "HOU",
+   "a": {
+    "type": "group",
+    "group": "C",
     "place": 1
    },
    "b": {
     "type": "group",
-    "group": "J",
+    "group": "F",
     "place": 2
    },
-   "label": "H1 vs J2"
+   "label": "C1 vs F2",
+   "matchNo": 76
   },
   {
-   "id": "R32-12",
-   "date": "Thu Jul 2",
-   "venueId": "TOR",
+   "id": "R32-5",
+   "date": "Tue Jun 30",
+   "venueId": "DAL",
    "a": {
     "type": "group",
-    "group": "K",
+    "group": "E",
     "place": 2
    },
    "b": {
     "type": "group",
-    "group": "L",
+    "group": "I",
     "place": 2
    },
-   "label": "K2 vs L2"
+   "label": "E2 vs I2",
+   "matchNo": 78
+  },
+  {
+   "id": "R32-7",
+   "date": "Tue Jun 30",
+   "venueId": "MEX",
+   "a": {
+    "type": "group",
+    "group": "A",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "C",
+     "E",
+     "F",
+     "H",
+     "I"
+    ]
+   },
+   "label": "A1 vs 3rd C/E/F/H/I",
+   "matchNo": 79
+  },
+  {
+   "id": "R32-8",
+   "date": "Wed Jul 1",
+   "venueId": "ATL",
+   "a": {
+    "type": "group",
+    "group": "L",
+    "place": 1
+   },
+   "b": {
+    "type": "third",
+    "groups": [
+     "E",
+     "H",
+     "I",
+     "J",
+     "K"
+    ]
+   },
+   "label": "L1 vs 3rd E/H/I/J/K",
+   "matchNo": 80
+  },
+  {
+   "id": "R32-15",
+   "date": "Fri Jul 3",
+   "venueId": "MIA",
+   "a": {
+    "type": "group",
+    "group": "J",
+    "place": 1
+   },
+   "b": {
+    "type": "group",
+    "group": "H",
+    "place": 2
+   },
+   "label": "J1 vs H2",
+   "matchNo": 86
+  },
+  {
+   "id": "R32-14",
+   "date": "Fri Jul 3",
+   "venueId": "DAL",
+   "a": {
+    "type": "group",
+    "group": "D",
+    "place": 2
+   },
+   "b": {
+    "type": "group",
+    "group": "G",
+    "place": 2
+   },
+   "label": "D2 vs G2",
+   "matchNo": 88
   },
   {
    "id": "R32-13",
@@ -1766,39 +1813,8 @@ const WC_DATA = {
      "J"
     ]
    },
-   "label": "B1 vs 3rd E/F/G/I/J"
-  },
-  {
-   "id": "R32-14",
-   "date": "Fri Jul 3",
-   "venueId": "DAL",
-   "a": {
-    "type": "group",
-    "group": "D",
-    "place": 2
-   },
-   "b": {
-    "type": "group",
-    "group": "G",
-    "place": 2
-   },
-   "label": "D2 vs G2"
-  },
-  {
-   "id": "R32-15",
-   "date": "Fri Jul 3",
-   "venueId": "MIA",
-   "a": {
-    "type": "group",
-    "group": "J",
-    "place": 1
-   },
-   "b": {
-    "type": "group",
-    "group": "H",
-    "place": 2
-   },
-   "label": "J1 vs H2"
+   "label": "B1 vs 3rd E/F/G/I/J",
+   "matchNo": 85
   },
   {
    "id": "R32-16",
@@ -1819,7 +1835,8 @@ const WC_DATA = {
      "L"
     ]
    },
-   "label": "K1 vs 3rd D/E/I/J/L"
+   "label": "K1 vs 3rd D/E/I/J/L",
+   "matchNo": 87
   }
  ],
  "koSchedule": [
