@@ -142,7 +142,7 @@ const WC_DATA = {
   {
    "code": "SCO",
    "name": "Scotland",
-   "flag": "🏴",
+   "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
    "group": "C",
    "fifaRank": 42,
    "confed": "UEFA",
@@ -505,7 +505,7 @@ const WC_DATA = {
   {
    "code": "ENG",
    "name": "England",
-   "flag": "🏴",
+   "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
    "group": "L",
    "fifaRank": 4,
    "confed": "UEFA",
