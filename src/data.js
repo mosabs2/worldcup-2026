@@ -2574,6 +2574,29 @@ const WC_DATA = {
     ],
     "c": "ESP",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Shamlan Abdulaziz",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "BRA",
+     "FRA"
+    ],
+    "c": "BRA",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
