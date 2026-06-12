@@ -1990,7 +1990,77 @@ const WC_DATA = {
   }
  ],
  "league": {
-  "entries": [],
+  "entries": [
+   {
+    "n": "Abdullah Khaled",
+    "w": {
+     "A": "MEX",
+     "B": "CAN",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "BRA",
+     "FRA"
+    ],
+    "c": "BRA",
+    "locked": "2026-06-12"
+   },
+   {
+    "n": "Fahad Khaled",
+    "w": {
+     "A": "KOR",
+     "B": "SUI",
+     "C": "MAR",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "POR",
+     "NED"
+    ],
+    "c": "POR",
+    "locked": "2026-06-12"
+   },
+   {
+    "n": "Khaled Fahad",
+    "w": {
+     "A": "MEX",
+     "B": "CAN",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "CRO"
+    },
+    "f": [
+     "POR",
+     "ESP"
+    ],
+    "c": "ESP",
+    "locked": "2026-06-12"
+   }
+  ],
   "scoring": {
    "groupWinner": 2,
    "finalist": 4,
