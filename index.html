@@ -196,6 +196,11 @@ footer .mono-foot { width: 16px; height: 21px; opacity: .8; }
 
 .spin { text-align: center; color: var(--gray); padding: 40px 0; font-size: 13px; }
 
+td.pick-hit { background: #E8F0E9; }
+td.pick-miss { background: #FDE9E7; }
+.selections th { white-space: nowrap; }
+.selections td { white-space: nowrap; }
+
 .toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
   background: var(--blue-dark); color: #fff; font-size: 13px; padding: 10px 18px;
@@ -3166,22 +3171,72 @@ const WC_ESPNMAP = {
       .concat(leagueLocal.map(e => ({ ...e, src: 'local' })));
     if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Generate picks above and send the code round.')); return; }
     const resolved = E.resolvedOutcomes(effData());
+    const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
+    const elim = c => {
+      // eliminated only once its group is fully played: 4th is out; 3rd stays alive until all groups resolve the best-third race
+      if (!T[c] || !resolved.groupWinners[T[c].group]) return false;
+      const posn = TABLES[T[c].group].findIndex(r => r.team === c);
+      if (posn === 3) return true;
+      if (posn === 2 && allGroupsDone) return SIM.teams[c].r32 === 0;
+      return false;
+    };
     const rows = entries.map(e => {
-      const r = E.scoreEntry(e, resolved, sc);
-      const hits = r.detail.filter(d => d.pts > 0).length;
-      return { e, pts: r.pts, hits };
-    }).sort((a, b) => b.pts - a.pts || (SIM.teams[b.e.c] ? SIM.teams[b.e.c].champ : 0) - (SIM.teams[a.e.c] ? SIM.teams[a.e.c].champ : 0));
-    root.append(el('div', { class: 'card' },
+      let pts = 0, exp = 0, max = 0;
+      GROUPS.forEach(g => {
+        const pick = e.w && e.w[g];
+        if (!pick || !T[pick]) return;
+        const win = resolved.groupWinners[g];
+        if (win) { const hit = win === pick ? sc.groupWinner : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[pick].groupWin * sc.groupWinner; max += sc.groupWinner; }
+      });
+      (e.f || []).forEach(fc => {
+        if (!T[fc]) return;
+        exp += SIM.teams[fc].fin * sc.finalist;
+        if (!elim(fc)) max += sc.finalist;
+      });
+      if (e.c && T[e.c]) { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
+      return { e, pts, exp, max };
+    }).sort((a, b) => b.pts - a.pts || b.exp - a.exp);
+
+    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
       el('h3', null, 'Leaderboard', el('span', { class: 'right' }, Object.keys(resolved.groupWinners).length + ' of 12 groups resolved')),
       el('table', null,
-        el('tr', null, ['#', 'Name', 'Champion pick', 'Model gives it', 'Correct calls', 'Points'].map((h, i) => el('th', { class: i > 2 ? 'num' : '' }, h))),
+        el('tr', null,
+          el('th', null, '#'), el('th', null, 'Name'), el('th', null, 'Champion pick'),
+          el('th', { class: 'num' }, 'Points'), el('th', { class: 'num' }, 'Expected'), el('th', { class: 'num' }, 'Max')),
         rows.map((r, i) => el('tr', null,
           el('td', null, i + 1),
           el('td', null, el('b', null, r.e.n), r.e.src === 'local' ? el('span', { class: 'tiny' }, ' (local)') : ''),
-          el('td', null, T[r.e.c] ? T[r.e.c].flag + ' ' + T[r.e.c].name : '—'),
-          el('td', { class: 'num' }, T[r.e.c] ? pct(SIM.teams[r.e.c].champ) : '—'),
-          el('td', { class: 'num' }, r.hits),
-          el('td', { class: 'num' }, el('b', null, r.pts)))))));
+          el('td', null, el('span', { class: 'teamcell' }, T[r.e.c] ? el('span', { class: 'fl' }, T[r.e.c].flag) : '', el('span', { class: 'nm' }, T[r.e.c] ? T[r.e.c].name : '—'))),
+          el('td', { class: 'num' }, el('b', null, r.pts)),
+          el('td', { class: 'num' }, r.exp.toFixed(1)),
+          el('td', { class: 'num' }, r.max)))),
+      el('p', { class: 'tiny', style: 'margin-top:8px' },
+        'Points: locked in from resolved outcomes. Expected: the model weighs every pick by its current probability; this number moves with each result. Max: the ceiling if every still-alive pick lands.')));
+
+    // selections board: everyone's picks side by side
+    const cell = (code, win) => {
+      if (!code || !T[code]) return el('td', { class: 'num muted' }, '—');
+      const cls = win ? (win === code ? 'pick-hit' : 'pick-miss') : (elim(code) ? 'pick-miss' : '');
+      return el('td', { class: cls }, el('span', { class: 'teamcell', style: 'font-weight:500' }, el('span', { class: 'fl' }, T[code].flag), el('span', { class: 'nm' }, T[code].code)));
+    };
+    root.append(el('div', { class: 'card' },
+      el('h3', null, 'The selections board'),
+      el('div', { class: 'chart-wrap' }, el('table', { class: 'selections' },
+        el('tr', null, el('th', null, ''), rows.map(r => el('th', null, r.e.n,
+          el('span', { class: 'tiny', style: 'display:block;font-weight:400;text-transform:none;letter-spacing:0' },
+            r.e.locked ? 'locked ' + r.e.locked : (r.e.src === 'local' ? 'local' : ''))))),
+        GROUPS.map(g => el('tr', null,
+          el('td', { class: 'muted', style: 'white-space:nowrap' }, 'Group ' + g),
+          rows.map(r => cell(r.e.w && r.e.w[g], resolved.groupWinners[g])))),
+        el('tr', null, el('td', { class: 'muted' }, 'Finalists'),
+          rows.map(r => el('td', null, (r.e.f || []).filter(fc => T[fc]).map(fc =>
+            el('span', { class: 'teamcell', style: 'font-weight:500;display:inline-flex;margin-right:8px' + (elim(fc) ? ';opacity:.45;text-decoration:line-through' : '') },
+              el('span', { class: 'fl' }, T[fc].flag), T[fc].code))))),
+        el('tr', null, el('td', { class: 'muted' }, 'Champion'),
+          rows.map(r => cell(r.e.c, null))))),
+      el('p', { class: 'tiny', style: 'margin-top:8px' },
+        'Green: called it. Red: pick eliminated or group went elsewhere. Locked dates show when each entry reached the published board.')));
   }
 
   function renderTimeline(root) {

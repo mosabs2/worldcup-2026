@@ -185,6 +185,11 @@ footer .mono-foot { width: 16px; height: 21px; opacity: .8; }
 
 .spin { text-align: center; color: var(--gray); padding: 40px 0; font-size: 13px; }
 
+td.pick-hit { background: #E8F0E9; }
+td.pick-miss { background: #FDE9E7; }
+.selections th { white-space: nowrap; }
+.selections td { white-space: nowrap; }
+
 .toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
   background: var(--blue-dark); color: #fff; font-size: 13px; padding: 10px 18px;
