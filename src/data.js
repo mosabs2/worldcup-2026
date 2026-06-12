@@ -2229,6 +2229,29 @@ const WC_DATA = {
     ],
     "c": "ESP",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Mohammed Jamal",
+    "w": {
+     "A": "KOR",
+     "B": "BIH",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "FRA",
+     "ARG"
+    ],
+    "c": "FRA",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
