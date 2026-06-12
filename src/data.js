@@ -2621,6 +2621,23 @@ const WC_DATA = {
     "tg": 133,
     "n": "Abdullah Mohammed",
     "locked": "2026-06-12"
+   },
+   {
+    "gb": {
+     "p": "Igor Thiago",
+     "t": "BRA"
+    },
+    "as": {
+     "p": "Lamine yamal",
+     "t": "ESP"
+    },
+    "cards": "ECU",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "MEX",
+    "tg": 259,
+    "n": "Hmoud Al Sabah",
+    "locked": "2026-06-12"
    }
   ],
   "propsDeadline": "16 June 2026"
