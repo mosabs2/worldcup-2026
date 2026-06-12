@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-12",
-  "asOfNote": "Results through matchday 1 (11 June 2026). Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 3 matches, auto-synced from the ESPN public feed 2026-06-12 23:56 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -762,8 +762,11 @@ const WC_DATA = {
    "team1": "CAN",
    "team2": "BIH",
    "venueId": "TOR",
-   "status": "scheduled",
-   "score": null
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   }
   },
   {
    "id": "M004",
