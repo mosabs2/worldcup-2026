@@ -2620,6 +2620,29 @@ const WC_DATA = {
     ],
     "c": "FRA",
     "locked": "2026-06-12"
+   },
+   {
+    "n": "Bader Al Gatheebi",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ESP",
+     "ENG"
+    ],
+    "c": "ESP",
+    "locked": "2026-06-12"
    }
   ],
   "scoring": {
