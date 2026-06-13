@@ -2398,7 +2398,7 @@ const WC_DATA = {
     "locked": "2026-06-12"
    },
    {
-    "n": "Eric",
+    "n": "Eric Bartlett",
     "w": {
      "A": "MEX",
      "B": "BIH",
