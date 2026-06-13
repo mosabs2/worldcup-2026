@@ -3383,6 +3383,23 @@ const WC_DATA = {
     "tg": 264,
     "n": "Eric Bartlett",
     "locked": "2026-06-13"
+   },
+   {
+    "gb": {
+     "p": "Embabi",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Fernandez prono",
+     "t": "POR"
+    },
+    "cards": "ECU",
+    "goals": "FRA",
+    "mena": "MAR",
+    "host": "MEX",
+    "tg": 180,
+    "n": "Khalifa zayed",
+    "locked": "2026-06-13"
    }
   ],
   "propsDeadline": "16 June 2026"
