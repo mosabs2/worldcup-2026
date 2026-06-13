@@ -26,6 +26,15 @@ jobs:
         id: fetch
         run: python3 scripts/fetch_scores.py
 
+      # Once the group stage finishes, build the knockout bracket and resolve each
+      # round's teams from completed results. No-ops while groups are in progress.
+      # continue-on-error so a feed hiccup here never blocks the score commit
+      # (fetch_scores has already patched the scores into data.js by this point).
+      - name: Build/resolve knockout bracket
+        if: steps.fetch.outputs.changed == 'true'
+        continue-on-error: true
+        run: python3 scripts/generate_knockout.py --from-feed
+
       - name: Recompute model and timeline snapshot
         if: steps.fetch.outputs.changed == 'true'
         run: node update.js --date "$(date -u +%F)"

@@ -35,6 +35,28 @@ Local to that browser; the published build catches up on the next workflow run.
 `node update.js --date YYYY-MM-DD && python3 build.py`, commit and push. This is the
 editorial path if the ESPN feed changes shape mid-tournament.
 
+## The knockout transition (early July)
+
+The data ships only the 72 group matches plus `r32Template` (the official R32 pairings,
+in bracket order, FIFA match numbers 73-88). `scripts/generate_knockout.py` builds the
+remaining 32 knockout fixtures (R32 with real teams, then R16/QF/SF/3rd/Final as a routed
+skeleton) and resolves each round's teams from completed results. The R32 to Final routing
+is the sequential pairing of `r32Template`, the same routing `engine.js` uses and the one
+`meta.bracketNote` records as verified against the published schedule.
+
+It runs automatically: the workflow calls it (`--from-feed`) after each score sync, so it
+no-ops until the group stage finishes, then builds the bracket (reading the official
+third-place assignment from the ESPN feed, since the allow-lists alone do not determine it
+— all 495 qualifying combinations are ambiguous) and fills knockout teams as rounds
+complete. It never overwrites a recorded score and is safe to run repeatedly.
+
+Manual options if the feed lags the draw: supply the official third assignment directly,
+`python3 scripts/generate_knockout.py --thirds '{"R32-3":"CRO", ...}'` (validated against
+each slot's allow-list and the qualifying thirds), or `--force` to build a teams-TBD
+skeleton, or `--selftest` to exercise the whole machinery on simulated results without
+writing. Per-match venues and dates for R16 and later are nominal (`scheduleApprox: true`)
+until confirmed against FIFA's published bracket.
+
 ## Honesty notes
 
 No fabricated data: head-to-head blurbs, weather, and cosmetic simulation counters from
