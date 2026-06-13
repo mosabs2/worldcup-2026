@@ -217,7 +217,7 @@
   // ---------- tabs ----------
   const tabs = [
     ['today', 'Today'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Bracket'],
-    ['teams', 'Teams'], ['mena', 'MENA'], ['league', 'League'], ['timeline', 'Timeline'],
+    ['teams', 'Teams'], ['mena', 'MENA'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About']];
 
   function renderToday(root) {
@@ -665,6 +665,85 @@
     }
   }
 
+  function renderCompare(root) {
+    const pubNames = new Set((D.league.entries || []).map(e => (e.n || '').toLowerCase()));
+    const entries = (D.league.entries || []).map(e => ({ ...e }))
+      .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())));
+    if (!entries.length) { root.append(el('h2', { class: 'section' }, 'Compare picks'), el('p', { class: 'muted' }, 'No entries yet. Add yours on the League tab.')); return; }
+    const n = entries.length;
+
+    // pick-frequency maps across the field
+    const champFreq = {}, finFreq = {}, grpFreq = {};
+    GROUPS.forEach(g => grpFreq[g] = {});
+    entries.forEach(e => {
+      if (e.c) champFreq[e.c] = (champFreq[e.c] || 0) + 1;
+      (e.f || []).forEach(fc => { finFreq[fc] = (finFreq[fc] || 0) + 1; });
+      GROUPS.forEach(g => { const p = e.w && e.w[g]; if (p) grpFreq[g][p] = (grpFreq[g][p] || 0) + 1; });
+    });
+    const team = (code) => T[code] ? T[code] : null;
+
+    root.append(el('h2', { class: 'section' }, 'Compare picks'));
+    root.append(el('p', { class: 'muted', style: 'margin-bottom:14px' },
+      n + ' entries, side by side. A 🐺 marks a lone-wolf pick: the only entry in the league making that call.'));
+
+    // --- Title-race split: who backed whom to win it ---
+    const champs = Object.keys(champFreq).sort((a, b) => champFreq[b] - champFreq[a] || a.localeCompare(b));
+    const maxC = Math.max.apply(null, champs.map(c => champFreq[c]));
+    root.append(el('div', { class: 'card champ-split', style: 'margin-bottom:16px' },
+      el('h3', null, 'Who backed whom to lift the trophy', el('span', { class: 'right' }, champs.length + ' different champions')),
+      champs.map(c => el('div', { class: 'row' },
+        el('span', { class: 'cell-team', style: 'min-width:128px;flex:none' }, el('span', { class: 'fl' }, team(c) ? team(c).flag : ''), el('span', { class: 'nm' }, team(c) ? team(c).name : c), champFreq[c] === 1 ? el('span', { class: 'lone-badge' }, ' 🐺') : ''),
+        el('span', { class: 'ct' }, champFreq[c]),
+        el('span', { class: 'bar', style: 'width:' + Math.max(6, Math.round(champFreq[c] / maxC * 130)) + 'px' }),
+        el('span', { class: 'who' }, entries.filter(e => e.c === c).map(e => e.n).join(', '))))));
+
+    // --- Mavericks vs the flock (boldness from pick rarity) ---
+    const bold = entries.map(e => {
+      let s = 0, lones = 0;
+      if (e.c && champFreq[e.c] === 1) { s += 3; lones++; }
+      (e.f || []).forEach(fc => { if (finFreq[fc] === 1) { s += 2; lones++; } });
+      GROUPS.forEach(g => { const p = e.w && e.w[g]; if (p && grpFreq[g][p] === 1) { s += 1; lones++; } });
+      return { n: e.n, exhibition: e.exhibition, s, lones };
+    });
+    const mavericks = bold.slice().sort((a, b) => b.s - a.s).filter(b => b.s > 0).slice(0, 3);
+    const flock = bold.slice().sort((a, b) => a.s - b.s).slice(0, 3);
+    root.append(el('div', { class: 'card', style: 'margin-bottom:16px' },
+      el('h3', null, 'Mavericks & the flock'),
+      el('div', { class: 'grid g2' },
+        el('div', null,
+          el('div', { class: 'subh' }, 'Biggest gamblers'),
+          mavericks.length ? mavericks.map(b => el('div', { class: 'tiny', style: 'padding:3px 0' }, el('b', null, b.n), ' — ' + b.lones + ' lone-wolf pick' + (b.lones === 1 ? '' : 's'))) : el('div', { class: 'tiny' }, 'Everyone is still playing it safe.')),
+        el('div', null,
+          el('div', { class: 'subh' }, 'Safest hands'),
+          flock.map(b => el('div', { class: 'tiny', style: 'padding:3px 0' }, el('b', null, b.n), ' — ' + (b.lones === 0 ? 'all consensus picks' : b.lones + ' lone pick' + (b.lones === 1 ? '' : 's'))))))));
+
+    // --- The full grid: every pick side by side ---
+    const cellTeam = (code, freq) => {
+      if (!code) return el('td', null, '—');
+      const lone = freq === 1;
+      return el('td', { class: lone ? 'lone' : '' }, el('span', { class: 'cell-team' },
+        el('span', { class: 'fl' }, team(code) ? team(code).flag : ''),
+        team(code) ? team(code).code : code,
+        lone ? el('span', { class: 'lone-badge' }, ' 🐺') : ''));
+    };
+    const header = el('tr', null,
+      el('th', { class: 'nm-cell' }, 'Name'), el('th', null, 'Champ'), el('th', null, 'Finalists'),
+      GROUPS.map(g => el('th', null, g)));
+    const gridRows = entries.slice()
+      .sort((a, b) => (a.exhibition ? 1 : 0) - (b.exhibition ? 1 : 0) || (a.n || '').toLowerCase().localeCompare((b.n || '').toLowerCase()))
+      .map(e => el('tr', { class: e.exhibition ? 'exhibition-row' : '' },
+        el('td', { class: 'nm-cell' }, e.n, e.exhibition ? el('span', { class: 'exh-badge' }, '★') : ''),
+        cellTeam(e.c, champFreq[e.c]),
+        el('td', null, (e.f || []).map((fc, i) => el('span', { class: 'cell-team', style: i ? 'margin-left:8px' : '' },
+          el('span', { class: 'fl' }, team(fc) ? team(fc).flag : ''), team(fc) ? team(fc).code : fc,
+          finFreq[fc] === 1 ? el('span', { class: 'lone-badge' }, ' 🐺') : ''))),
+        GROUPS.map(g => { const p = e.w && e.w[g]; return cellTeam(p, p ? grpFreq[g][p] : 0); })));
+    root.append(el('div', { class: 'card' },
+      el('h3', null, 'Every pick, side by side', el('span', { class: 'right' }, n + ' entries · scroll sideways →')),
+      el('div', { class: 'compare-wrap' }, el('table', { class: 'compare-table' }, header, gridRows)),
+      el('p', { class: 'tiny', style: 'margin-top:8px' }, '🐺 = lone wolf (the only entry making that pick). Scroll sideways for all twelve groups. ★ = the commissioner’s exhibition entry.')));
+  }
+
   function renderTimeline(root) {
     const hist = H.slice();
     const liveProbs = {};
@@ -1016,7 +1095,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
     ({
       today: renderToday, matches: renderMatches, groups: renderGroups, bracket: renderBracket,
-      teams: renderTeams, mena: renderMena, league: renderLeague, timeline: renderTimeline,
+      teams: renderTeams, mena: renderMena, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
       venues: renderVenues, model: renderModel, about: renderAbout,
     })[activeTab](root);
     window.scrollTo(0, 0);
