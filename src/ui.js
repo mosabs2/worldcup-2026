@@ -64,7 +64,6 @@
   const pct = (x, dp) => (x * 100).toFixed(dp == null ? 1 : dp) + '%';
   function fmtT(iso, tz) { return new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit' }).format(new Date(iso)); }
   function fmtD(iso, tz) { return new Intl.DateTimeFormat('en-GB', { timeZone: tz, weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(iso)); }
-  function dayKWT(iso) { return new Intl.DateTimeFormat('en-CA', { timeZone: KWT }).format(new Date(iso)); }
   const todayKWT = () => new Intl.DateTimeFormat('en-CA', { timeZone: KWT }).format(new Date());
   // Card kickoff: the visitor's local time, with Kuwait time in parentheses for non-Kuwait visitors.
   function kt(iso) {
@@ -72,10 +71,10 @@
     return localTZ === KWT ? loc + ' Kuwait' : loc + ' (' + fmtT(iso, KWT) + ' KWT)';
   }
   function dayLocal(iso) { return new Intl.DateTimeFormat('en-CA', { timeZone: localTZ }).format(new Date(iso)); }
+  const todayLocal = () => new Intl.DateTimeFormat('en-CA', { timeZone: localTZ }).format(new Date());
+  // Whole-site kickoff: visitor-local day and time, with Kuwait time appended (in parentheses for non-Kuwait visitors).
   function kickoff(m) {
-    let s = fmtD(m.dateET, KWT) + ' · ' + fmtT(m.dateET, KWT) + ' Kuwait';
-    if (localTZ !== KWT) s += ' (' + fmtT(m.dateET, localTZ) + ' local)';
-    return s;
+    return fmtD(m.dateET, localTZ) + ' · ' + kt(m.dateET);
   }
   function odds(m) {
     const ra = RT.ratings[m.team1] + E.hostEdge(m.team1, m.venueId, VC);
@@ -222,12 +221,12 @@
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About']];
 
   function renderToday(root) {
-    const today = todayKWT();
-    const todays = D.matches.filter(m => dayKWT(m.dateET) === today).sort((a, b) => a.dateET.localeCompare(b.dateET));
-    const done = D.matches.filter(m => effScore(m) && dayKWT(m.dateET) < today).sort((a, b) => b.dateET.localeCompare(a.dateET)).slice(0, 6);
-    const next = D.matches.filter(m => !effScore(m) && dayKWT(m.dateET) > today).sort((a, b) => a.dateET.localeCompare(b.dateET));
+    const today = todayLocal();
+    const todays = D.matches.filter(m => dayLocal(m.dateET) === today).sort((a, b) => a.dateET.localeCompare(b.dateET));
+    const done = D.matches.filter(m => effScore(m) && dayLocal(m.dateET) < today).sort((a, b) => b.dateET.localeCompare(a.dateET)).slice(0, 6);
+    const next = D.matches.filter(m => !effScore(m) && dayLocal(m.dateET) > today).sort((a, b) => a.dateET.localeCompare(b.dateET));
 
-    root.append(el('h2', { class: 'section' }, 'Today — ' + new Intl.DateTimeFormat('en-GB', { timeZone: KWT, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())));
+    root.append(el('h2', { class: 'section' }, 'Today — ' + new Intl.DateTimeFormat('en-GB', { timeZone: localTZ, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())));
     if (todays.length) root.append(el('div', { class: 'grid g2' }, todays.map(m => matchCard(m))));
     else root.append(el('p', { class: 'muted' }, 'No matches today.'),
       el('h2', { class: 'section' }, 'Next matchday'),
@@ -422,7 +421,7 @@
               el('div', { class: 'frow' }, el('span', { class: 'fl-label' }, l),
                 el('div', { class: 'hbar' }, el('div', { style: 'width:' + Math.max(p * 100, 0.5) + '%' })),
                 el('span', { class: 'num' }, pct(p))))),
-          nxt ? el('div', { class: 'tiny', style: 'margin-top:8px' }, 'Next: v ' + T[nxt.team1 === c ? nxt.team2 : nxt.team1].name + ' · ' + fmtD(nxt.dateET, KWT)) : null);
+          nxt ? el('div', { class: 'tiny', style: 'margin-top:8px' }, 'Next: v ' + T[nxt.team1 === c ? nxt.team2 : nxt.team1].name + ' · ' + kickoff(nxt)) : null);
       })));
   }
 
@@ -714,10 +713,10 @@
       el('table', null, fixtures.map(m => {
         const sc = effScore(m);
         return el('tr', { class: 'click', onclick: () => matchModal(m) },
-          el('td', { style: 'white-space:nowrap' }, fmtD(m.dateET, KWT)),
+          el('td', { style: 'white-space:nowrap' }, fmtD(m.dateET, localTZ)),
           el('td', null, el('span', { class: 'teamcell', style: 'font-weight:500' },
             T[m.team1].flag + ' ' + T[m.team1].code + (sc ? ' ' + sc.team1 + '–' + sc.team2 + ' ' : ' v ') + T[m.team2].code + ' ' + T[m.team2].flag)),
-          el('td', { class: 'num tiny' }, sc ? 'FT' : fmtT(m.dateET, KWT) + ' KWT'));
+          el('td', { class: 'num tiny' }, sc ? 'FT' : kt(m.dateET)));
       })));
   }
 
@@ -734,7 +733,7 @@
       const name = (seg.length > 1 ? seg[1] : seg[0]).replace(' Bay Area', '').replace(' New Jersey', '');
       return name;
     };
-    const today = todayKWT();
+    const today = todayLocal();
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'geomap');
     svg.setAttribute('viewBox', [x0, y0, w, h].join(' '));
@@ -742,7 +741,7 @@
     svg.innerHTML = WC_MAP.paths.map(d => '<path class="land" d="' + d + '"/>').join('');
     D.venues.forEach(v => {
       const n = D.matches.filter(m => m.venueId === v.id).length;
-      const playingToday = D.matches.some(m => m.venueId === v.id && dayKWT(m.dateET) === today);
+      const playingToday = D.matches.some(m => m.venueId === v.id && dayLocal(m.dateET) === today);
       const cx = px(v.lon), cy = py(v.lat);
       if (playingToday) {
         const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -770,7 +769,7 @@
       el('div', { class: 'card' },
         el('h3', null, 'The sixteen stadiums', el('span', { class: 'right' }, 'marker size = matches hosted · pulse = playing today')),
         svg,
-        el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Tap any marker for the venue’s full fixture list. Times in Kuwait time.')),
+        el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Tap any marker for the venue’s full fixture list. Times shown in your local timezone' + (localTZ === KWT ? '.' : ' (Kuwait time in brackets).'))),
       el('div', { class: 'grid g3', style: 'margin-top:14px' }, D.venues.map(v => {
         const fixtures = D.matches.filter(m => m.venueId === v.id);
         const next = fixtures.filter(m => !effScore(m)).sort((a, b) => a.dateET.localeCompare(b.dateET))[0];
@@ -779,7 +778,7 @@
           el('div', null, el('b', null, v.name)),
           el('div', { class: 'muted' }, v.capacity.toLocaleString() + ' capacity' + (v.elev > 500 ? ' · ' + v.elev + ' m altitude' : '')),
           el('div', { class: 'tiny', style: 'margin-top:4px' }, fixtures.length + ' matches' +
-            (next ? ' · next: ' + T[next.team1].code + ' v ' + T[next.team2].code + ', ' + fmtD(next.dateET, KWT) : '')));
+            (next ? ' · next: ' + T[next.team1].code + ' v ' + T[next.team2].code + ', ' + fmtD(next.dateET, localTZ) : '')));
       })));
   }
 
@@ -807,7 +806,7 @@
     // update console
     const sel = el('select', null, D.matches.filter(m => m.status !== 'completed')
       .sort((a, b) => a.dateET.localeCompare(b.dateET))
-      .map(m => el('option', { value: m.id }, m.id + ' · ' + T[m.team1].code + ' v ' + T[m.team2].code + ' · ' + fmtD(m.dateET, KWT))));
+      .map(m => el('option', { value: m.id }, m.id + ' · ' + T[m.team1].code + ' v ' + T[m.team2].code + ' · ' + fmtD(m.dateET, localTZ))));
     const a = el('input', { type: 'number', min: 0, max: 9, style: 'width:60px', placeholder: '0' });
     const b = el('input', { type: 'number', min: 0, max: 9, style: 'width:60px', placeholder: '0' });
     const ta = el('textarea', { placeholder: '{"M003": [2, 1], "M004": [0, 0]}' });
@@ -866,7 +865,7 @@
       el('div', { class: 'card', style: 'margin-bottom:14px' },
         el('h3', null, 'The tabs, in one line each'),
         el('table', null, [
-          ['Today', 'today’s fixtures in Kuwait time, the latest results, the title race, the MENA strip and the player watch'],
+          ['Today', 'today’s fixtures in your local time, the latest results, the title race, the MENA strip and the player watch'],
           ['Matches', 'every fixture day by day; click any match for its detailed odds and most likely scorelines'],
           ['Groups', 'all twelve group tables: real standings plus the model’s projected points and qualification chances'],
           ['Bracket', 'one most-likely path from the Round of 32 to the champion; the favourite in every tie'],
