@@ -2951,7 +2951,7 @@ const WC_DATA = {
     "locked": "2026-06-13"
    },
    {
-    "n": "Gelenn Caley Caley",
+    "n": "Gelenn Caley Cale",
     "w": {
      "A": "MEX",
      "B": "SUI",
