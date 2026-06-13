@@ -3386,11 +3386,11 @@ const WC_DATA = {
    },
    {
     "gb": {
-     "p": "Embabi",
+     "p": "Mbappé",
      "t": "FRA"
     },
     "as": {
-     "p": "Fernandez prono",
+     "p": "Bruno Fernandes",
      "t": "POR"
     },
     "cards": "ECU",
@@ -3399,6 +3399,23 @@ const WC_DATA = {
     "host": "MEX",
     "tg": 180,
     "n": "Khalifa zayed",
+    "locked": "2026-06-13"
+   },
+   {
+    "gb": {
+     "p": "Harry Kane",
+     "t": "ENG"
+    },
+    "as": {
+     "p": "Alexis Mac Allister",
+     "t": "ARG"
+    },
+    "cards": "ECU",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "USA",
+    "tg": 221,
+    "n": "Fahad jaber",
     "locked": "2026-06-13"
    }
   ],
