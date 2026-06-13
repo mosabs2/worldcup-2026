@@ -3018,6 +3018,29 @@ const WC_DATA = {
     ],
     "c": "ESP",
     "locked": "2026-06-13"
+   },
+   {
+    "n": "Khalifa ali",
+    "w": {
+     "A": "KOR",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "POR",
+     "NED"
+    ],
+    "c": "NED",
+    "locked": "2026-06-13"
    }
   ],
   "scoring": {
