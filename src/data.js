@@ -2995,6 +2995,29 @@ const WC_DATA = {
     ],
     "c": "ESP",
     "locked": "2026-06-13"
+   },
+   {
+    "n": "Khaled Al Qahtani",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "SWE",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "POR",
+     "ESP"
+    ],
+    "c": "ESP",
+    "locked": "2026-06-13"
    }
   ],
   "scoring": {
