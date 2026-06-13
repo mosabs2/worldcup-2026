@@ -1,0 +1,15 @@
+{
+  "name": "World Cup 2026 — Probability Centre",
+  "short_name": "WC26 Probability",
+  "description": "Live title probabilities, a family predictions league, and live scores for the 2026 World Cup.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E1E91",
+  "theme_color": "#0E1E91",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
