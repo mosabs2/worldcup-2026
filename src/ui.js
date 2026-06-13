@@ -66,6 +66,12 @@
   function fmtD(iso, tz) { return new Intl.DateTimeFormat('en-GB', { timeZone: tz, weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(iso)); }
   function dayKWT(iso) { return new Intl.DateTimeFormat('en-CA', { timeZone: KWT }).format(new Date(iso)); }
   const todayKWT = () => new Intl.DateTimeFormat('en-CA', { timeZone: KWT }).format(new Date());
+  // Card kickoff: the visitor's local time, with Kuwait time in parentheses for non-Kuwait visitors.
+  function kt(iso) {
+    const loc = fmtT(iso, localTZ);
+    return localTZ === KWT ? loc + ' Kuwait' : loc + ' (' + fmtT(iso, KWT) + ' KWT)';
+  }
+  function dayLocal(iso) { return new Intl.DateTimeFormat('en-CA', { timeZone: localTZ }).format(new Date(iso)); }
   function kickoff(m) {
     let s = fmtD(m.dateET, KWT) + ' · ' + fmtT(m.dateET, KWT) + ' Kuwait';
     if (localTZ !== KWT) s += ' (' + fmtT(m.dateET, localTZ) + ' local)';
@@ -113,7 +119,7 @@
       el('div', { class: 'meta' }, tag,
         el('span', null, 'Group ' + m.group),
         el('span', null, V[m.venueId].city),
-        (opts && opts.times !== false) ? el('span', null, sc ? fmtD(m.dateET, KWT) : kickoff(m)) : null));
+        (!opts || opts.times !== false) ? el('span', null, sc ? fmtD(m.dateET, localTZ) : kt(m.dateET)) : null));
     return card;
   }
 
@@ -268,9 +274,9 @@
       wrap.innerHTML = '';
       const ms = D.matches.filter(m => !g || m.group === g);
       const byDay = {};
-      ms.forEach(m => { (byDay[dayKWT(m.dateET)] = byDay[dayKWT(m.dateET)] || []).push(m); });
+      ms.forEach(m => { (byDay[dayLocal(m.dateET)] = byDay[dayLocal(m.dateET)] || []).push(m); });
       for (const day of Object.keys(byDay).sort()) {
-        wrap.append(el('h2', { class: 'section' }, fmtD(byDay[day][0].dateET, KWT)),
+        wrap.append(el('h2', { class: 'section' }, fmtD(byDay[day][0].dateET, localTZ)),
           el('div', { class: 'grid g2' }, byDay[day].sort((a, b) => a.dateET.localeCompare(b.dateET)).map(m => matchCard(m))));
       }
     }
