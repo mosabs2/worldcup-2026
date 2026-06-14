@@ -3469,6 +3469,23 @@ const WC_DATA = {
     "tg": 193,
     "n": "Mohammad Ahmad Nasser",
     "locked": "2026-06-13"
+   },
+   {
+    "gb": {
+     "p": "Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Messi",
+     "t": "ARG"
+    },
+    "cards": "ARG",
+    "goals": "FRA",
+    "mena": "ALG",
+    "host": "MEX",
+    "tg": 178,
+    "n": "AD",
+    "locked": "2026-06-14"
    }
   ],
   "propsDeadline": "16 June 2026"
