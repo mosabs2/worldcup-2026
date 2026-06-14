@@ -3566,6 +3566,23 @@ const WC_DATA = {
     "tg": 222,
     "n": "Abdulaziz Alkhalifa",
     "locked": "2026-06-14"
+   },
+   {
+    "gb": {
+     "p": "Kai Havertz",
+     "t": "GER"
+    },
+    "as": {
+     "p": "Bruno Fernandes",
+     "t": "POR"
+    },
+    "cards": "IRQ",
+    "goals": "POR",
+    "mena": "MAR",
+    "host": "CAN",
+    "tg": 230,
+    "n": "Salem Athbi",
+    "locked": "2026-06-14"
    }
   ],
   "propsDeadline": "16 June 2026"
