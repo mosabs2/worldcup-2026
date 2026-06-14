@@ -3122,6 +3122,29 @@ const WC_DATA = {
     ],
     "c": "POR",
     "locked": "2026-06-13"
+   },
+   {
+    "n": "Chris Ovenden",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "JPN",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "ESP",
+     "ENG"
+    ],
+    "c": "ESP",
+    "locked": "2026-06-14"
    }
   ],
   "scoring": {
