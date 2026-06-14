@@ -3145,6 +3145,29 @@ const WC_DATA = {
     ],
     "c": "ESP",
     "locked": "2026-06-14"
+   },
+   {
+    "n": "Zuz",
+    "w": {
+     "A": "KOR",
+     "B": "QAT",
+     "C": "BRA",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "BRA",
+     "FRA"
+    ],
+    "c": "BRA",
+    "locked": "2026-06-14"
    }
   ],
   "scoring": {
@@ -3525,6 +3548,23 @@ const WC_DATA = {
     "host": "USA",
     "tg": 225,
     "n": "Chris Ovenden",
+    "locked": "2026-06-14"
+   },
+   {
+    "gb": {
+     "p": "Messi",
+     "t": "ARG"
+    },
+    "as": {
+     "p": "Messi",
+     "t": "ARG"
+    },
+    "cards": "ESP",
+    "goals": "BRA",
+    "mena": "QAT",
+    "host": "MEX",
+    "tg": 222,
+    "n": "Abdulaziz Alkhalifa",
     "locked": "2026-06-14"
    }
   ],
