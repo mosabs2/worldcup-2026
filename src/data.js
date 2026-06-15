@@ -1042,9 +1042,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6065,
-    "x": 0.2365,
-    "a": 0.157,
+    "h": 0.6022,
+    "x": 0.2391,
+    "a": 0.1586,
     "book": "Pinnacle"
    }
   },
@@ -1059,9 +1059,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1158,
-    "x": 0.2207,
-    "a": 0.6635,
+    "h": 0.115,
+    "x": 0.2197,
+    "a": 0.6652,
     "book": "Pinnacle"
    }
   },
@@ -1076,9 +1076,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5011,
-    "x": 0.2874,
-    "a": 0.2115,
+    "h": 0.5118,
+    "x": 0.2842,
+    "a": 0.2041,
     "book": "Pinnacle"
    }
   },
@@ -1110,9 +1110,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0618,
-    "x": 0.128,
-    "a": 0.8102,
+    "h": 0.0616,
+    "x": 0.1278,
+    "a": 0.8107,
     "book": "Pinnacle"
    }
   },
@@ -1159,7 +1159,13 @@ const WC_DATA = {
    "team2": "COD",
    "venueId": "HOU",
    "status": "scheduled",
-   "score": null
+   "score": null,
+   "market": {
+    "h": 0.7503,
+    "x": 0.1656,
+    "a": 0.0841,
+    "book": "Pinnacle"
+   }
   },
   {
    "id": "M022",
@@ -1172,9 +1178,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5576,
-    "x": 0.248,
-    "a": 0.1945,
+    "h": 0.5554,
+    "x": 0.2497,
+    "a": 0.1948,
     "book": "Pinnacle"
    }
   },
@@ -1189,9 +1195,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4395,
-    "x": 0.2786,
-    "a": 0.2819,
+    "h": 0.438,
+    "x": 0.2798,
+    "a": 0.2822,
     "book": "Pinnacle"
    }
   },
@@ -1206,9 +1212,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1041,
+    "h": 0.104,
     "x": 0.2022,
-    "a": 0.6937,
+    "a": 0.6938,
     "book": "Pinnacle"
    }
   },
@@ -1223,9 +1229,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5423,
-    "x": 0.2501,
-    "a": 0.2076,
+    "h": 0.5429,
+    "x": 0.2497,
+    "a": 0.2074,
     "book": "Pinnacle"
    }
   },
@@ -1240,9 +1246,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6024,
-    "x": 0.23,
-    "a": 0.1676,
+    "h": 0.603,
+    "x": 0.2292,
+    "a": 0.1678,
     "book": "Pinnacle"
    }
   },
@@ -1291,9 +1297,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5856,
-    "x": 0.2252,
-    "a": 0.1891,
+    "h": 0.5889,
+    "x": 0.2246,
+    "a": 0.1865,
     "book": "Pinnacle"
    }
   },
@@ -1308,9 +1314,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1876,
-    "x": 0.2613,
-    "a": 0.551,
+    "h": 0.1878,
+    "x": 0.2637,
+    "a": 0.5485,
     "book": "Pinnacle"
    }
   },
@@ -1325,9 +1331,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8742,
-    "x": 0.0816,
-    "a": 0.0442,
+    "h": 0.8759,
+    "x": 0.0807,
+    "a": 0.0435,
     "book": "Pinnacle"
    }
   },
@@ -1342,9 +1348,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4693,
-    "x": 0.2835,
-    "a": 0.2472,
+    "h": 0.4697,
+    "x": 0.2829,
+    "a": 0.2474,
     "book": "Pinnacle"
    }
   },
@@ -1410,9 +1416,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1354,
-    "x": 0.2293,
-    "a": 0.6352,
+    "h": 0.1343,
+    "x": 0.2281,
+    "a": 0.6376,
     "book": "Pinnacle"
    }
   },
@@ -1512,9 +1518,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8478,
-    "x": 0.1142,
-    "a": 0.038,
+    "h": 0.8487,
+    "x": 0.1136,
+    "a": 0.0377,
     "book": "Pinnacle"
    }
   },
@@ -1612,7 +1618,13 @@ const WC_DATA = {
    "team2": "COD",
    "venueId": "GDL",
    "status": "scheduled",
-   "score": null
+   "score": null,
+   "market": {
+    "h": 0.659,
+    "x": 0.2161,
+    "a": 0.1249,
+    "book": "Pinnacle"
+   }
   },
   {
    "id": "M049",
@@ -1642,9 +1654,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6197,
-    "x": 0.2254,
-    "a": 0.1549,
+    "h": 0.6226,
+    "x": 0.2264,
+    "a": 0.1509,
     "book": "Betfair Exchange"
    }
   },
@@ -1676,9 +1688,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7186,
-    "x": 0.1793,
-    "a": 0.1021,
+    "h": 0.7309,
+    "x": 0.1732,
+    "a": 0.0959,
     "book": "Pinnacle"
    }
   },
@@ -1795,9 +1807,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.3423,
-    "x": 0.2493,
-    "a": 0.4084,
+    "h": 0.3412,
+    "x": 0.2517,
+    "a": 0.4071,
     "book": "Betfair Exchange"
    }
   },
@@ -1863,9 +1875,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.3848,
-    "x": 0.2586,
-    "a": 0.3565,
+    "h": 0.3789,
+    "x": 0.2642,
+    "a": 0.3568,
     "book": "Betfair Exchange"
    }
   },
@@ -1897,9 +1909,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4223,
-    "x": 0.3136,
-    "a": 0.2641,
+    "h": 0.4247,
+    "x": 0.3139,
+    "a": 0.2614,
     "book": "Pinnacle"
    }
   },
@@ -1980,7 +1992,13 @@ const WC_DATA = {
    "team2": "UZB",
    "venueId": "ATL",
    "status": "scheduled",
-   "score": null
+   "score": null,
+   "market": {
+    "h": 0.4098,
+    "x": 0.2835,
+    "a": 0.3067,
+    "book": "Pinnacle"
+   }
   },
   {
    "id": "M071",

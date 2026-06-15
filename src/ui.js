@@ -433,7 +433,7 @@
     }
     draw();
     root.append(el('div', { class: 'card' }, tbl),
-      el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Elo updates live with every result entered (K=40, margin-weighted). Click any column to sort, any row for the team’s glory funnel.'));
+      el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Elo updates live with every result entered (K=' + E.ELO_K + ', margin-weighted). Click any column to sort, any row for the team’s glory funnel.'));
   }
 
   function renderMena(root) {
@@ -632,10 +632,13 @@
       });
       (e.f || []).forEach(fc => {
         if (!T[fc]) return;
-        exp += SIM.teams[fc].fin * sc.finalist;
-        if (!elim(fc)) max += sc.finalist;
+        if (resolved.finalists) { const hit = resolved.finalists.includes(fc) ? sc.finalist : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[fc].fin * sc.finalist; if (!elim(fc)) max += sc.finalist; }
       });
-      if (e.c && T[e.c]) { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
+      if (e.c && T[e.c]) {
+        if (resolved.champion) { const hit = resolved.champion === e.c ? sc.champion : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
+      }
       return { e, pts, exp, max };
     }).sort((a, b) => b.pts - a.pts || b.exp - a.exp);
     // exhibition entries (the commissioner) are ranked for display but carry no prize position
@@ -932,7 +935,6 @@
   function renderGeeks(root) {
     const P = (...k) => el('p', { class: 'muted' }, ...k);
     const card = (title, ...k) => el('div', { class: 'card', style: 'margin-bottom:14px' }, el('h3', null, title), ...k);
-    const played = D.matches.filter(m => m.status === 'completed' && m.score).length;
 
     root.append(card('For the curious',
       P('None of this is needed to play. It is here because a few people asked how the site actually works, and how much sits under a number like “Spain 7%”. Everything below is the real engine and the real homework behind it, parameters and all.')));
@@ -967,7 +969,7 @@
 
     root.append(card('Did we need to buy the market? The backtest',
       P('A subscription to a professional data feed gives us the bookmakers’ own probabilities (their closing odds, with the bookmaker’s margin removed). The bookmakers, Pinnacle especially, are the sharpest forecasters in football. So the honest question was: does our homemade model add anything, or should we just show the market’s numbers?'),
-      P('We tested it properly. For each of the ', String(played), ' matches played so far, we took the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and scored both against what actually happened, using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper.'),
+      P('We tested it properly. For each of the first 12 matches played (the opening round), we took the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and scored both against what actually happened, using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper.'),
       el('table', null,
         el('tr', null, ['Metric (lower = sharper)', 'Our model', 'Market'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
         el('tr', null, el('td', null, 'Log-loss'), el('td', { class: 'num' }, el('b', null, '0.98')), el('td', { class: 'num' }, '1.04')),
@@ -977,7 +979,7 @@
         el('b', null, 'What we did with the finding. '), 'We did not throw away our model to chase the market. Instead the market line is shown on each match as a reference, and the paid feed’s real value, the expected-goals data, is used to temper the rating updates as described above. We bought sharper inputs, not a replacement brain.')));
 
     root.append(card('Where the data comes from, and what the model cannot see',
-      P('Live scores come from a free public feed (ESPN), checked every couple of hours during the match window. Expected goals, bookmaker odds and player stats come from a paid feed (TheStatsAPI), refreshed once a day. The site itself is a single self-contained page that updates in the background automatically. ',
+      P('Live scores come from a free public feed (ESPN), checked every few minutes during the match window (and the published site is rebuilt for everyone every couple of hours). Expected goals, bookmaker odds and player stats come from a paid feed (TheStatsAPI), refreshed once a day. The site itself is a single self-contained page that updates in the background automatically. ',
         el('b', null, 'Its blind spots, stated plainly: '), 'the model knows only results. It cannot see injuries, suspensions, team-sheets, travel, weather or morale, which is one honest reason its numbers differ a little from the bookmakers’. It does not pretend otherwise.')));
 
     root.append(P('Built by Mohammed with Claude. Questions, corrections and arguments all welcome.'));
