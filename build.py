@@ -29,6 +29,6 @@ html = (shell
     .replace("{{MONOGRAM_BLUE}}", svg_body(mono_b))
     .replace("{{FAVICON}}", favicon))
 
-assert "{{" not in html, "unresolved placeholder: " + str(re.findall(r"\{\{[A-Z_]+\}\}", html)[:3])
+assert not re.search(r"\{\{[A-Z_]+\}\}", html), "unresolved placeholder: " + str(re.findall(r"\{\{[A-Z_]+\}\}", html)[:3])
 OUT.write_text(html)
 print(f"built index.html ({len(html)//1024} KB)")

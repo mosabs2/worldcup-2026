@@ -339,6 +339,9 @@
 
   function renderBracket(root) {
     // most-likely single path
+    const VC = Object.fromEntries(D.venues.map(v => [v.id, v.country]));
+    const koRoundVenue = {};
+    (D.koSchedule || []).forEach(k => { if (k.round && !koRoundVenue[k.round]) koRoundVenue[k.round] = k.venueId; });
     const rank = {};
     GROUPS.forEach(g => {
       rank[g] = D.teams.filter(t => t.group === g).map(t => t.code)
@@ -359,9 +362,11 @@
       const a = pick(slot.a), b = pick(slot.b);
       return { a, b, label: slot.label, venue: slot.venueId, date: slot.date };
     });
-    function koP(a, b) {
-      const p = E.predict(RT.ratings[a], RT.ratings[b]);
-      const tilt = Math.max(0.35, Math.min(0.65, 0.5 + (RT.ratings[a] - RT.ratings[b]) / 4000));
+    function koP(a, b, venueId) {
+      const ra = RT.ratings[a] + E.hostEdge(a, venueId, VC);
+      const rb = RT.ratings[b] + E.hostEdge(b, venueId, VC);
+      const p = E.predict(ra, rb);
+      const tilt = Math.max(0.35, Math.min(0.65, 0.5 + (ra - rb) / 4000));
       return p.p1 + p.draw * tilt;
     }
     const cols = [{ name: 'Round of 32', pairs: r32 }];
@@ -369,24 +374,24 @@
     for (const name of ['Round of 16', 'Quarter-finals', 'Semi-finals', 'Final']) {
       const nxt = [];
       for (let i = 0; i < cur.length; i += 2) {
-        const w1 = koP(cur[i].a, cur[i].b) >= 0.5 ? cur[i].a : cur[i].b;
+        const w1 = koP(cur[i].a, cur[i].b, cur[i].venue) >= 0.5 ? cur[i].a : cur[i].b;
         const o = cur[i + 1];
-        const w2 = o ? (koP(o.a, o.b) >= 0.5 ? o.a : o.b) : null;
-        if (w2) nxt.push({ a: w1, b: w2 });
+        const w2 = o ? (koP(o.a, o.b, o.venue) >= 0.5 ? o.a : o.b) : null;
+        if (w2) nxt.push({ a: w1, b: w2, venue: koRoundVenue[name] });
       }
       if (!nxt.length) break;
       cols.push({ name, pairs: nxt });
       cur = nxt;
     }
     const fin = cols[cols.length - 1].pairs[0];
-    const champ = koP(fin.a, fin.b) >= 0.5 ? fin.a : fin.b;
+    const champ = koP(fin.a, fin.b, fin.venue) >= 0.5 ? fin.a : fin.b;
     root.append(
       el('p', { class: 'muted', style: 'margin-bottom:12px' },
         'One most-likely path through the tournament, taking the modal qualifier in every slot and the favourite in every tie. Real distributions are wider; see the Teams tab for every side’s full funnel.'),
       el('div', { class: 'bracket' },
         cols.map(c => el('div', { class: 'round' }, el('h4', null, c.name),
           c.pairs.map(p => {
-            const pa = koP(p.a, p.b);
+            const pa = koP(p.a, p.b, p.venue);
             return el('div', { class: 'bk' },
               p.label ? el('div', { class: 'lbl' }, p.label + (p.date ? ' · ' + p.date : '')) : null,
               el('div', { class: 't ' + (pa >= .5 ? 'w' : '') }, T[p.a].flag, ' ', T[p.a].name, el('span', { class: 'pct' }, pct(pa, 0))),
@@ -1233,6 +1238,7 @@
     // shareable tab links: #league opens the league directly
     const fromHash = (location.hash || '').slice(1);
     if (tabs.some(([id]) => id === fromHash)) activeTab = fromHash;
+    if (!tabs.some(([id]) => id === activeTab)) activeTab = 'today';  // guard a stale/removed tab id stored from an earlier version
     window.addEventListener('hashchange', () => {
       const h = (location.hash || '').slice(1);
       if (tabs.some(([id]) => id === h) && h !== activeTab) { activeTab = h; renderTab(); }
