@@ -10,7 +10,7 @@
   const PALETTE = ['#0E1E91', '#1C62B7', '#B3261E', '#1A7F4E', '#9A6B00', '#7B2D8E', '#0E7490', '#C2410C', '#5A5A5A', '#BE185D'];
 
   // ---------- state ----------
-  const LS = { ov: 'wc26.overrides.v1', league: 'wc26.league.v1', tab: 'wc26.tab.v1' };
+  const LS = { ov: 'wc26.overrides.v1', league: 'wc26.league.v1', tab: 'wc26.tab.v1', theme: 'wc26.theme.v1' };
   let localOv = lsGet(LS.ov, {});
   let whatIf = { on: false, ov: {} };
   let leagueLocal = lsGet(LS.league, []);
@@ -838,7 +838,7 @@
     const maxY = Math.max(...points.flatMap(p => series.map(c => p.probs[c] || 0))) * 1.15;
     const x = i => padL + i * ((W - padL - 20) / Math.max(points.length - 1, 1));
     const y = v => padT + (Hh - padB - padT) * (1 - v / maxY);
-    let svg = '<svg class="vmap" viewBox="0 0 ' + W + ' ' + Hh + '" style="background:#fff">';
+    let svg = '<svg class="vmap" viewBox="0 0 ' + W + ' ' + Hh + '" style="background:var(--card)">';
     for (let gy = 0; gy <= 4; gy++) {
       const v = maxY * gy / 4;
       svg += '<line x1="' + padL + '" x2="' + (W - 20) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="#EDEFF6"/>' +
@@ -1288,6 +1288,24 @@
       if (!whatIf.on) whatIf.ov = {};
       refresh();
     });
+    (function () {   // theme: Auto (follows the system) / Dark / Light override; persisted
+      const labels = { auto: '◐ Auto', dark: '☾ Dark', light: '☀ Light' }, order = ['auto', 'dark', 'light'];
+      const tbtn = document.getElementById('theme');
+      const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+      const apply = mode => {
+        const eff = (mode === 'dark' || (mode === 'auto' && mq && mq.matches)) ? 'dark' : 'light';
+        document.documentElement.dataset.theme = eff;
+        if (tbtn) tbtn.textContent = labels[mode];
+      };
+      let mode = lsGet(LS.theme, 'auto');
+      if (order.indexOf(mode) === -1) mode = 'auto';
+      apply(mode);
+      if (tbtn) tbtn.addEventListener('click', () => {
+        mode = order[(order.indexOf(mode) + 1) % order.length];
+        lsSet(LS.theme, mode); apply(mode);
+      });
+      if (mq && mq.addEventListener) mq.addEventListener('change', () => { if (mode === 'auto') apply('auto'); });
+    })();
     document.getElementById('view').append(el('div', { class: 'spin' }, 'Running 10,000 tournament simulations…'));
     setTimeout(refresh, 30);
   }

@@ -15,6 +15,38 @@
   --amber: #9A6B00;
   --grad: linear-gradient(135deg, #1C62B7 0%, #0E1E91 50%, #162E68 100%);
 }
+/* Dark mode. The head script sets data-theme to the effective theme (auto follows the
+   system setting; the header toggle overrides), so every dark rule keys off a single
+   selector with no duplication. The navy --grad masthead stays brand in both modes. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --blue: #7d9bff;
+  --gray: #9aa3b8;
+  --gray-light: #6b7488;
+  --line: #2a3148;
+  --bg: #0d1117;
+  --card: #161c2c;
+  --ink: #e6e9f2;
+  --green: #43d17f;
+  --red: #ff8a80;
+  --amber: #f2c14e;
+}
+:root[data-theme="dark"] .tag.ft { background: #13321f; color: #5fd58a; }
+:root[data-theme="dark"] .tag.live { background: #3a1714; color: #ff9a90; }
+:root[data-theme="dark"] .tag.up { background: #16204a; color: #9db4ff; }
+:root[data-theme="dark"] .tag.whatif { background: #3a3112; color: #f2d680; }
+:root[data-theme="dark"] .pbar .pd { background: #3a4470; }
+:root[data-theme="dark"] .modal { background: var(--card); }
+:root[data-theme="dark"] td.pick-hit { background: #173a23; }
+:root[data-theme="dark"] td.pick-miss { background: #3a1714; }
+:root[data-theme="dark"] .compare-table td.lone { background: #3a3112; box-shadow: inset 0 0 0 1px #6a5a1e; }
+:root[data-theme="dark"] input, :root[data-theme="dark"] select, :root[data-theme="dark"] textarea { background: #0f1422; color: var(--ink); }
+:root[data-theme="dark"] button.btn.ghost { background: transparent; }
+:root[data-theme="dark"] tr.click:hover td { background: #1c2333; }
+:root[data-theme="dark"] .mena-chip { background: var(--card); }
+:root[data-theme="dark"] .geomap { background: linear-gradient(180deg, #0f1626 0%, #0b1019 100%); }
+:root[data-theme="dark"] .geomap .land { fill: #222b42; stroke: #33405f; }
+:root[data-theme="dark"] .banner { background: #2a2410; border-color: #4a3f1e; color: #f2d680; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 body {
