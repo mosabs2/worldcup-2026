@@ -748,7 +748,20 @@ const WC_DATA = {
    "xg": {
     "team1": 1.35,
     "team2": 0.07
-   }
+   },
+   "goals": [
+    {
+     "t": "MEX",
+     "p": "Julián Quiñones",
+     "m": "9'"
+    },
+    {
+     "t": "MEX",
+     "p": "Raúl Jiménez",
+     "m": "67'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M002",
@@ -772,7 +785,25 @@ const WC_DATA = {
    "xg": {
     "team1": 1.84,
     "team2": 0.79
-   }
+   },
+   "goals": [
+    {
+     "t": "CZE",
+     "p": "Ladislav Krejcí",
+     "m": "59'"
+    },
+    {
+     "t": "KOR",
+     "p": "Hwang In-Beom",
+     "m": "67'"
+    },
+    {
+     "t": "KOR",
+     "p": "Oh Hyeon-Gyu",
+     "m": "80'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M003",
@@ -796,7 +827,20 @@ const WC_DATA = {
    "xg": {
     "team1": 1.27,
     "team2": 1.02
-   }
+   },
+   "goals": [
+    {
+     "t": "BIH",
+     "p": "Jovo Lukic",
+     "m": "21'"
+    },
+    {
+     "t": "CAN",
+     "p": "Cyle Larin",
+     "m": "78'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M004",
@@ -820,7 +864,36 @@ const WC_DATA = {
    "xg": {
     "team1": 1.44,
     "team2": 0.46
-   }
+   },
+   "goals": [
+    {
+     "t": "USA",
+     "p": "Damián Bobadilla",
+     "m": "7'",
+     "og": true
+    },
+    {
+     "t": "USA",
+     "p": "Folarin Balogun",
+     "m": "31'"
+    },
+    {
+     "t": "USA",
+     "p": "Folarin Balogun",
+     "m": "45'+5'"
+    },
+    {
+     "t": "PAR",
+     "p": "Maurício",
+     "m": "73'"
+    },
+    {
+     "t": "USA",
+     "p": "Giovanni Reyna",
+     "m": "90'+8'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M005",
@@ -844,7 +917,22 @@ const WC_DATA = {
    "xg": {
     "team1": 0.75,
     "team2": 3.3
-   }
+   },
+   "goals": [
+    {
+     "t": "SUI",
+     "p": "Breel Embolo",
+     "m": "17'",
+     "pen": true
+    },
+    {
+     "t": "QAT",
+     "p": "Miro Muheim",
+     "m": "90'+4'",
+     "og": true
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M006",
@@ -868,7 +956,20 @@ const WC_DATA = {
    "xg": {
     "team1": 1.24,
     "team2": 1.56
-   }
+   },
+   "goals": [
+    {
+     "t": "MAR",
+     "p": "Ismael Saibari",
+     "m": "21'"
+    },
+    {
+     "t": "BRA",
+     "p": "Vinícius Júnior",
+     "m": "32'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M007",
@@ -892,7 +993,15 @@ const WC_DATA = {
    "xg": {
     "team1": 1.24,
     "team2": 1.16
-   }
+   },
+   "goals": [
+    {
+     "t": "SCO",
+     "p": "John McGinn",
+     "m": "28'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M008",
@@ -916,7 +1025,20 @@ const WC_DATA = {
    "xg": {
     "team1": 0.75,
     "team2": 1.3
-   }
+   },
+   "goals": [
+    {
+     "t": "AUS",
+     "p": "Nestory Irankunda",
+     "m": "27'"
+    },
+    {
+     "t": "AUS",
+     "p": "Connor Metcalfe",
+     "m": "75'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M009",
@@ -940,7 +1062,51 @@ const WC_DATA = {
    "xg": {
     "team1": 3.93,
     "team2": 0.4
-   }
+   },
+   "goals": [
+    {
+     "t": "GER",
+     "p": "Felix Nmecha",
+     "m": "6'"
+    },
+    {
+     "t": "CUW",
+     "p": "Livano Comenencia",
+     "m": "21'"
+    },
+    {
+     "t": "GER",
+     "p": "Nico Schlotterbeck",
+     "m": "38'"
+    },
+    {
+     "t": "GER",
+     "p": "Kai Havertz",
+     "m": "45'+5'",
+     "pen": true
+    },
+    {
+     "t": "GER",
+     "p": "Jamal Musiala",
+     "m": "47'"
+    },
+    {
+     "t": "GER",
+     "p": "Nathaniel Brown",
+     "m": "68'"
+    },
+    {
+     "t": "GER",
+     "p": "Deniz Undav",
+     "m": "78'"
+    },
+    {
+     "t": "GER",
+     "p": "Kai Havertz",
+     "m": "88'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M010",
@@ -964,7 +1130,30 @@ const WC_DATA = {
    "xg": {
     "team1": 0.75,
     "team2": 0.53
-   }
+   },
+   "goals": [
+    {
+     "t": "NED",
+     "p": "Virgil van Dijk",
+     "m": "51'"
+    },
+    {
+     "t": "JPN",
+     "p": "Keito Nakamura",
+     "m": "57'"
+    },
+    {
+     "t": "NED",
+     "p": "Crysencio Summerville",
+     "m": "64'"
+    },
+    {
+     "t": "JPN",
+     "p": "Daichi Kamada",
+     "m": "89'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M011",
@@ -988,7 +1177,15 @@ const WC_DATA = {
    "xg": {
     "team1": 1.7,
     "team2": 0.99
-   }
+   },
+   "goals": [
+    {
+     "t": "CIV",
+     "p": "Amad Diallo",
+     "m": "90'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M012",
@@ -1012,7 +1209,40 @@ const WC_DATA = {
    "xg": {
     "team1": 1.34,
     "team2": 0.29
-   }
+   },
+   "goals": [
+    {
+     "t": "SWE",
+     "p": "Yasin Ayari",
+     "m": "7'"
+    },
+    {
+     "t": "SWE",
+     "p": "Alexander Isak",
+     "m": "30'"
+    },
+    {
+     "t": "TUN",
+     "p": "Omar Rekik",
+     "m": "43'"
+    },
+    {
+     "t": "SWE",
+     "p": "Viktor Gyökeres",
+     "m": "59'"
+    },
+    {
+     "t": "SWE",
+     "p": "Mattias Svanberg",
+     "m": "84'"
+    },
+    {
+     "t": "SWE",
+     "p": "Yasin Ayari",
+     "m": "90'+6'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M013",
@@ -1032,7 +1262,9 @@ const WC_DATA = {
     "x": 0.072,
     "a": 0.0286,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [],
+   "goals_src": "espn"
   },
   {
    "id": "M014",

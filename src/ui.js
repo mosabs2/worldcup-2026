@@ -159,6 +159,12 @@
     openModal(
       el('h2', null, T[m.team1].flag + ' ' + T[m.team1].name + (sc ? ' ' + sc.team1 + ' – ' + sc.team2 + ' ' : ' v ') + T[m.team2].name + ' ' + T[m.team2].flag),
       el('div', { class: 'muted', style: 'margin-bottom:14px' }, 'Group ' + m.group + ' · ' + v.name + ', ' + v.city + (v.elev > 800 ? ' (' + v.elev + ' m altitude)' : '') + ' · ' + kickoff(m)),
+      (m.goals && m.goals.length) ? el('h2', { class: 'section' }, 'Goals') : null,
+      (m.goals && m.goals.length) ? el('div', { style: 'margin:2px 0 6px' }, m.goals.map(g =>
+        el('div', { style: 'display:flex; gap:9px; align-items:baseline; padding:3px 0; font-size:14px' },
+          el('span', { style: 'font-size:16px' }, T[g.t] ? T[g.t].flag : ''),
+          el('span', { class: 'num', style: 'min-width:46px; color:var(--blue); font-weight:700; font-variant-numeric:tabular-nums' }, g.m || ''),
+          el('span', null, g.p, g.pen ? el('span', { class: 'tiny', style: 'color:var(--gray)' }, ' (pen)') : '', g.og ? el('span', { class: 'tiny', style: 'color:var(--gray)' }, ' (OG)') : '')))) : null,
       el('h2', { class: 'section' }, sc ? 'Pre-result model read' : 'Model odds'),
       pbarRow(p),
       m.market ? el('p', { class: 'tiny', style: 'margin-top:8px' },

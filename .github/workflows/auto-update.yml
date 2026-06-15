@@ -26,6 +26,14 @@ jobs:
         id: fetch
         run: python3 scripts/fetch_scores.py
 
+      # Goal events (scorer, minute, pen/OG) from ESPN's free summary feed, the
+      # timely source for the match-modal Goals list. continue-on-error so a feed
+      # hiccup never blocks the score commit. No-op once all matches are espn-sourced.
+      - name: Fetch goal events from ESPN
+        if: steps.fetch.outputs.changed == 'true'
+        continue-on-error: true
+        run: python3 scripts/fetch_goals.py
+
       # Once the group stage finishes, build the knockout bracket and resolve each
       # round's teams from completed results. No-ops while groups are in progress.
       # continue-on-error so a feed hiccup here never blocks the score commit
