@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-15",
-  "asOfNote": "Results through 13 matches, auto-synced from the ESPN public feed 2026-06-15 18:06 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 14 matches, auto-synced from the ESPN public feed 2026-06-15 21:12 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1274,14 +1274,31 @@ const WC_DATA = {
    "team1": "BEL",
    "team2": "EGY",
    "venueId": "SEA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.6022,
     "x": 0.2391,
     "a": 0.1586,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "EGY",
+     "p": "Emam Ashour",
+     "m": "19'"
+    },
+    {
+     "t": "BEL",
+     "p": "Mohamed Hany",
+     "m": "66'",
+     "og": true
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M015",

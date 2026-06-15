@@ -362,7 +362,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-15",
-  "asOfNote": "Results through 13 matches, auto-synced from the ESPN public feed 2026-06-15 18:06 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 14 matches, auto-synced from the ESPN public feed 2026-06-15 21:12 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1632,14 +1632,31 @@ const WC_DATA = {
    "team1": "BEL",
    "team2": "EGY",
    "venueId": "SEA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.6022,
     "x": 0.2391,
     "a": 0.1586,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "EGY",
+     "p": "Emam Ashour",
+     "m": "19'"
+    },
+    {
+     "t": "BEL",
+     "p": "Mohamed Hany",
+     "m": "66'",
+     "og": true
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M015",
@@ -5176,24 +5193,24 @@ const WC_HISTORY = [
  },
  {
   "date": "2026-06-15",
-  "label": "Model v1.0 · after 13 matches",
+  "label": "Model v1.0 · after 14 matches",
   "probs": {
-   "FRA": 6.39,
-   "ENG": 6.21,
-   "ARG": 6.16,
-   "USA": 6.07,
-   "ESP": 5.55,
-   "POR": 5.28,
-   "GER": 5.07,
-   "BRA": 4.79,
-   "MEX": 4.59,
-   "MAR": 4.02,
-   "NED": 3.71,
-   "BEL": 3.48,
-   "COL": 2.9,
-   "CRO": 2.67,
-   "JPN": 2.5,
-   "AUS": 2.33
+   "ARG": 6.24,
+   "USA": 6.18,
+   "ENG": 6.07,
+   "FRA": 6.04,
+   "GER": 5.75,
+   "ESP": 5.64,
+   "POR": 5.33,
+   "MEX": 4.92,
+   "BRA": 4.91,
+   "NED": 3.82,
+   "MAR": 3.45,
+   "BEL": 3.32,
+   "COL": 2.92,
+   "URU": 2.9,
+   "CRO": 2.76,
+   "SEN": 2.18
   }
  }
 ];
