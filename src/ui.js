@@ -144,8 +144,15 @@
       el('div', { class: 'muted', style: 'margin-bottom:14px' }, 'Group ' + m.group + ' · ' + v.name + ', ' + v.city + (v.elev > 800 ? ' (' + v.elev + ' m altitude)' : '') + ' · ' + kickoff(m)),
       el('h2', { class: 'section' }, sc ? 'Pre-result model read' : 'Model odds'),
       pbarRow(p),
-      el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Model xG (synthetic, derived from current Elo ratings, not shot data): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)),
+      m.market ? el('p', { class: 'tiny', style: 'margin-top:8px' },
+        el('b', null, 'Market line'), ' (' + (m.market.book || 'closing') + ', vig removed): ' +
+        pct(m.market.h) + ' ' + T[m.team1].code + ' / ' + pct(m.market.x) + ' draw / ' + pct(m.market.a) + ' ' + T[m.team2].code +
+        '. Shown for comparison; the model runs on its own ratings.') : null,
+      m.xg ? el('p', { class: 'tiny', style: 'margin-top:8px' },
+        'Actual xG (shot data): ' + m.xg.team1.toFixed(2) + ' – ' + m.xg.team2.toFixed(2) +
+        ' · model xG (rating-derived): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)) :
+        el('p', { class: 'tiny', style: 'margin-top:8px' },
+          'Model xG (synthetic, derived from current Elo ratings, not shot data): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)),
       el('h2', { class: 'section' }, 'Most likely scorelines'),
       el('div', { class: 'funnel' }, tops.map(s => el('div', { class: 'frow' },
         el('span', { class: 'fl-label' }, s.s),
@@ -663,6 +670,32 @@
         el('p', { class: 'tiny', style: 'margin-top:8px' },
           'Standings per category are updated through the tournament; each category is its own prize. The Goals column is also the main league’s official tiebreaker (closest wins).')));
     }
+
+    const pl = D.propsLive;
+    if (pl) {
+      const board = (title, rows, cols, fmt) => el('div', { class: 'card', style: 'margin-bottom:14px' },
+        el('h3', null, title, el('span', { class: 'right' }, 'after ' + pl.matchesCounted + ' matches')),
+        (rows && rows.length) ? el('div', { class: 'chart-wrap' }, el('table', null,
+          el('tr', null, cols.map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
+          rows.map((r, i) => fmt(r, i)))) : el('p', { class: 'muted' }, 'No data yet — fills in as games are played.'));
+      const teamCell = c => T[c] ? T[c].flag + ' ' + T[c].name : (c || '—');
+      root.append(el('h2', { class: 'section' }, 'Props race — live leaderboards'));
+      root.append(board('Golden Boot race', pl.topScorers, ['#', 'Player', 'Team', 'Goals'], (r, i) => el('tr', null,
+        el('td', { class: 'num' }, String(i + 1)), el('td', null, el('b', null, r.player || '—')),
+        el('td', null, T[r.team] ? T[r.team].flag + ' ' + r.team : '—'),
+        el('td', { class: 'num' }, el('b', null, r.goals + (r.pens ? ' (' + r.pens + 'p)' : ''))))));
+      root.append(board('Assists race', pl.topAssists, ['#', 'Player', 'Team', 'Assists'], (r, i) => el('tr', null,
+        el('td', { class: 'num' }, String(i + 1)), el('td', null, el('b', null, r.player || '—')),
+        el('td', null, T[r.team] ? T[r.team].flag + ' ' + r.team : '—'),
+        el('td', { class: 'num' }, el('b', null, r.assists)))));
+      root.append(board('Dirty Trophy — most cards', pl.teamCards, ['#', 'Team', 'Yellow', 'Red', 'Pts'], (r, i) => el('tr', null,
+        el('td', { class: 'num' }, String(i + 1)), el('td', null, teamCell(r.team)),
+        el('td', { class: 'num' }, r.yellow), el('td', { class: 'num' }, r.red), el('td', { class: 'num' }, el('b', null, r.points)))));
+      root.append(board('Most team goals', pl.teamGoals, ['#', 'Team', 'Goals'], (r, i) => el('tr', null,
+        el('td', { class: 'num' }, String(i + 1)), el('td', null, teamCell(r.team)),
+        el('td', { class: 'num' }, el('b', null, r.goals)))));
+      root.append(el('p', { class: 'tiny' }, pl.note + ' As of ' + (pl.asOf || D.meta.asOf) + '.'));
+    }
   }
 
   function renderCompare(root) {
@@ -869,7 +902,7 @@
       el('p', { class: 'muted', style: 'margin-bottom:8px' },
         'One engine produces every probability on this site. Each team carries an Elo-style rating (seeded from FIFA rankings as of 11 June 2026). Every completed result updates ratings live (K=' + E.ELO_K + ', margin-weighted), so form flows through the tournament. Match odds come from a logistic curve on the rating difference with a strength-dependent draw rate; goals are Poisson with rating-derived expected goals; hosts get +' + E.HOST_BONUS + ' rating points at home. The whole tournament — remaining group games, third-place qualification, the full bracket, extra time, penalties — is then simulated 10,000 times with a fixed seed, and the title, stage and qualification percentages are simply counts over those runs, quoted with a 95% band.'),
       el('p', { class: 'muted' },
-        'What the model does not know: injuries, suspensions, lineups, or anything not visible in results. The "model xG" figures are synthetic (rating-derived), not shot data. The 11 June timeline baseline is an external blend (market and rating models) and is labelled as such; everything after it is this engine.')),
+        'What the model does not know: injuries, suspensions, lineups, or anything not visible in results. For upcoming games the "model xG" is synthetic (rating-derived); played games also show actual xG from shot data (TheStatsAPI), which now tempers the Elo update so a flattering scoreline like 7-1 moves ratings by the chances created rather than by the goals. Each match also shows the market’s closing line for comparison, though the model runs on its own ratings (a backtest on the first 12 games found the market no sharper than the model, so it informs rather than drives). The 11 June timeline baseline is an external blend (market and rating models) and is labelled as such; everything after it is this engine.')),
       el('div', { class: 'card', style: 'margin-bottom:14px' },
         el('h3', null, 'Model v market', el('span', { class: 'right' }, 'pre-tournament reference')),
         el('table', null,

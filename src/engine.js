@@ -25,11 +25,26 @@
   const ELO_K = 40;               // World Cup K-factor (World Football Elo convention)
   const LOGISTIC_DIV = 420;       // inherited calibration from the v4 lab
   const ET_LAMBDA_SCALE = 1 / 3;  // 30 min of extra time vs 90 min
+  const XG_TEMPER = 0.6;          // weight on the xG margin (vs scoreline) when tempering
+                                  // Elo updates. A 7-1 worth only ~3.9 xG should not move
+                                  // ratings like a true 6-goal rout. The winner is still the
+                                  // winner (result unchanged); only the margin is tempered.
 
   function marginMult(gd) {       // World Football Elo goal-difference multiplier
     if (gd <= 1) return 1;
     if (gd === 2) return 1.5;
     return (11 + gd) / 8;
+  }
+
+  // Effective goal difference for the Elo margin multiplier: blend the actual
+  // scoreline GD with the xG GD when per-team xG is available, so flattering
+  // blowouts (and undeserved narrow wins) update ratings by what was created,
+  // not just what was scored. Falls back to the raw scoreline when no xG.
+  function effectiveGD(g1, g2, xg) {
+    const actual = Math.abs(g1 - g2);
+    if (!xg || xg.team1 == null || xg.team2 == null) return actual;
+    const xgd = Math.abs(xg.team1 - xg.team2);
+    return Math.max(1, Math.round((1 - XG_TEMPER) * actual + XG_TEMPER * xgd));
   }
 
   // --- Ratings: base + Elo updates from every completed match, in date order ---
@@ -51,7 +66,7 @@
       const exp = 1 / (1 + Math.pow(10, -((ra + ha) - (rb + hb)) / LOGISTIC_DIV));
       const g1 = m.score.team1, g2 = m.score.team2;
       const w = g1 > g2 ? 1 : g1 < g2 ? 0 : 0.5;
-      const ch = ELO_K * marginMult(Math.abs(g1 - g2)) * (w - exp);
+      const ch = ELO_K * marginMult(effectiveGD(g1, g2, m.xg)) * (w - exp);
       r[m.team1] += ch; r[m.team2] -= ch;
       delta[m.team1] += ch; delta[m.team2] -= ch;
     }

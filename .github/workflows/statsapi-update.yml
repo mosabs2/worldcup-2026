@@ -1,0 +1,54 @@
+name: StatsAPI daily enrich
+
+# TheStatsAPI Starter tier is ~12 requests/minute, so this is a SEPARATE,
+# once-daily job (the 2-hourly auto-update keeps using the free ESPN feed for
+# scores). It enriches matches with xG + market lines and rebuilds the props
+# race, then recomputes the model (xG-tempered Elo) and republishes.
+# Runs at 08:00 UTC (11:00 Kuwait), after the North American match window.
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: statsapi-update
+  cancel-in-progress: false
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enrich matches with xG + market lines
+        env:
+          STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
+        run: python3 scripts/fetch_statsapi.py
+
+      - name: Rebuild props race (full — assists + cards)
+        env:
+          STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
+        run: python3 scripts/fetch_props.py --full
+
+      - name: Recompute model and timeline snapshot
+        run: node update.js --date "$(date -u +%F)"
+
+      - name: Rebuild site
+        run: python3 build.py
+
+      - name: Commit and publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -m "statsapi: daily xG/market/props enrich $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

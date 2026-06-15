@@ -1,2 +1,9 @@
 .DS_Store
 __pycache__/
+
+# secrets — never commit API keys
+.env
+.env.local
+*.key
+secrets/
+.cache/
