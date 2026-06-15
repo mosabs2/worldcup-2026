@@ -3686,6 +3686,29 @@ const WC_DATA = {
     ],
     "c": "FRA",
     "locked": "2026-06-15"
+   },
+   {
+    "n": "Mohammed Behbehani",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "AUS",
+     "E": "GER",
+     "F": "SWE",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "FRA",
+     "ENG"
+    ],
+    "c": "ENG",
+    "locked": "2026-06-15"
    }
   ],
   "scoring": {
