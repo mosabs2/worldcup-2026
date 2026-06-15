@@ -5095,6 +5095,20 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     data.teams.forEach(t => { (groups[t.group] = groups[t.group] || []).push(t.code); });
     const groupNames = Object.keys(groups).sort();
 
+    // Knockout venues for the host edge. R32 is per-slot (data-backed); R16+ use
+    // each round's representative venue from koSchedule (the data's granularity for
+    // those rounds — enough to capture the US-hosted Quarter-finals/Semis/Final).
+    const r32SlotVenue = data.r32Template.map(s => s.venueId);
+    const koRoundVenue = {};
+    (data.koSchedule || []).forEach(k => { if (k.round && !koRoundVenue[k.round]) koRoundVenue[k.round] = k.venueId; });
+    const playedRoundVenue = [null, koRoundVenue['Round of 16'], koRoundVenue['Quarter-finals'], koRoundVenue['Semi-finals'], koRoundVenue['Final']];
+    // Third-place R32 slots and their allowed-group lists, for a legal assignment.
+    const thirdSlots = [];
+    data.r32Template.forEach((slot, i) => {
+      const side = slot.a.type === 'third' ? slot.a : slot.b.type === 'third' ? slot.b : null;
+      if (side) thirdSlots.push({ i, groups: side.groups || null });
+    });
+
     // Pre-split matches: fixed (completed or overridden) vs to-sample
     const fixed = [], open = [];
     for (const m of data.matches) {
@@ -5143,14 +5157,20 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       const qualThirds = thirds.slice(0, 8);
       qualThirds.forEach(c => tally[c].third++);
 
-      // R32 from template; thirds assigned greedily avoiding same-group pairings
+      // R32 from template. Third-place qualifiers are assigned to their slots by a
+      // constraint-respecting bijection honouring every slot's allowed-groups list
+      // (FIFA guarantees a legal assignment exists); the old greedy first-fit is a
+      // fallback only if no legal assignment can be found for the qualifying set.
+      const assigned = assignThirds(thirdSlots.map(s => s.groups), qualThirds, c => groupOf[c]);
+      const thirdAt = {};
+      if (assigned) thirdSlots.forEach((s, k) => { thirdAt[s.i] = assigned[k]; });
       const pool = qualThirds.slice();
-      const r32 = [];
-      for (const slot of data.r32Template) {
-        const a = slot.a.type === 'group' ? rank[slot.a.group][slot.a.place - 1] : takeThird(pool, rank, slot, rng);
-        const b = slot.b.type === 'group' ? rank[slot.b.group][slot.b.place - 1] : takeThird(pool, rank, slot, rng);
-        r32.push([a, b]);
-      }
+      const r32 = data.r32Template.map((slot, i) => {
+        const resolve = sd => sd.type === 'group'
+          ? rank[sd.group][sd.place - 1]
+          : (assigned ? thirdAt[i] : takeThird(pool, rank, slot, rng));
+        return [resolve(slot.a), resolve(slot.b)];
+      });
       r32.flat().forEach(c => tally[c].r32++);
 
       // knockout rounds: winners of each round are re-paired sequentially.
@@ -5159,7 +5179,10 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       const stages = ['r16', 'qf', 'sf', 'fin', 'champ'];
       let si = 0;
       while (pairs.length >= 1) {
-        const winners = pairs.map(p => koWin(p[0], p[1], ratings, rng, koActuals));
+        const winners = pairs.map((p, j) => {
+          const venueId = si === 0 ? r32SlotVenue[j] : playedRoundVenue[si];
+          return koWin(p[0], p[1], ratings, rng, koActuals, venueId, venueCountry);
+        });
         const stage = stages[si++];
         winners.forEach(c => tally[c][stage]++);
         if (stage === 'champ') break;
@@ -5193,6 +5216,28 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     if (idx === -1) idx = pool.findIndex(c => grpOf(c) !== oppGroup);
     if (idx === -1) idx = 0;
     return pool.splice(idx, 1)[0];
+  }
+
+  // Constraint-respecting assignment of the qualifying thirds to the third-place
+  // R32 slots: a bijection where each slot's third comes from its allowed-groups
+  // list. Backtracking; returns an array aligned to slotGroups, or null if none.
+  function assignThirds(slotGroups, thirds, grpOf) {
+    const n = slotGroups.length;
+    if (thirds.length < n) return null;
+    const assign = new Array(n).fill(null), used = new Set();
+    const bt = i => {
+      if (i === n) return true;
+      const allowed = slotGroups[i];
+      for (const t of thirds) {
+        if (used.has(t)) continue;
+        if (allowed && allowed.indexOf(grpOf(t)) === -1) continue;
+        assign[i] = t; used.add(t);
+        if (bt(i + 1)) return true;
+        used.delete(t); assign[i] = null;
+      }
+      return false;
+    };
+    return bt(0) ? assign : null;
   }
 
   // --- bracket-half feasibility for league entries ---
@@ -5235,16 +5280,19 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
   }
   function pairKey(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
 
-  function koWin(a, b, ratings, rng, koActuals, fieldSize) {
+  function koWin(a, b, ratings, rng, koActuals, venueId, venueCountry) {
     const pinned = koActuals[pairKey(a, b)];
     if (pinned) return pinned;
-    const p = predict(ratings[a], ratings[b]);
+    // host edge applies in knockouts too (e.g. a host nation playing at home)
+    const ra = ratings[a] + hostEdge(a, venueId, venueCountry);
+    const rb = ratings[b] + hostEdge(b, venueId, venueCountry);
+    const p = predict(ra, rb);
     let g1 = sampleGoals(p.xg1, rng), g2 = sampleGoals(p.xg2, rng);
     if (g1 !== g2) return g1 > g2 ? a : b;
     g1 = sampleGoals(p.xg1 * ET_LAMBDA_SCALE, rng); g2 = sampleGoals(p.xg2 * ET_LAMBDA_SCALE, rng);
     if (g1 !== g2) return g1 > g2 ? a : b;
-    // penalties: slight tilt to the stronger side
-    const tilt = clamp(0.5 + (ratings[a] - ratings[b]) / 4000, 0.35, 0.65);
+    // penalties: slight tilt to the stronger side (host edge included)
+    const tilt = clamp(0.5 + (ra - rb) / 4000, 0.35, 0.65);
     return rng() < tilt ? a : b;
   }
 
