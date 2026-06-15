@@ -5797,13 +5797,15 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     const tops = E.topScorelines(p.xg1, p.xg2, 5);
     const maxp = tops[0].p;
     const v = V[m.venueId];
+    // committed goals win once synced; the in-play live feed fills the gap during a match
+    const mg = (m.goals !== undefined) ? m.goals : liveGoals[m.id];
     const s1 = el('input', { type: 'number', min: 0, max: 9, style: 'width:62px', value: sc ? sc.team1 : '' });
     const s2 = el('input', { type: 'number', min: 0, max: 9, style: 'width:62px', value: sc ? sc.team2 : '' });
     openModal(
       el('h2', null, T[m.team1].flag + ' ' + T[m.team1].name + (sc ? ' ' + sc.team1 + ' – ' + sc.team2 + ' ' : ' v ') + T[m.team2].name + ' ' + T[m.team2].flag),
       el('div', { class: 'muted', style: 'margin-bottom:14px' }, 'Group ' + m.group + ' · ' + v.name + ', ' + v.city + (v.elev > 800 ? ' (' + v.elev + ' m altitude)' : '') + ' · ' + kickoff(m)),
-      (m.goals && m.goals.length) ? el('h2', { class: 'section' }, 'Goals') : null,
-      (m.goals && m.goals.length) ? el('div', { style: 'margin:2px 0 6px' }, m.goals.map(g =>
+      (mg && mg.length) ? el('h2', { class: 'section' }, 'Goals') : null,
+      (mg && mg.length) ? el('div', { style: 'margin:2px 0 6px' }, mg.map(g =>
         el('div', { style: 'display:flex; gap:9px; align-items:baseline; padding:3px 0; font-size:14px' },
           el('span', { style: 'font-size:16px' }, T[g.t] ? T[g.t].flag : ''),
           el('span', { class: 'num', style: 'min-width:46px; color:var(--blue); font-weight:700; font-variant-numeric:tabular-nums' }, g.m || ''),
@@ -6749,7 +6751,25 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
 
   // ---------- live overlay: the page keeps itself current during match windows ----------
   let liveNow = {};   // matchId -> {g1, g2, clock} display-only; finals flow through localOv
+  let liveGoals = {}; // matchId -> [goal,...] from the ESPN summary, fetched only for in-play matches
   const etDate = m => m.dateET.slice(0, 10).replace(/-/g, '');   // dateET already carries the Eastern offset
+
+  // Parse ESPN summary keyEvents into our compact goal shape (mirrors fetch_goals.py).
+  function parseEspnGoals(summary, ids) {
+    const out = [];
+    for (const k of ((summary && summary.keyEvents) || [])) {
+      if (!k.scoringPlay) continue;
+      const ttext = (k.type && k.type.text) || '';
+      const code = ids[String((k.team && k.team.id) || '')];
+      const scorer = k.participants && k.participants[0] && k.participants[0].athlete && k.participants[0].athlete.displayName;
+      if (!code || !scorer) continue;
+      const g = { t: code, p: scorer, m: (k.clock && k.clock.displayValue) || '' };
+      if (ttext.indexOf('Penalty') !== -1) g.pen = true;
+      if (ttext.indexOf('Own') !== -1) g.og = true;
+      out.push(g);
+    }
+    return out;
+  }
 
   async function pollLive() {
     // only bother when a fixture is near: kickoff within the last 4h or the next hour
@@ -6767,6 +6787,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       const js = await r.json();
       const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
       const fresh = {};
+      const inPlay = [];
       let finals = 0;
       for (const e of (js.events || [])) {
         const st = e.status && e.status.type;
@@ -6780,15 +6801,26 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
         if (!match) continue;
         if (st.state === 'in') {
           fresh[match.id] = { g1: sc[match.team1], g2: sc[match.team2], clock: st.shortDetail || '' };
+          inPlay.push([match.id, e.id]);
         } else if (st.name === 'STATUS_FULL_TIME' && st.completed && !localOv[match.id]) {
           const g1 = sc[match.team1], g2 = sc[match.team2];
           if (g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15) { localOv[match.id] = [g1, g2]; finals++; }
         }
       }
+      // live goals: hit the ESPN summary only for the in-play match(es), this poll only —
+      // so the scorer feed runs during a match and is silent the rest of the time.
+      let goalsChanged = false;
+      for (const [mid, eid] of inPlay) {
+        try {
+          const sr = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=' + eid);
+          const g = parseEspnGoals(await sr.json(), ids);
+          if (JSON.stringify(g) !== JSON.stringify(liveGoals[mid])) { liveGoals[mid] = g; goalsChanged = true; }
+        } catch (e) { /* best-effort */ }
+      }
       const changedLive = JSON.stringify(fresh) !== JSON.stringify(liveNow);
       liveNow = fresh;
       if (finals) { lsSet(LS.ov, localOv); refresh(); toast(finals + ' final score' + (finals === 1 ? '' : 's') + ' came in; probabilities recomputed.'); }
-      else if (changedLive) { renderHeader(); renderTab(); }
+      else if (changedLive || goalsChanged) { renderHeader(); renderTab(); }
     } catch (err) { /* silent: the live overlay is best-effort */ }
   }
   setInterval(pollLive, 180000);
