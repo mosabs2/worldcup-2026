@@ -4196,8 +4196,172 @@ const WC_DATA = {
     "pens": 0
    }
   ],
-  "topAssists": [],
-  "teamCards": [],
+  "topAssists": [
+   {
+    "player": "Alexander Isak",
+    "team": "SWE",
+    "assists": 2,
+    "goals": 1
+   },
+   {
+    "player": "Deniz Undav",
+    "team": "GER",
+    "assists": 2,
+    "goals": 1
+   },
+   {
+    "player": "Joshua Kimmich",
+    "team": "GER",
+    "assists": 2,
+    "goals": 0
+   },
+   {
+    "player": "Ryan Gravenberch",
+    "team": "NED",
+    "assists": 2,
+    "goals": 0
+   },
+   {
+    "player": "Hwang In-beom",
+    "team": "KOR",
+    "assists": 1,
+    "goals": 1
+   },
+   {
+    "player": "Nathaniel Brown",
+    "team": "GER",
+    "assists": 1,
+    "goals": 1
+   },
+   {
+    "player": "Viktor Gyökeres",
+    "team": "SWE",
+    "assists": 1,
+    "goals": 1
+   },
+   {
+    "player": "Alexander Freeman",
+    "team": "USA",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Brahim Díaz",
+    "team": "MAR",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Bruno Guimarães",
+    "team": "BRA",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Christian Pulišić",
+    "team": "USA",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Erik Lira",
+    "team": "MEX",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Florian Wirtz",
+    "team": "GER",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Hannibal Mejbri",
+    "team": "TUN",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Julio Enciso",
+    "team": "PAR",
+    "assists": 1,
+    "goals": 0
+   }
+  ],
+  "teamCards": [
+   {
+    "team": "RSA",
+    "yellow": 2,
+    "red": 2,
+    "points": 8
+   },
+   {
+    "team": "PAR",
+    "yellow": 5,
+    "red": 0,
+    "points": 5
+   },
+   {
+    "team": "MEX",
+    "yellow": 1,
+    "red": 1,
+    "points": 4
+   },
+   {
+    "team": "CIV",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
+    "team": "NED",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
+    "team": "SCO",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
+    "team": "BIH",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
+    "team": "BRA",
+    "yellow": 2,
+    "red": 0,
+    "points": 2
+   },
+   {
+    "team": "QAT",
+    "yellow": 2,
+    "red": 0,
+    "points": 2
+   },
+   {
+    "team": "CAN",
+    "yellow": 2,
+    "red": 0,
+    "points": 2
+   },
+   {
+    "team": "TUN",
+    "yellow": 1,
+    "red": 0,
+    "points": 1
+   },
+   {
+    "team": "ECU",
+    "yellow": 1,
+    "red": 0,
+    "points": 1
+   }
+  ],
   "teamGoals": [
    {
     "team": "GER",
@@ -4248,7 +4412,7 @@ const WC_DATA = {
     "goals": 1
    }
   ],
-  "note": "Golden Boot from shot data; team goals from results. Assists, cards, MENA and host props resolve over the tournament."
+  "note": "Golden Boot from shot data; assists and cards from official player stats (may lag a match); team goals from results. MENA and host props resolve on the bracket."
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };
