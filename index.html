@@ -6504,5 +6504,33 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
 })();
 
 </script>
+<script>
+// Register the service worker for seamless background updates. Network-first
+// (see sw.js) keeps the app fresh whenever online; this also auto-reloads once
+// when a new worker takes over, and re-checks for updates whenever the app is
+// brought back to the foreground (the case that matters for iOS home-screen apps).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').then(function (reg) {
+      var updatePending = false, refreshing = false;
+      reg.addEventListener('updatefound', function () {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', function () {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) updatePending = true;
+        });
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (updatePending && !refreshing) { refreshing = true; location.reload(); }
+      });
+      // re-check on foreground (reopened standalone app) and shortly after load
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') reg.update().catch(function () {});
+      });
+      setTimeout(function () { reg.update().catch(function () {}); }, 3000);
+    }).catch(function () {});
+  });
+}
+</script>
 </body>
 </html>
