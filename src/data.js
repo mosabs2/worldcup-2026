@@ -3180,6 +3180,29 @@ const WC_DATA = {
     ],
     "c": "BRA",
     "locked": "2026-06-14"
+   },
+   {
+    "n": "AD",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "JPN",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "FRA",
+     "POR"
+    ],
+    "c": "FRA",
+    "locked": "2026-06-15"
    }
   ],
   "scoring": {
@@ -3595,9 +3618,26 @@ const WC_DATA = {
     "tg": 230,
     "n": "Salem Athbi",
     "locked": "2026-06-14"
+   },
+   {
+    "gb": {
+     "p": "Kylian Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Lamine Yamal",
+     "t": "ESP"
+    },
+    "cards": "ENG",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "USA",
+    "tg": 235,
+    "n": "Rashed",
+    "locked": "2026-06-15"
    }
   ],
-  "propsDeadline": "16 June 2026"
+  "propsDeadline": "Open — TBC"
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };

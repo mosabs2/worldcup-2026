@@ -3494,6 +3494,29 @@ const WC_DATA = {
     ],
     "c": "BRA",
     "locked": "2026-06-14"
+   },
+   {
+    "n": "AD",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "JPN",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "FRA",
+     "POR"
+    ],
+    "c": "FRA",
+    "locked": "2026-06-15"
    }
   ],
   "scoring": {
@@ -3909,9 +3932,26 @@ const WC_DATA = {
     "tg": 230,
     "n": "Salem Athbi",
     "locked": "2026-06-14"
+   },
+   {
+    "gb": {
+     "p": "Kylian Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Lamine Yamal",
+     "t": "ESP"
+    },
+    "cards": "ENG",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "USA",
+    "tg": 235,
+    "n": "Rashed",
+    "locked": "2026-06-15"
    }
   ],
-  "propsDeadline": "16 June 2026"
+  "propsDeadline": "Open — TBC"
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };
@@ -5077,7 +5117,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     // ---------- round 2: the props ----------
     root.append(el('h2', { class: 'section' }, 'Round 2 — The Props'));
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, 'entries close ' + (D.league.propsDeadline || '16 June') + ', 23:59 Kuwait')),
+      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, (function(){ var d = D.league.propsDeadline || '16 June'; return /open|tbc/i.test(d) ? 'entries open — deadline TBC' : 'entries close ' + d + ', 23:59 Kuwait'; })())),
       el('p', { class: 'muted' },
         'Separate from the main league, separate prizes, everyone starts equal. Pick the Golden Boot winner, the top assist provider, the team that collects the most cards (the Dirty Trophy), the team that scores the most goals, the MENA side that goes furthest, and the host nation that survives longest. Your total-goals number doubles as the official tiebreaker for the main league. Send the code to Mohammed as before.')));
 

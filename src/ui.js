@@ -594,7 +594,7 @@
     // ---------- round 2: the props ----------
     root.append(el('h2', { class: 'section' }, 'Round 2 — The Props'));
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, 'entries close ' + (D.league.propsDeadline || '16 June') + ', 23:59 Kuwait')),
+      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, (function(){ var d = D.league.propsDeadline || '16 June'; return /open|tbc/i.test(d) ? 'entries open — deadline TBC' : 'entries close ' + d + ', 23:59 Kuwait'; })())),
       el('p', { class: 'muted' },
         'Separate from the main league, separate prizes, everyone starts equal. Pick the Golden Boot winner, the top assist provider, the team that collects the most cards (the Dirty Trophy), the team that scores the most goals, the MENA side that goes furthest, and the host nation that survives longest. Your total-goals number doubles as the official tiebreaker for the main league. Send the code to Mohammed as before.')));
 
