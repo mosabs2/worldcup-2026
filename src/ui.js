@@ -249,7 +249,7 @@
   // ---------- tabs ----------
   const tabs = [
     ['today', 'Today'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Bracket'],
-    ['teams', 'Teams'], ['mena', 'MENA'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
+    ['teams', 'Teams'], ['mena', 'MENA'], ['join', 'Join'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About']];
 
   function renderToday(root) {
@@ -461,7 +461,7 @@
   function encodeEntry(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, ''); }
   function decodeEntry(s) { return JSON.parse(decodeURIComponent(escape(atob(s.trim())))); }
 
-  function renderLeague(root) {
+  function renderJoin(root) {
     const sc = D.league.scoring;
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
       el('h3', null, 'How it works'),
@@ -519,6 +519,70 @@
         }, 'Generate code')),
       out));
 
+    // ---------- round 2: the props ----------
+    root.append(el('h2', { class: 'section' }, 'Round 2 — The Props'));
+    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
+      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, (function(){ var d = D.league.propsDeadline || '16 June'; return /open|tbc/i.test(d) ? 'entries open — deadline TBC' : 'entries close ' + d + ', 23:59 Kuwait'; })())),
+      el('p', { class: 'muted' },
+        'Separate from the main league, separate prizes, everyone starts equal. Pick the Golden Boot winner, the top assist provider, the team that collects the most cards (the Dirty Trophy), the team that scores the most goals, the MENA side that goes furthest, and the host nation that survives longest. Your total-goals number doubles as the official tiebreaker for the main league. Send the code to Mohammed as before.')));
+
+    const pName = el('input', { placeholder: 'Your name (same as your main entry)', style: 'min-width:220px' });
+    const teamOpts = sel => [el('option', { value: '' }, '— choose —')]
+      .concat(D.teams.slice().sort((a, b) => a.name.localeCompare(b.name)).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
+    const gbP = el('input', { placeholder: 'Player name' }), gbT = el('select', null, teamOpts());
+    const asP = el('input', { placeholder: 'Player name' }), asT = el('select', null, teamOpts());
+    const cardsT = el('select', null, teamOpts());
+    const goalsT = el('select', null, teamOpts());
+    const menaT = el('select', null, [el('option', { value: '' }, '— choose —')]
+      .concat(D.mena.map(c => el('option', { value: c }, T[c].flag + ' ' + T[c].name))));
+    const hostT = el('select', null, [el('option', { value: '' }, '— choose —')]
+      .concat(['MEX', 'USA', 'CAN'].map(c => el('option', { value: c }, T[c].flag + ' ' + T[c].name))));
+    const tg = el('input', { type: 'number', min: 50, max: 400, placeholder: 'e.g. 172', style: 'width:110px' });
+    const pOut = el('div');
+    const row = (label, ...controls) => el('div', { class: 'formrow' }, el('span', { class: 'muted', style: 'min-width:190px' }, label), ...controls);
+    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
+      el('h3', null, 'Make your props picks'),
+      el('div', { class: 'formrow' }, pName),
+      row('Golden Boot (top scorer)', gbP, gbT),
+      row('Most assists', asP, asT),
+      row('Dirty Trophy (most cards)', cardsT),
+      row('Top-scoring team', goalsT),
+      row('Best MENA run', menaT),
+      row('Furthest host', hostT),
+      row('Total tournament goals (tiebreaker)', tg),
+      el('div', { class: 'formrow' }, el('button', {
+        class: 'btn', onclick: () => {
+          const fail = msg => pOut.replaceChildren(el('p', { class: 'muted' }, msg));
+          if (!pName.value.trim()) return fail('Add your name first.');
+          if (!gbP.value.trim() || !gbT.value) return fail('Golden Boot needs a player name and his team.');
+          if (!asP.value.trim() || !asT.value) return fail('Most assists needs a player name and his team.');
+          if (!cardsT.value || !goalsT.value || !menaT.value || !hostT.value) return fail('Pick a team for every category.');
+          const n = parseInt(tg.value, 10);
+          if (isNaN(n) || n < 50 || n > 400) return fail('Total goals needs a number between 50 and 400 — there are 104 matches.');
+          const code = encodeEntry({
+            v: 2, t: 'props', n: pName.value.trim(),
+            gb: { p: gbP.value.trim(), t: gbT.value }, as: { p: asP.value.trim(), t: asT.value },
+            cards: cardsT.value, goals: goalsT.value, mena: menaT.value, host: hostT.value, tg: n,
+          });
+          pOut.replaceChildren(
+            el('code', { class: 'codebox' }, code),
+            el('div', { class: 'formrow', style: 'margin-top:8px' },
+              el('button', { class: 'btn small ghost', onclick: () => navigator.clipboard.writeText(code) }, 'Copy code'),
+              el('a', { class: 'btn small', href: 'https://wa.me/?text=' + encodeURIComponent('My World Cup props: ' + code), target: '_blank', style: 'display:inline-block;text-decoration:none' }, 'Share on WhatsApp')));
+        }
+      }, 'Generate props code')),
+      pOut));
+
+    root.append(el('p', { class: 'muted', style: 'margin-top:14px' },
+      'Sent your code? Watch the standings, the selections board and the live props race on the ', el('b', null, 'League'), ' tab.'));
+  }
+
+  function renderLeague(root) {
+    const sc = D.league.scoring;
+    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
+      el('p', { class: 'muted', style: 'margin:0' },
+        'Not entered yet? Make your picks on the ', el('b', null, 'Join'), ' tab, then send Mohammed the code.')));
+
     // import + leaderboard
     const ta = el('textarea', { placeholder: 'Paste one or more codes, one per line' });
     root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
@@ -546,7 +610,7 @@
     const pubNames = new Set((D.league.entries || []).map(e => e.n.toLowerCase()));
     const entries = (D.league.entries || []).map(e => ({ ...e, src: 'published' }))
       .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())).map(e => ({ ...e, src: 'local' })));
-    if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Generate picks above and send the code round.')); return; }
+    if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Make your picks on the Join tab and send the code round.')); return; }
     const resolved = E.resolvedOutcomes(effData());
     const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
     const elim = c => {
@@ -622,60 +686,6 @@
           rows.map(r => cell(r.e.c, null))))),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
         'Green: called it. Red: pick eliminated or group went elsewhere. Locked dates show when each entry reached the published board.')));
-
-    // ---------- round 2: the props ----------
-    root.append(el('h2', { class: 'section' }, 'Round 2 — The Props'));
-    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, (function(){ var d = D.league.propsDeadline || '16 June'; return /open|tbc/i.test(d) ? 'entries open — deadline TBC' : 'entries close ' + d + ', 23:59 Kuwait'; })())),
-      el('p', { class: 'muted' },
-        'Separate from the main league, separate prizes, everyone starts equal. Pick the Golden Boot winner, the top assist provider, the team that collects the most cards (the Dirty Trophy), the team that scores the most goals, the MENA side that goes furthest, and the host nation that survives longest. Your total-goals number doubles as the official tiebreaker for the main league. Send the code to Mohammed as before.')));
-
-    const pName = el('input', { placeholder: 'Your name (same as your main entry)', style: 'min-width:220px' });
-    const teamOpts = sel => [el('option', { value: '' }, '— choose —')]
-      .concat(D.teams.slice().sort((a, b) => a.name.localeCompare(b.name)).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
-    const gbP = el('input', { placeholder: 'Player name' }), gbT = el('select', null, teamOpts());
-    const asP = el('input', { placeholder: 'Player name' }), asT = el('select', null, teamOpts());
-    const cardsT = el('select', null, teamOpts());
-    const goalsT = el('select', null, teamOpts());
-    const menaT = el('select', null, [el('option', { value: '' }, '— choose —')]
-      .concat(D.mena.map(c => el('option', { value: c }, T[c].flag + ' ' + T[c].name))));
-    const hostT = el('select', null, [el('option', { value: '' }, '— choose —')]
-      .concat(['MEX', 'USA', 'CAN'].map(c => el('option', { value: c }, T[c].flag + ' ' + T[c].name))));
-    const tg = el('input', { type: 'number', min: 50, max: 400, placeholder: 'e.g. 172', style: 'width:110px' });
-    const pOut = el('div');
-    const row = (label, ...controls) => el('div', { class: 'formrow' }, el('span', { class: 'muted', style: 'min-width:190px' }, label), ...controls);
-    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
-      el('h3', null, 'Make your props picks'),
-      el('div', { class: 'formrow' }, pName),
-      row('Golden Boot (top scorer)', gbP, gbT),
-      row('Most assists', asP, asT),
-      row('Dirty Trophy (most cards)', cardsT),
-      row('Top-scoring team', goalsT),
-      row('Best MENA run', menaT),
-      row('Furthest host', hostT),
-      row('Total tournament goals (tiebreaker)', tg),
-      el('div', { class: 'formrow' }, el('button', {
-        class: 'btn', onclick: () => {
-          const fail = msg => pOut.replaceChildren(el('p', { class: 'muted' }, msg));
-          if (!pName.value.trim()) return fail('Add your name first.');
-          if (!gbP.value.trim() || !gbT.value) return fail('Golden Boot needs a player name and his team.');
-          if (!asP.value.trim() || !asT.value) return fail('Most assists needs a player name and his team.');
-          if (!cardsT.value || !goalsT.value || !menaT.value || !hostT.value) return fail('Pick a team for every category.');
-          const n = parseInt(tg.value, 10);
-          if (isNaN(n) || n < 50 || n > 400) return fail('Total goals needs a number between 50 and 400 — there are 104 matches.');
-          const code = encodeEntry({
-            v: 2, t: 'props', n: pName.value.trim(),
-            gb: { p: gbP.value.trim(), t: gbT.value }, as: { p: asP.value.trim(), t: asT.value },
-            cards: cardsT.value, goals: goalsT.value, mena: menaT.value, host: hostT.value, tg: n,
-          });
-          pOut.replaceChildren(
-            el('code', { class: 'codebox' }, code),
-            el('div', { class: 'formrow', style: 'margin-top:8px' },
-              el('button', { class: 'btn small ghost', onclick: () => navigator.clipboard.writeText(code) }, 'Copy code'),
-              el('a', { class: 'btn small', href: 'https://wa.me/?text=' + encodeURIComponent('My World Cup props: ' + code), target: '_blank', style: 'display:inline-block;text-decoration:none' }, 'Share on WhatsApp')));
-        }
-      }, 'Generate props code')),
-      pOut));
 
     const props = (D.league.props || []);
     if (props.length) {
@@ -1153,7 +1163,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
     ({
       today: renderToday, matches: renderMatches, groups: renderGroups, bracket: renderBracket,
-      teams: renderTeams, mena: renderMena, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
+      teams: renderTeams, mena: renderMena, join: renderJoin, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
       venues: renderVenues, model: renderModel, about: renderAbout,
     })[activeTab](root);
     window.scrollTo(0, 0);
