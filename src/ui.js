@@ -114,6 +114,7 @@
            : live ? el('div', { class: 'score' }, live.g1 + ' – ' + live.g2)
            : el('div', { class: 'vs' }, 'v'),
         el('div', { class: 'team away' }, T[m.team2].name, el('span', { class: 'fl' }, T[m.team2].flag))),
+      (sc && m.xg) ? el('div', { class: 'xg-line' }, el('span', { class: 'lab' }, 'xG '), m.xg.team1.toFixed(2) + ' – ' + m.xg.team2.toFixed(2)) : null,
       (sc || live) ? null : pbarRow(p),
       el('div', { class: 'meta' }, tag,
         el('span', null, 'Group ' + m.group),
@@ -130,6 +131,22 @@
     document.body.append(bg);
   }
   function closeModal() { document.querySelectorAll('.modal-bg').forEach(n => n.remove()); }
+
+  // Plain-language read of actual xG against the scoreline (played games).
+  function xgRead(m, sc) {
+    const x1 = m.xg.team1, x2 = m.xg.team2, g1 = sc.team1, g2 = sc.team2;
+    const c1 = T[m.team1].code, c2 = T[m.team2].code;
+    const xgFav = x1 > x2 + 0.3 ? c1 : x2 > x1 + 0.3 ? c2 : null;
+    const winner = g1 > g2 ? c1 : g2 > g1 ? c2 : null;
+    if (winner && xgFav && winner !== xgFav)
+      return 'The chances favoured ' + xgFav + ' (' + Math.max(x1, x2).toFixed(2) + ' xG); the scoreline flattered ' + winner + '.';
+    if ((g1 - x1) >= 1.5 || (g2 - x2) >= 1.5) {
+      const c = (g1 - x1) >= (g2 - x2) ? c1 : c2;
+      const gg = c === c1 ? g1 : g2, xx = c === c1 ? x1 : x2;
+      return c + ' scored ' + gg + ' from ' + xx.toFixed(2) + ' xG — clinical finishing on a flattering margin.';
+    }
+    return 'The scoreline broadly matched the chances created.';
+  }
 
   function matchModal(m) {
     const p = odds(m);
@@ -148,11 +165,19 @@
         el('b', null, 'Market line'), ' (' + (m.market.book || 'closing') + ', vig removed): ' +
         pct(m.market.h) + ' ' + T[m.team1].code + ' / ' + pct(m.market.x) + ' draw / ' + pct(m.market.a) + ' ' + T[m.team2].code +
         '. Shown for comparison; the model runs on its own ratings.') : null,
-      m.xg ? el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Actual xG (shot data): ' + m.xg.team1.toFixed(2) + ' – ' + m.xg.team2.toFixed(2) +
-        ' · model xG (rating-derived): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)) :
-        el('p', { class: 'tiny', style: 'margin-top:8px' },
-          'Model xG (synthetic, derived from current Elo ratings, not shot data): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)),
+      m.xg ? el('h2', { class: 'section' }, 'Expected goals (xG) — from shot data') : null,
+      m.xg ? (function () {
+        const x1 = m.xg.team1, x2 = m.xg.team2, mx = Math.max(x1, x2, 0.1);
+        const row = (code, goals, xg) => el('div', { class: 'frow' },
+          el('span', { class: 'fl-label' }, T[code].flag + ' ' + T[code].name + (goals != null ? '  ·  ' + goals + ' scored' : '')),
+          el('div', { class: 'hbar' }, el('div', { style: 'width:' + (xg / mx * 100) + '%' })),
+          el('span', { class: 'num' }, xg.toFixed(2)));
+        return el('div', { class: 'xg-block' }, row(m.team1, sc ? sc.team1 : null, x1), row(m.team2, sc ? sc.team2 : null, x2));
+      })() : null,
+      m.xg && sc ? el('p', { class: 'tiny', style: 'margin-top:6px' }, xgRead(m, sc)) : null,
+      el('p', { class: 'tiny', style: 'margin-top:8px' },
+        m.xg ? 'Model xG (rating-derived, for comparison): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)
+             : 'Model xG (synthetic, derived from current Elo ratings, not shot data): ' + p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2)),
       el('h2', { class: 'section' }, 'Most likely scorelines'),
       el('div', { class: 'funnel' }, tops.map(s => el('div', { class: 'frow' },
         el('span', { class: 'fl-label' }, s.s),
