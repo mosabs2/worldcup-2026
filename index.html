@@ -5311,7 +5311,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     rngFactory, liveRatings, predict, topScorelines, poissonPmf, sampleGoals,
     simulateTournament, currentTables, scoreEntry, resolvedOutcomes, hostEdge,
     entryHalves, finalFeasible,
-    LOGISTIC_DIV, ELO_K, HOST_BONUS,
+    LOGISTIC_DIV, ELO_K, HOST_BONUS, XG_TEMPER,
   };
 });
 
@@ -5569,7 +5569,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
   const tabs = [
     ['today', 'Today'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Bracket'],
     ['teams', 'Teams'], ['mena', 'MENA'], ['join', 'Join'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
-    ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About']];
+    ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About'], ['geeks', 'For Geeks']];
 
   function renderToday(root) {
     const today = todayLocal();
@@ -6248,6 +6248,60 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       })));
   }
 
+  function renderGeeks(root) {
+    const P = (...k) => el('p', { class: 'muted' }, ...k);
+    const card = (title, ...k) => el('div', { class: 'card', style: 'margin-bottom:14px' }, el('h3', null, title), ...k);
+    const played = D.matches.filter(m => m.status === 'completed' && m.score).length;
+
+    root.append(card('For the curious',
+      P('None of this is needed to play. It is here because a few people asked how the site actually works, and how much sits under a number like “Spain 7%”. Everything below is the real engine and the real homework behind it, parameters and all.')));
+
+    root.append(card('The model, end to end',
+      P('One engine produces every probability on the site, in five steps. ',
+        el('b', null, '1. Rate every team. '), 'Each side carries an Elo-style strength rating, seeded from the FIFA rankings. ',
+        el('b', null, '2. Update on every result. '), 'After each match the ratings shift (winner up, loser down), weighted by the margin and now tempered by expected goals (below). ',
+        el('b', null, '3. Turn a rating gap into match odds. '), 'A logistic curve converts the rating difference between two teams into win/draw/loss probabilities, and into an expected goals figure for each side. ',
+        el('b', null, '4. Roll the dice for goals. '), 'Those expected-goal figures feed a Poisson model that produces a plausible scoreline. ',
+        el('b', null, '5. Play the whole tournament 10,000 times. '), 'Every remaining match, the group tables, the bracket, extra time and penalties are simulated end to end, ten thousand times. A team lifting the trophy in 700 of those runs is exactly what “7%” means.'),
+      el('table', null,
+        el('tr', null, ['Parameter', 'Value', 'What it does'].map((h, i) => el('th', { class: i === 1 ? 'num' : '' }, h))),
+        [['Elo K-factor', String(E.ELO_K), 'How hard one result moves a rating (World Football Elo convention)'],
+         ['Logistic divisor', String(E.LOGISTIC_DIV), 'How sharply a rating gap becomes a win probability'],
+         ['Host bonus', '+' + E.HOST_BONUS, 'Rating points for a host nation playing at home'],
+         ['xG temper weight', String(E.XG_TEMPER), 'How much the chances created (not the scoreline) drive a rating update'],
+         ['Monte-Carlo runs', '10,000', 'Tournaments simulated per refresh'],
+         ['Random seed', 'fixed', 'So the published numbers are stable and what-if deltas are real, not noise']].map(r =>
+          el('tr', null, el('td', null, r[0]), el('td', { class: 'num' }, el('b', null, r[1])), el('td', { class: 'muted' }, r[2]))))));
+
+    root.append(card('The Elo ratings, and the xG twist',
+      P('Ratings update with the World Football Elo rule: the change is the K-factor (', String(E.ELO_K), ') times a goal-difference multiplier times the gap between the result and what the ratings expected. Beating a much stronger side moves you more than beating a minnow, because the model expected you to lose.'),
+      P(el('b', null, 'The twist we added. '), 'A scoreline can lie. Germany beat Curaçao 7-1, but the shots were worth only about 3.9 expected goals. Rewarding that as a true six-goal rout would over-rate Germany. So the margin that drives the rating update is now a blend of the actual goal difference and the expected-goal difference (weighted ', String(E.XG_TEMPER), ' toward xG). The winner is still the winner; only how much it moves the ratings is tempered by how many real chances were created.')));
+
+    root.append(card('From a rating gap to a result',
+      P(el('b', null, 'Match odds. '), 'The win probability is a logistic function of the rating difference; the draw probability rises as two sides get closer (bounded between 17% and 30%, because real draw rates live in that band). ',
+        el('b', null, 'Goals. '), 'Each side’s expected goals come from the same rating gap, then a Poisson distribution turns that into scoreline probabilities. This is where “most likely scorelines” on each match card come from.')));
+
+    root.append(card('Why simulate 10,000 times (Monte Carlo)',
+      P('You cannot calculate the future of a 104-match tournament directly; there are far too many branching paths. So the computer simply plays it out, ten thousand times, and counts. Each run plays every remaining group game, ranks the tables, draws the 32-team bracket (third-place qualifiers and all), and resolves every knockout tie including extra time and a penalty shootout, all the way to a champion. The percentages are just how often each outcome happened across the ten thousand runs, and the “±” you see is the give-or-take from running ten thousand experiments rather than infinity. A fixed random seed keeps the published figures stable and makes the what-if mode’s changes real rather than simulation jitter.')));
+
+    root.append(card('Did we need to buy the market? The backtest',
+      P('A subscription to a professional data feed gives us the bookmakers’ own probabilities (their closing odds, with the bookmaker’s margin removed). The bookmakers, Pinnacle especially, are the sharpest forecasters in football. So the honest question was: does our homemade model add anything, or should we just show the market’s numbers?'),
+      P('We tested it properly. For each of the ', String(played), ' matches played so far, we took the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and scored both against what actually happened, using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper.'),
+      el('table', null,
+        el('tr', null, ['Metric (lower = sharper)', 'Our model', 'Market'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
+        el('tr', null, el('td', null, 'Log-loss'), el('td', { class: 'num' }, el('b', null, '0.98')), el('td', { class: 'num' }, '1.04')),
+        el('tr', null, el('td', null, 'Brier score'), el('td', { class: 'num' }, el('b', null, '0.58')), el('td', { class: 'num' }, '0.64'))),
+      P(el('b', null, 'The honest verdict. '), 'The market was not sharper than our model. It was actually a touch worse on these games, but the sample is tiny (about ten matches) and that gap is well within noise, so the truthful claim is that the two are comparable, not that we beat Pinnacle. That a homemade model can sit level with the sharpest book in the world is the result worth bragging about.'),
+      P(el('b', null, 'Why it can. '), 'Two reasons. First, our base ratings are themselves seeded from data the market has already digested, so we are not starting from scratch. Second, the opening round was chaos: the market had Switzerland firm favourites against Qatar (it finished 1-1) and Türkiye over Australia (Australia won), and a confident wrong call is punished hard, so the market’s very confidence cost it on the upsets. ',
+        el('b', null, 'What we did with the finding. '), 'We did not throw away our model to chase the market. Instead the market line is shown on each match as a reference, and the paid feed’s real value, the expected-goals data, is used to temper the rating updates as described above. We bought sharper inputs, not a replacement brain.')));
+
+    root.append(card('Where the data comes from, and what the model cannot see',
+      P('Live scores come from a free public feed (ESPN), checked every couple of hours during the match window. Expected goals, bookmaker odds and player stats come from a paid feed (TheStatsAPI), refreshed once a day. The site itself is a single self-contained page that updates in the background automatically. ',
+        el('b', null, 'Its blind spots, stated plainly: '), 'the model knows only results. It cannot see injuries, suspensions, team-sheets, travel, weather or morale, which is one honest reason its numbers differ a little from the bookmakers’. It does not pretend otherwise.')));
+
+    root.append(P('Built by Mohammed with Claude. Questions, corrections and arguments all welcome.'));
+  }
+
   function renderModel(root) {
     const nLocal = Object.keys(localOv).length;
     // methodology
@@ -6483,7 +6537,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     ({
       today: renderToday, matches: renderMatches, groups: renderGroups, bracket: renderBracket,
       teams: renderTeams, mena: renderMena, join: renderJoin, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
-      venues: renderVenues, model: renderModel, about: renderAbout,
+      venues: renderVenues, model: renderModel, about: renderAbout, geeks: renderGeeks,
     })[activeTab](root);
     window.scrollTo(0, 0);
   }

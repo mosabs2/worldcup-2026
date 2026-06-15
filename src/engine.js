@@ -370,6 +370,6 @@
     rngFactory, liveRatings, predict, topScorelines, poissonPmf, sampleGoals,
     simulateTournament, currentTables, scoreEntry, resolvedOutcomes, hostEdge,
     entryHalves, finalFeasible,
-    LOGISTIC_DIV, ELO_K, HOST_BONUS,
+    LOGISTIC_DIV, ELO_K, HOST_BONUS, XG_TEMPER,
   };
 });
