@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-16",
-  "asOfNote": "Results through 16 matches, auto-synced from the ESPN public feed 2026-06-16 05:40 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 17 matches, auto-synced from the ESPN public feed 2026-06-16 21:52 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1400,14 +1400,40 @@ const WC_DATA = {
    "team1": "FRA",
    "team2": "SEN",
    "venueId": "NYNJ",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 1
+   },
    "market": {
     "h": 0.6583,
     "x": 0.2109,
     "a": 0.1308,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "FRA",
+     "p": "Kylian Mbappé",
+     "m": "66'"
+    },
+    {
+     "t": "FRA",
+     "p": "Bradley Barcola",
+     "m": "82'"
+    },
+    {
+     "t": "SEN",
+     "p": "Ibrahim Mbaye",
+     "m": "90'+5'"
+    },
+    {
+     "t": "FRA",
+     "p": "Kylian Mbappé",
+     "m": "90'+6'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M018",
