@@ -116,9 +116,11 @@
         el('div', { class: 'team away' }, T[m.team2].name, el('span', { class: 'fl' }, T[m.team2].flag))),
       (sc && m.xg)
         ? el('div', { class: 'xg-line' }, el('span', { class: 'lab' }, 'xG actual '), m.xg.team1.toFixed(2) + ' – ' + m.xg.team2.toFixed(2))
-        : (p && p.xg1 != null)
-          ? el('div', { class: 'xg-line xg-exp' }, el('span', { class: 'lab' }, 'xG expected '), p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2))
-          : null,
+        : sc
+          ? el('div', { class: 'xg-line xg-pending' }, el('span', { class: 'lab' }, 'xG actual '), 'updating…')
+          : (p && p.xg1 != null)
+            ? el('div', { class: 'xg-line xg-exp' }, el('span', { class: 'lab' }, 'xG expected '), p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2))
+            : null,
       (sc || live) ? null : pbarRow(p),
       el('div', { class: 'meta' }, tag,
         el('span', null, 'Group ' + m.group),

@@ -30,10 +30,16 @@ jobs:
           STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
         run: python3 scripts/fetch_statsapi.py
 
+      # Time-bounded and non-fatal: this assists/cards harvest is heavy on the
+      # rate-limited Starter tier and has hung past the 50-min job timeout, which
+      # previously cancelled the whole job and lost the xG enrich from the step
+      # above. Cap it at 12 min and never let it block the model recompute, the
+      # site rebuild, or the commit/publish that follow.
       - name: Rebuild props race (full — assists + cards)
+        continue-on-error: true
         env:
           STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
-        run: python3 scripts/fetch_props.py --full
+        run: timeout 720 python3 scripts/fetch_props.py --full || echo "props harvest timed out or failed — skipping; xG + model still publish"
 
       - name: Recompute model and timeline snapshot
         run: node update.js --date "$(date -u +%F)"
