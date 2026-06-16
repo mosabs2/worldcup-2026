@@ -1,0 +1,11 @@
+{
+  "_comment": "THE ASSET. This is the only file the auto-research agent is allowed to edit. Values seeded at the current engine.js constants. Only these eight globals are tunable; team base ratings are frozen (48 free params on 14 games = guaranteed overfit).",
+  "ELO_K": 40,
+  "LOGISTIC_DIV": 420,
+  "HOST_BONUS": 55,
+  "XG_TEMPER": 0.6,
+  "DRAW_BASE": 0.27,
+  "DRAW_DIV": 2600,
+  "DRAW_FLOOR": 0.17,
+  "DRAW_CEIL": 0.30
+}
