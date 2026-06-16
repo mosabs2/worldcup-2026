@@ -1258,13 +1258,17 @@ const WC_DATA = {
     "team2": 0
    },
    "market": {
-    "h": 0.8995,
-    "x": 0.072,
-    "a": 0.0286,
+    "h": 0.886,
+    "x": 0.075,
+    "a": 0.039,
     "book": "Pinnacle"
    },
    "goals": [],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.31,
+    "team2": 0.3
+   }
   },
   {
    "id": "M014",
@@ -1280,9 +1284,9 @@ const WC_DATA = {
     "team2": 1
    },
    "market": {
-    "h": 0.6022,
-    "x": 0.2391,
-    "a": 0.1586,
+    "h": 0.6347,
+    "x": 0.2247,
+    "a": 0.1406,
     "book": "Pinnacle"
    },
    "goals": [
@@ -1298,7 +1302,11 @@ const WC_DATA = {
      "og": true
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.42,
+    "team2": 1.08
+   }
   },
   {
    "id": "M015",
@@ -1314,9 +1322,9 @@ const WC_DATA = {
     "team2": 1
    },
    "market": {
-    "h": 0.115,
-    "x": 0.2197,
-    "a": 0.6652,
+    "h": 0.1194,
+    "x": 0.2277,
+    "a": 0.6528,
     "book": "Pinnacle"
    },
    "goals": [
@@ -1331,7 +1339,11 @@ const WC_DATA = {
      "m": "80'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.1,
+    "team2": 1.6
+   }
   },
   {
    "id": "M016",
@@ -1347,9 +1359,9 @@ const WC_DATA = {
     "team2": 2
    },
    "market": {
-    "h": 0.5118,
-    "x": 0.2842,
-    "a": 0.2041,
+    "h": 0.5244,
+    "x": 0.274,
+    "a": 0.2015,
     "book": "Pinnacle"
    },
    "goals": [
@@ -1374,7 +1386,11 @@ const WC_DATA = {
      "m": "64'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.43,
+    "team2": 1.23
+   }
   },
   {
    "id": "M017",
@@ -1387,9 +1403,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6521,
-    "x": 0.2145,
-    "a": 0.1335,
+    "h": 0.6583,
+    "x": 0.2109,
+    "a": 0.1308,
     "book": "Pinnacle"
    }
   },
@@ -1404,9 +1420,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0616,
-    "x": 0.1278,
-    "a": 0.8107,
+    "h": 0.0676,
+    "x": 0.1352,
+    "a": 0.7971,
     "book": "Pinnacle"
    }
   },
@@ -1421,9 +1437,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.687,
-    "x": 0.21,
-    "a": 0.103,
+    "h": 0.679,
+    "x": 0.208,
+    "a": 0.113,
     "book": "Pinnacle"
    }
   },
@@ -1438,9 +1454,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7184,
-    "x": 0.1766,
-    "a": 0.105,
+    "h": 0.7082,
+    "x": 0.1862,
+    "a": 0.1057,
     "book": "Pinnacle"
    }
   },
@@ -1455,9 +1471,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7503,
-    "x": 0.1656,
-    "a": 0.0841,
+    "h": 0.7453,
+    "x": 0.1693,
+    "a": 0.0855,
     "book": "Pinnacle"
    }
   },
@@ -1472,9 +1488,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5554,
-    "x": 0.2497,
-    "a": 0.1948,
+    "h": 0.5548,
+    "x": 0.2581,
+    "a": 0.1871,
     "book": "Pinnacle"
    }
   },
@@ -1489,9 +1505,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.438,
-    "x": 0.2798,
-    "a": 0.2822,
+    "h": 0.4243,
+    "x": 0.2977,
+    "a": 0.278,
     "book": "Pinnacle"
    }
   },
@@ -1506,9 +1522,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.104,
-    "x": 0.2022,
-    "a": 0.6938,
+    "h": 0.1038,
+    "x": 0.1946,
+    "a": 0.7016,
     "book": "Pinnacle"
    }
   },
@@ -1523,9 +1539,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5429,
-    "x": 0.2497,
-    "a": 0.2074,
+    "h": 0.5432,
+    "x": 0.2498,
+    "a": 0.207,
     "book": "Pinnacle"
    }
   },
@@ -1540,9 +1556,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.603,
+    "h": 0.6069,
     "x": 0.2292,
-    "a": 0.1678,
+    "a": 0.1638,
     "book": "Pinnacle"
    }
   },
@@ -1557,9 +1573,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7516,
-    "x": 0.1653,
-    "a": 0.0831,
+    "h": 0.7481,
+    "x": 0.1661,
+    "a": 0.0859,
     "book": "Pinnacle"
    }
   },
@@ -1574,9 +1590,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4875,
-    "x": 0.2864,
-    "a": 0.2261,
+    "h": 0.4763,
+    "x": 0.2861,
+    "a": 0.2376,
     "book": "Pinnacle"
    }
   },
@@ -1591,9 +1607,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5889,
-    "x": 0.2246,
-    "a": 0.1865,
+    "h": 0.5979,
+    "x": 0.2188,
+    "a": 0.1833,
     "book": "Pinnacle"
    }
   },
@@ -1608,9 +1624,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1878,
-    "x": 0.2637,
-    "a": 0.5485,
+    "h": 0.1849,
+    "x": 0.2627,
+    "a": 0.5524,
     "book": "Pinnacle"
    }
   },
@@ -1625,9 +1641,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8759,
-    "x": 0.0807,
-    "a": 0.0435,
+    "h": 0.8779,
+    "x": 0.0795,
+    "a": 0.0426,
     "book": "Pinnacle"
    }
   },
@@ -1642,9 +1658,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4697,
-    "x": 0.2829,
-    "a": 0.2474,
+    "h": 0.4762,
+    "x": 0.281,
+    "a": 0.2429,
     "book": "Pinnacle"
    }
   },
@@ -1659,9 +1675,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5641,
-    "x": 0.2353,
-    "a": 0.2006,
+    "h": 0.5663,
+    "x": 0.2431,
+    "a": 0.1906,
     "book": "Pinnacle"
    }
   },
@@ -1676,9 +1692,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6248,
-    "x": 0.2096,
-    "a": 0.1656,
+    "h": 0.6254,
+    "x": 0.2062,
+    "a": 0.1684,
     "book": "Pinnacle"
    }
   },
@@ -1693,9 +1709,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8713,
-    "x": 0.0904,
-    "a": 0.0383,
+    "h": 0.8743,
+    "x": 0.0886,
+    "a": 0.0371,
     "book": "Pinnacle"
    }
   },
@@ -1710,9 +1726,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1343,
+    "h": 0.1385,
     "x": 0.2281,
-    "a": 0.6376,
+    "a": 0.6334,
     "book": "Pinnacle"
    }
   },
@@ -1727,9 +1743,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8613,
-    "x": 0.0935,
-    "a": 0.0452,
+    "h": 0.8701,
+    "x": 0.0913,
+    "a": 0.0386,
     "book": "Pinnacle"
    }
   },
@@ -1744,9 +1760,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6835,
-    "x": 0.1986,
-    "a": 0.1178,
+    "h": 0.6737,
+    "x": 0.2037,
+    "a": 0.1226,
     "book": "Pinnacle"
    }
   },
@@ -1761,9 +1777,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.665,
-    "x": 0.2087,
-    "a": 0.1263,
+    "h": 0.6548,
+    "x": 0.2265,
+    "a": 0.1187,
     "book": "Pinnacle"
    }
   },
@@ -1778,9 +1794,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2146,
-    "x": 0.2438,
-    "a": 0.5415,
+    "h": 0.1779,
+    "x": 0.2281,
+    "a": 0.5941,
     "book": "Pinnacle"
    }
   },
@@ -1795,9 +1811,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5886,
-    "x": 0.248,
-    "a": 0.1634,
+    "h": 0.5789,
+    "x": 0.2526,
+    "a": 0.1685,
     "book": "Pinnacle"
    }
   },
@@ -1812,9 +1828,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8487,
-    "x": 0.1136,
-    "a": 0.0377,
+    "h": 0.8472,
+    "x": 0.1139,
+    "a": 0.0389,
     "book": "Pinnacle"
    }
   },
@@ -1829,9 +1845,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4552,
-    "x": 0.2657,
-    "a": 0.2791,
+    "h": 0.4528,
+    "x": 0.2648,
+    "a": 0.2823,
     "book": "Pinnacle"
    }
   },
@@ -1863,9 +1879,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7727,
+    "h": 0.7728,
     "x": 0.1465,
-    "a": 0.0808,
+    "a": 0.0806,
     "book": "Pinnacle"
    }
   },
@@ -1880,9 +1896,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7222,
-    "x": 0.1744,
-    "a": 0.1034,
+    "h": 0.7149,
+    "x": 0.178,
+    "a": 0.1071,
     "book": "Pinnacle"
    }
   },
@@ -1897,9 +1913,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1458,
-    "x": 0.2501,
-    "a": 0.6041,
+    "h": 0.1502,
+    "x": 0.254,
+    "a": 0.5959,
     "book": "Pinnacle"
    }
   },
@@ -1914,9 +1930,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.659,
-    "x": 0.2161,
-    "a": 0.1249,
+    "h": 0.6435,
+    "x": 0.2233,
+    "a": 0.1331,
     "book": "Pinnacle"
    }
   },
@@ -1931,9 +1947,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4504,
-    "x": 0.278,
-    "a": 0.2716,
+    "h": 0.4527,
+    "x": 0.2781,
+    "a": 0.2693,
     "book": "Pinnacle"
    }
   },
@@ -1948,9 +1964,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6226,
-    "x": 0.2264,
-    "a": 0.1509,
+    "h": 0.6168,
+    "x": 0.2271,
+    "a": 0.1561,
     "book": "Betfair Exchange"
    }
   },
@@ -1982,9 +1998,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7309,
-    "x": 0.1732,
-    "a": 0.0959,
+    "h": 0.7293,
+    "x": 0.1738,
+    "a": 0.097,
     "book": "Pinnacle"
    }
   },
@@ -2016,9 +2032,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.17,
-    "x": 0.2415,
-    "a": 0.5885,
+    "h": 0.1647,
+    "x": 0.2386,
+    "a": 0.5966,
     "book": "Pinnacle"
    }
   },
@@ -2033,9 +2049,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2107,
-    "x": 0.2572,
-    "a": 0.5321,
+    "h": 0.1931,
+    "x": 0.2495,
+    "a": 0.5574,
     "book": "Pinnacle"
    }
   },
@@ -2050,9 +2066,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.063,
-    "x": 0.1225,
-    "a": 0.8145,
+    "h": 0.054,
+    "x": 0.1114,
+    "a": 0.8346,
     "book": "Pinnacle"
    }
   },
@@ -2067,9 +2083,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4398,
-    "x": 0.2755,
-    "a": 0.2847,
+    "h": 0.4428,
+    "x": 0.2745,
+    "a": 0.2827,
     "book": "Pinnacle"
    }
   },
@@ -2084,9 +2100,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1102,
-    "x": 0.1833,
-    "a": 0.7065,
+    "h": 0.1047,
+    "x": 0.1769,
+    "a": 0.7184,
     "book": "Pinnacle"
    }
   },
@@ -2102,8 +2118,8 @@ const WC_DATA = {
    "score": null,
    "market": {
     "h": 0.3412,
-    "x": 0.2517,
-    "a": 0.4071,
+    "x": 0.255,
+    "a": 0.4038,
     "book": "Betfair Exchange"
    }
   },
@@ -2118,9 +2134,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4481,
-    "x": 0.2804,
-    "a": 0.2715,
+    "h": 0.4485,
+    "x": 0.2806,
+    "a": 0.2709,
     "book": "Pinnacle"
    }
   },
@@ -2152,9 +2168,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.683,
-    "x": 0.1993,
-    "a": 0.1177,
+    "h": 0.6828,
+    "x": 0.1997,
+    "a": 0.1175,
     "book": "Pinnacle"
    }
   },
@@ -2169,9 +2185,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.3789,
-    "x": 0.2642,
-    "a": 0.3568,
+    "h": 0.3483,
+    "x": 0.2619,
+    "a": 0.3898,
     "book": "Betfair Exchange"
    }
   },
@@ -2186,9 +2202,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1796,
-    "x": 0.2391,
-    "a": 0.5813,
+    "h": 0.16,
+    "x": 0.2245,
+    "a": 0.6155,
     "book": "Pinnacle"
    }
   },
@@ -2203,9 +2219,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4247,
-    "x": 0.3139,
-    "a": 0.2614,
+    "h": 0.457,
+    "x": 0.3022,
+    "a": 0.2408,
     "book": "Pinnacle"
    }
   },
@@ -2220,9 +2236,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0994,
-    "x": 0.1654,
-    "a": 0.7352,
+    "h": 0.0809,
+    "x": 0.1507,
+    "a": 0.7684,
     "book": "Pinnacle"
    }
   },
@@ -2237,9 +2253,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1158,
-    "x": 0.1402,
-    "a": 0.744,
+    "h": 0.1136,
+    "x": 0.1384,
+    "a": 0.748,
     "book": "Pinnacle"
    }
   },
@@ -2271,9 +2287,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2692,
-    "x": 0.2847,
-    "a": 0.4461,
+    "h": 0.2674,
+    "x": 0.2827,
+    "a": 0.4499,
     "book": "Pinnacle"
    }
   },
@@ -2322,9 +2338,9 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0686,
-    "x": 0.1283,
-    "a": 0.8031,
+    "h": 0.0685,
+    "x": 0.128,
+    "a": 0.8035,
     "book": "Pinnacle"
    }
   }
