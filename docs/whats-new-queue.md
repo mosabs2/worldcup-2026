@@ -4,12 +4,21 @@ Running list of user-facing changes to announce on the **next** "What's New" fly
 Do **not** generate a flyer from this automatically — Mohammed triggers it. When a flyer ships,
 move shipped items to the Announced log at the bottom with the flyer date.
 
-**Baseline:** the last "What's New" flyer was **13 June 2026** (Compare-tab edition). Everything
-below shipped *after* that date, so the queue is already pruned to genuinely new items.
+**Baseline:** the last *sent* "What's New" flyer was **13 June 2026** (Compare-tab edition). Everything
+below shipped *after* that date, so the queue is already pruned to genuinely new items. (A 15 June
+draft PDF was rendered but never sent — superseded by this queue.)
 
-## Queued — to announce next time (all shipped 15 June 2026)
+**Status:** an edition covering the five items below was **rendered 16 June 2026** —
+`outputs/world-cup-site-what-s-new-2026-06-16.pdf` (text-forward, MAS CV style) — and is
+**awaiting Mohammed's send**. Once sent, move these items to the Announced log with the date.
 
-- **Dark mode.** The site now follows your phone's light/dark setting automatically. There's
+## Queued — to announce next time (rendered 16 June 2026, not yet sent)
+
+- **Lands on today.** *(shipped 16 June 2026)* Open the **Matches** tab and it now jumps
+  straight to today's games instead of starting back at the opening day — no more scrolling.
+  Today's date is marked "· Today"; scroll up for past results, down for what's coming. On a
+  rest day it lands on the next matchday.
+- **Dark mode.** *(shipped 15 June 2026)* The site now follows your phone's light/dark setting automatically. There's
   also a toggle top-right (◐ Auto → ☾ Dark → ☀ Light) if you want to force one. Great for
   checking scores in bed without the white glare.
 - **Goal scorer & timings.** Tap any match in the **Matches** tab to see who scored and when,
