@@ -159,6 +159,9 @@ h2.section:first-child { margin-top: 0; }
 .match .xg-line { text-align: center; font-size: 12px; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; letter-spacing: .02em; margin: 4px 0 2px; }
 .match .xg-line .lab { color: var(--gray-light); font-weight: 700; letter-spacing: .08em; font-size: 10px; }
 .match .xg-line.xg-pending { color: var(--gray-light); font-weight: 600; }
+td.xg-up { color: #1f9b54; font-weight: 700; }
+td.xg-down { color: #cc5b4e; font-weight: 700; }
+table.shocks td:first-child { white-space: nowrap; }
 .xg-block .frow { display: flex; align-items: center; gap: 10px; margin: 7px 0; }
 .xg-block .frow .fl-label { min-width: 150px; color: var(--ink); font-weight: 600; }
 .xg-block .frow .hbar { flex: 1; height: 12px; }
@@ -5888,6 +5891,58 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     if (ov) return { team1: ov[0], team2: ov[1], local: true };
     return m.status === 'completed' && m.score ? m.score : null;
   }
+
+  // Walk-forward model-vs-market calibration over completed games (mirrors statsapi_backtest.py,
+  // no look-ahead). Also yields per-game 'surprise' = 1 - the pre-match probability of the actual
+  // result, used by the shock board. Pure read over stored results/market; recomputed on render.
+  function calibration() {
+    const r = {}; D.teams.forEach(t => r[t.code] = t.baseRating);
+    const played = D.matches.filter(m => m.status === 'completed' && m.score)
+      .slice().sort((a, b) => (a.dateET || '').localeCompare(b.dateET || ''));
+    const EPS = 1e-9;
+    const mMult = gd => gd <= 1 ? 1 : gd === 2 ? 1.5 : (11 + gd) / 8;
+    const eGD = (g1, g2, xg) => { const a = Math.abs(g1 - g2); if (!xg || xg.team1 == null || xg.team2 == null) return a; return Math.max(1, Math.round((1 - E.XG_TEMPER) * a + E.XG_TEMPER * Math.abs(xg.team1 - xg.team2))); };
+    const sc = (probs, out, act) => { const p = probs.map(x => Math.min(1 - EPS, Math.max(EPS, x))); return { ll: -Math.log(p[out]), br: p.reduce((s, v, i) => s + (v - act[i]) ** 2, 0) }; };
+    const rows = []; let llM = 0, brM = 0, llK = 0, brK = 0, nK = 0;
+    for (const m of played) {
+      const ha = E.hostEdge(m.team1, m.venueId, VC), hb = E.hostEdge(m.team2, m.venueId, VC);
+      const p = E.predict(r[m.team1] + ha, r[m.team2] + hb);   // pre-match, walk-forward
+      const modelP = [p.p1, p.draw, p.p2];
+      const g1 = m.score.team1, g2 = m.score.team2;
+      const out = g1 > g2 ? 0 : g2 > g1 ? 2 : 1;
+      const act = [out === 0 ? 1 : 0, out === 1 ? 1 : 0, out === 2 ? 1 : 0];
+      const mk = m.market ? [m.market.h, m.market.x, m.market.a] : null;
+      const sm = sc(modelP, out, act); llM += sm.ll; brM += sm.br;
+      if (mk) { const sk = sc(mk, out, act); llK += sk.ll; brK += sk.br; nK++; }
+      const ref = mk || modelP;
+      rows.push({ m, out, pActual: ref[out], surprise: 1 - ref[out], src: mk ? 'market' : 'model' });
+      const ra = r[m.team1] + ha, rb = r[m.team2] + hb;   // post-match update, mirrors liveRatings
+      const exp = 1 / (1 + Math.pow(10, -(ra - rb) / E.LOGISTIC_DIV));
+      const w = g1 > g2 ? 1 : g1 < g2 ? 0 : 0.5;
+      const ch = E.ELO_K * mMult(eGD(g1, g2, m.xg)) * (w - exp);
+      r[m.team1] += ch; r[m.team2] -= ch;
+    }
+    const n = played.length || 1;
+    return { n: played.length, rows, model: { ll: llM / n, brier: brM / n }, market: { ll: llK / Math.max(nK, 1), brier: brK / Math.max(nK, 1), n: nK } };
+  }
+
+  // Deserved (xG) group tables: points by which side created more xG per played match (a draw
+  // when within DESERVED_DRAW xG). Only completed games carrying xG count.
+  const DESERVED_DRAW = 0.5;
+  function deservedTables() {
+    const t = {}; D.teams.forEach(tm => t[tm.code] = { team: tm.code, group: tm.group, P: 0, pts: 0, xgF: 0, xgA: 0 });
+    D.matches.filter(m => m.status === 'completed' && m.score && m.xg && m.xg.team1 != null).forEach(m => {
+      const a = t[m.team1], b = t[m.team2], x1 = m.xg.team1, x2 = m.xg.team2;
+      a.P++; b.P++; a.xgF += x1; a.xgA += x2; b.xgF += x2; b.xgA += x1;
+      if (Math.abs(x1 - x2) < DESERVED_DRAW) { a.pts++; b.pts++; }
+      else if (x1 > x2) a.pts += 3; else b.pts += 3;
+    });
+    const byG = {};
+    GROUPS.forEach(g => { byG[g] = D.teams.filter(tm => tm.group === g).map(tm => t[tm.code])
+      .sort((x, y) => y.pts - x.pts || (y.xgF - y.xgA) - (x.xgF - x.xgA) || y.xgF - x.xgF); });
+    return byG;
+  }
+
   function flagName(c, bold) {
     const t = T[c];
     return el('span', { class: 'teamcell' }, el('span', { class: 'fl' }, t.flag), el('span', { class: 'nm', title: t.name }, t.name));
@@ -6091,6 +6146,23 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     if (done.length) root.append(el('h2', { class: 'section' }, 'Latest results'),
       el('div', { class: 'grid g2' }, done.map(m => matchCard(m))));
 
+    // Biggest shocks — completed games ranked by how improbable the actual result was.
+    const shocks = calibration().rows.slice().sort((a, b) => b.surprise - a.surprise).slice(0, 5);
+    if (shocks.length) root.append(el('h2', { class: 'section' }, 'Biggest shocks'),
+      el('div', { class: 'card' },
+        el('table', { class: 'shocks' },
+          el('tr', null, ['Match', 'What happened', 'Was given'].map((h, i) => el('th', { class: i === 2 ? 'num' : '' }, h))),
+          shocks.map(x => {
+            const m = x.m, sc = effScore(m);
+            const what = x.out === 1 ? 'a draw' : (x.out === 0 ? T[m.team1].name : T[m.team2].name) + ' win';
+            return el('tr', { class: 'click', onclick: () => matchModal(m) },
+              el('td', null, T[m.team1].flag + ' ' + T[m.team1].code + ' ' + sc.team1 + '–' + sc.team2 + ' ' + T[m.team2].code + ' ' + T[m.team2].flag),
+              el('td', { class: 'muted' }, what),
+              el('td', { class: 'num' }, el('b', null, pct(x.pActual, 0))));
+          })),
+        el('p', { class: 'tiny', style: 'margin-top:8px' },
+          'Ranked by how unlikely the result was beforehand: "was given" is the pre-match chance (' + (shocks[0].src === 'market' ? "bookies'" : 'model') + ' line) of what actually happened — the lower, the bigger the shock.')));
+
     // MENA strip
     const mena = D.mena.slice().sort((a, b) => SIM.teams[b].champ - SIM.teams[a].champ);
     root.append(el('h2', { class: 'section' }, 'MENA watch'),
@@ -6140,26 +6212,66 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
   }
 
   function renderGroups(root) {
-    root.append(el('div', { class: 'grid g2' }, GROUPS.map(g => {
-      const rows = TABLES[g];
-      return el('div', { class: 'card' },
-        el('h3', null, 'Group ' + g),
-        el('table', null,
-          el('tr', null, ['Team', 'P', 'GD', 'Pts', 'xPts', '1st', 'Qual'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
-          rows.map((r, i) => {
-            const s = SIM.teams[r.team];
-            const qual = s.top2 + s.thirdQual;
-            return el('tr', { class: 'click ' + (i < 2 ? 'qual' : i === 2 ? 'third' : ''), onclick: () => teamModal(r.team) },
-              el('td', null, flagName(r.team)),
-              el('td', { class: 'num' }, r.P), el('td', { class: 'num' }, r.GD > 0 ? '+' + r.GD : r.GD),
-              el('td', { class: 'num' }, el('b', null, r.Pts)),
-              el('td', { class: 'num' }, s.xPts.toFixed(1)),
-              el('td', { class: 'num' }, pct(s.groupWin, 0)),
-              el('td', { class: 'num' }, pct(Math.min(qual, 1), 0)));
-          })));
-    })),
-      el('p', { class: 'tiny', style: 'margin-top:10px' },
-        'xPts: expected final points. 1st: probability of winning the group. Qual: reaching the R32 by any route (top two or one of the eight best third-placed sides). Blue edge: currently in a qualifying position.'));
+    let mode = 'actual';
+    const ctrl = el('div', { class: 'formrow no-print' });
+    const wrap = el('div');
+    root.append(ctrl, wrap);
+    function sync() {
+      ctrl.innerHTML = '';
+      [['actual', 'Actual'], ['deserved', 'Deserved (xG)']].forEach(([id, label]) =>
+        ctrl.append(el('button', { class: 'btn small' + (mode === id ? '' : ' ghost'), onclick: () => { if (mode !== id) { mode = id; sync(); } } }, label)));
+      wrap.innerHTML = '';
+      (mode === 'actual' ? drawActual : drawDeserved)(wrap);
+    }
+    function drawActual(w) {
+      w.append(el('div', { class: 'grid g2' }, GROUPS.map(g => {
+        const rows = TABLES[g];
+        return el('div', { class: 'card' },
+          el('h3', null, 'Group ' + g),
+          el('table', null,
+            el('tr', null, ['Team', 'P', 'GD', 'Pts', 'xPts', '1st', 'Qual'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
+            rows.map((r, i) => {
+              const s = SIM.teams[r.team];
+              const qual = s.top2 + s.thirdQual;
+              return el('tr', { class: 'click ' + (i < 2 ? 'qual' : i === 2 ? 'third' : ''), onclick: () => teamModal(r.team) },
+                el('td', null, flagName(r.team)),
+                el('td', { class: 'num' }, r.P), el('td', { class: 'num' }, r.GD > 0 ? '+' + r.GD : r.GD),
+                el('td', { class: 'num' }, el('b', null, r.Pts)),
+                el('td', { class: 'num' }, s.xPts.toFixed(1)),
+                el('td', { class: 'num' }, pct(s.groupWin, 0)),
+                el('td', { class: 'num' }, pct(Math.min(qual, 1), 0)));
+            })));
+      })),
+        el('p', { class: 'tiny', style: 'margin-top:10px' },
+          'xPts: expected final points. 1st: probability of winning the group. Qual: reaching the R32 by any route (top two or one of the eight best third-placed sides). Blue edge: currently in a qualifying position.'));
+    }
+    function drawDeserved(w) {
+      const dt = deservedTables();
+      const actualPos = {};
+      GROUPS.forEach(g => TABLES[g].forEach((r, i) => actualPos[r.team] = i + 1));
+      const maxP = Object.values(dt).flat().reduce((s, r) => Math.max(s, r.P), 0);
+      w.append(el('div', { class: 'grid g2' }, GROUPS.map(g => {
+        const rows = dt[g];
+        return el('div', { class: 'card' },
+          el('h3', null, 'Group ' + g, el('span', { class: 'right' }, 'deserved · xG')),
+          el('table', null,
+            el('tr', null, ['Team', 'P', 'D-Pts', 'xGD', 'vs actual'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
+            rows.map((r, i) => {
+              const xgd = r.xgF - r.xgA;
+              const delta = actualPos[r.team] - (i + 1);   // + = deserves higher than its actual place (unlucky)
+              const arrow = r.P === 0 ? '–' : delta > 0 ? '↑' + delta : delta < 0 ? '↓' + (-delta) : '=';
+              return el('tr', { class: 'click ' + (i < 2 ? 'qual' : i === 2 ? 'third' : ''), onclick: () => teamModal(r.team) },
+                el('td', null, flagName(r.team)),
+                el('td', { class: 'num' }, r.P),
+                el('td', { class: 'num' }, el('b', null, r.pts)),
+                el('td', { class: 'num' }, (xgd >= 0 ? '+' : '') + xgd.toFixed(1)),
+                el('td', { class: 'num ' + (delta > 0 ? 'xg-up' : delta < 0 ? 'xg-down' : '') }, arrow));
+            })));
+      })),
+        el('p', { class: 'tiny', style: 'margin-top:10px' },
+          'The deserved table awards points by which side created more expected goals (xG) in each played match, a draw if within ' + DESERVED_DRAW + ' xG. D-Pts: deserved points. xGD: cumulative xG for minus against. "vs actual": ↑ means a side is placed lower than the chances deserve (unlucky so far), ↓ means it is riding its luck. Early read — only ' + maxP + ' game' + (maxP === 1 ? '' : 's') + ' per team so far, and only games with xG count.'));
+    }
+    sync();
   }
 
   function renderBracket(root) {
@@ -6797,16 +6909,25 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     root.append(card('Why simulate 10,000 times (Monte Carlo)',
       P('You cannot calculate the future of a 104-match tournament directly; there are far too many branching paths. So the computer simply plays it out, ten thousand times, and counts. Each run plays every remaining group game, ranks the tables, draws the 32-team bracket (third-place qualifiers and all), and resolves every knockout tie including extra time and a penalty shootout, all the way to a champion. The percentages are just how often each outcome happened across the ten thousand runs, and the “±” you see is the give-or-take from running ten thousand experiments rather than infinity. A fixed random seed keeps the published figures stable and makes the what-if mode’s changes real rather than simulation jitter.')));
 
-    root.append(card('Did we need to buy the market? The backtest',
-      P('A subscription to a professional data feed gives us the bookmakers’ own probabilities (their closing odds, with the bookmaker’s margin removed). The bookmakers, Pinnacle especially, are the sharpest forecasters in football. So the honest question was: does our homemade model add anything, or should we just show the market’s numbers?'),
-      P('We tested it properly. For each of the first 12 matches played (the opening round), we took the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and scored both against what actually happened, using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper.'),
+    const cal = calibration();
+    const mll = cal.model.ll, kll = cal.market.ll, mbr = cal.model.brier, kbr = cal.market.brier;
+    const verdict = kll > mll * 1.03 ? 'the market has been a touch behind our model'
+      : kll < mll * 0.97 ? 'the market has been a touch sharper than our model'
+      : 'the two have been comparable';
+    root.append(card('Did we need to buy the market? The live backtest',
+      P('A subscription to a professional data feed gives us the bookmakers’ own probabilities (their closing odds, with the bookmaker’s margin removed). The bookmakers, Pinnacle especially, are the sharpest forecasters in football. So the honest question is: does our homemade model add anything, or should we just show the market’s numbers?'),
+      P('We test it continuously. For every match played so far (' + cal.n + ' games), we take the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and score both against what actually happened using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper. These numbers update live as games complete.'),
       el('table', null,
         el('tr', null, ['Metric (lower = sharper)', 'Our model', 'Market'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
-        el('tr', null, el('td', null, 'Log-loss'), el('td', { class: 'num' }, el('b', null, '0.98')), el('td', { class: 'num' }, '1.04')),
-        el('tr', null, el('td', null, 'Brier score'), el('td', { class: 'num' }, el('b', null, '0.58')), el('td', { class: 'num' }, '0.64'))),
-      P(el('b', null, 'The honest verdict. '), 'The market was not sharper than our model. It was actually a touch worse on these games, but the sample is tiny (about ten matches) and that gap is well within noise, so the truthful claim is that the two are comparable, not that we beat Pinnacle. That a homemade model can sit level with the sharpest book in the world is the result worth bragging about.'),
+        el('tr', null, el('td', null, 'Log-loss'), el('td', { class: 'num' }, el('b', null, mll.toFixed(2))), el('td', { class: 'num' }, kll.toFixed(2))),
+        el('tr', null, el('td', null, 'Brier score'), el('td', { class: 'num' }, el('b', null, mbr.toFixed(2))), el('td', { class: 'num' }, kbr.toFixed(2)))),
+      P(el('b', null, 'The honest verdict (live, ' + cal.n + ' games). '), 'On the games played so far, ' + verdict + '. The sample is still small, so treat it as directional, not a victory lap. But a homemade model sitting level with the sharpest book in the world is the result worth bragging about.'),
       P(el('b', null, 'Why it can. '), 'Two reasons. First, our base ratings are themselves seeded from data the market has already digested, so we are not starting from scratch. Second, the opening round was chaos: the market had Switzerland firm favourites against Qatar (it finished 1-1) and Türkiye over Australia (Australia won), and a confident wrong call is punished hard, so the market’s very confidence cost it on the upsets. ',
         el('b', null, 'What we did with the finding. '), 'We did not throw away our model to chase the market. Instead the market line is shown on each match as a reference, and the paid feed’s real value, the expected-goals data, is used to temper the rating updates as described above. We bought sharper inputs, not a replacement brain.')));
+
+    root.append(card('Two more live stats: the deserved table and the shock board',
+      P(el('b', null, 'The deserved table (xG) — on the Groups tab. '), 'Toggle "Deserved (xG)" on Groups and the standings rebuild from expected goals instead of actual goals: in each played match the side that created the better chances takes the points (a draw if the two xG totals are within ' + DESERVED_DRAW + '), then we tally and rank. The "vs actual" arrow shows the gap between where a side actually sits and where the chances say it deserves to: an up arrow means it has been unlucky, a down arrow means it is riding its luck. It is the cleanest one-glance answer to "is this team for real, or has the scoreline flattered them?" — bearing in mind it is only a game or two per side so far.'),
+      P(el('b', null, 'The shock board — on the Today tab. '), 'Every completed game carries a pre-match chance for what actually happened (the bookies’ line where we have it, otherwise the model). One minus that chance is the "surprise". We rank the games by it and show the five biggest: a result the world gave 22% is a far bigger shock than one it gave 45%. It is the same probabilities that drive everything else on the site, just pointed backwards at the games that defied them.')));
 
     root.append(card('Can the model tune itself? Auto-research',
       P('The model has a handful of dials, the numbers in the table above: how hard a result moves a rating, how sharply a rating gap becomes a win probability, how often it expects draws, and so on. They were set by hand from football convention. A fair question, popularised by Andrej Karpathy’s “auto-research” idea, is whether a program could turn those dials itself: try a setting, grade it against the matches already played on a scorecard it is not allowed to touch, keep the change only if the grade improves, and repeat. Run that overnight and the model, in theory, sharpens itself while you sleep.'),
@@ -6906,9 +7027,9 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       el('div', { class: 'card', style: 'margin-bottom:14px' },
         el('h3', null, 'The tabs, in one line each'),
         el('table', null, [
-          ['Today', 'today’s fixtures in your local time, the latest results, the title race, the MENA strip and the player watch'],
+          ['Today', 'today’s fixtures in your local time, the latest results, the title race, a "biggest shocks" board of the most improbable results, the MENA strip and the player watch'],
           ['Matches', 'every fixture day by day; click any match for its detailed odds and most likely scorelines'],
-          ['Groups', 'all twelve group tables: real standings plus the model’s projected points and qualification chances'],
+          ['Groups', 'all twelve group tables, with a toggle between the real standings and a "deserved (xG)" table that ranks sides by the chances they created'],
           ['Bracket', 'one most-likely path from the Round of 32 to the champion; the favourite in every tie'],
           ['Teams', 'all 48 teams, sortable; click a team for its "glory funnel" from group stage to trophy'],
           ['MENA', 'the nine Middle East and North Africa sides, tracked together'],
@@ -6916,6 +7037,7 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
           ['Timeline', 'how each contender’s title chance has risen and fallen across the tournament'],
           ['Venues', 'the sixteen stadiums across the three host countries'],
           ['Model & Updates', 'the technical description of the model, the model-versus-market table, and the console for entering results'],
+          ['For Geeks', 'the full engine under the hood, plus the live model-versus-market scorecard and how the deserved table and shock board are worked out'],
         ].map(([k, v]) => el('tr', null, el('td', { style: 'white-space:nowrap' }, el('b', null, k)), el('td', { class: 'muted' }, v))))),
 
       el('div', { class: 'card', style: 'margin-bottom:14px' },

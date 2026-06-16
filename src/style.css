@@ -122,6 +122,9 @@ h2.section:first-child { margin-top: 0; }
 .match .xg-line { text-align: center; font-size: 12px; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; letter-spacing: .02em; margin: 4px 0 2px; }
 .match .xg-line .lab { color: var(--gray-light); font-weight: 700; letter-spacing: .08em; font-size: 10px; }
 .match .xg-line.xg-pending { color: var(--gray-light); font-weight: 600; }
+td.xg-up { color: #1f9b54; font-weight: 700; }
+td.xg-down { color: #cc5b4e; font-weight: 700; }
+table.shocks td:first-child { white-space: nowrap; }
 .xg-block .frow { display: flex; align-items: center; gap: 10px; margin: 7px 0; }
 .xg-block .frow .fl-label { min-width: 150px; color: var(--ink); font-weight: 600; }
 .xg-block .frow .hbar { flex: 1; height: 12px; }
