@@ -1,12 +1,15 @@
 name: Auto-update scores
 
 # Matches run in North America: kickoffs fall roughly 16:00-03:00 UTC
-# (19:00-06:00 Kuwait). The schedule only fires inside that window, every
-# two hours, so nothing runs during the quiet Kuwait daytime.
+# (19:00-06:00 Kuwait), with the latest games ending ~06:00 UTC. The schedule
+# fires every 15 minutes inside that window so a full-time result publishes
+# within ~15 min of the final whistle (was every 2 hours). Each run is a quick
+# no-op when nothing has changed, so the dense cadence is cheap (public repo =
+# free Actions). Nothing runs during the quiet Kuwait daytime (07:00-15:59 UTC).
 on:
   schedule:
-    - cron: '23 16,18,20,22 * * *'
-    - cron: '23 0,2,4,6 * * *'
+    - cron: '*/15 16-23 * * *'
+    - cron: '*/15 0-6 * * *'
   workflow_dispatch: {}
 
 permissions:
