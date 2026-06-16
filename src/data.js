@@ -3,8 +3,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-15",
-  "asOfNote": "Results through 14 matches, auto-synced from the ESPN public feed 2026-06-15 21:12 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-16",
+  "asOfNote": "Results through 16 matches, auto-synced from the ESPN public feed 2026-06-16 05:40 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1308,14 +1308,30 @@ const WC_DATA = {
    "team1": "KSA",
    "team2": "URU",
    "venueId": "MIA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.115,
     "x": 0.2197,
     "a": 0.6652,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "KSA",
+     "p": "Abdulelah Al-Amri",
+     "m": "41'"
+    },
+    {
+     "t": "URU",
+     "p": "Maxi Araújo",
+     "m": "80'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M016",
@@ -1325,14 +1341,40 @@ const WC_DATA = {
    "team1": "IRN",
    "team2": "NZL",
    "venueId": "LA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 2,
+    "team2": 2
+   },
    "market": {
     "h": 0.5118,
     "x": 0.2842,
     "a": 0.2041,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "NZL",
+     "p": "Elijah Just",
+     "m": "7'"
+    },
+    {
+     "t": "IRN",
+     "p": "Ramin Rezaeian",
+     "m": "32'"
+    },
+    {
+     "t": "NZL",
+     "p": "Elijah Just",
+     "m": "54'"
+    },
+    {
+     "t": "IRN",
+     "p": "Mohammad Mohebbi",
+     "m": "64'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M017",
