@@ -4000,6 +4000,29 @@ const WC_DATA = {
     ],
     "c": "ENG",
     "locked": "2026-06-15"
+   },
+   {
+    "n": "Hani Ibraheam sulaiman abdullah al mawash",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "MAR",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "EGY",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "GER",
+     "ARG"
+    ],
+    "c": "GER",
+    "locked": "2026-06-16"
    }
   ],
   "scoring": {
