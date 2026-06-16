@@ -4,33 +4,20 @@ Running list of user-facing changes to announce on the **next** "What's New" fly
 Do **not** generate a flyer from this automatically — Mohammed triggers it. When a flyer ships,
 move shipped items to the Announced log at the bottom with the flyer date.
 
-**Baseline:** the last *sent* "What's New" flyer was **13 June 2026** (Compare-tab edition). Everything
-below shipped *after* that date, so the queue is already pruned to genuinely new items. (A 15 June
-draft PDF was rendered but never sent — superseded by this queue.)
+**Baseline:** the last *sent* "What's New" flyer was **16 June 2026**. The queue below is empty;
+add new user-facing changes here as they ship, for the next edition.
 
-**Status:** an edition covering the five items below was **rendered 16 June 2026** —
-`outputs/world-cup-site-what-s-new-2026-06-16.pdf` (text-forward, MAS CV style) — and is
-**awaiting Mohammed's send**. Once sent, move these items to the Announced log with the date.
+## Queued — to announce next time
 
-## Queued — to announce next time (rendered 16 June 2026, not yet sent)
-
-- **Lands on today.** *(shipped 16 June 2026)* Open the **Matches** tab and it now jumps
-  straight to today's games instead of starting back at the opening day — no more scrolling.
-  Today's date is marked "· Today"; scroll up for past results, down for what's coming. On a
-  rest day it lands on the next matchday.
-- **Dark mode.** *(shipped 15 June 2026)* The site now follows your phone's light/dark setting automatically. There's
-  also a toggle top-right (◐ Auto → ☾ Dark → ☀ Light) if you want to force one. Great for
-  checking scores in bed without the white glare.
-- **Goal scorer & timings.** Tap any match in the **Matches** tab to see who scored and when,
-  with penalty and own-goal markers.
-- **Live scorers during a match.** While a game is in play, the scorers list now updates on its
-  own every few minutes — not just the score, the goals too. (We already had live scores; this
-  adds the live scorer detail.)
-- **Expected goals (xG) + a sharper model.** Each match now shows xG, and the probability model
-  is fed by real match xG and bookmakers' market odds, so the title and match numbers are better
-  calibrated.
+_(empty — nothing new since the 16 June 2026 edition)_
 
 ## Announced log
+
+### 16 June 2026 — "What's new on the site" edition (1pp PDF, text-forward) — SENT
+Source render: `outputs/world-cup-site-what-s-new-2026-06-16.pdf` (`_render_whatsnew_2026-06-16.py`). Sent to the group 16 June 2026. Covered: **lands on today** (the Matches tab auto-scrolls to today's matchday); **dark mode**; **goal scorers, live as it happens**; and **expected goals (xG) + the sharper model**. Note: xG had also featured in the 15 June edition below, so it received a second mention here (harmless overlap, flagged for the record).
+
+### 15 June 2026 — xG / league-split / self-updating edition (PDF, screenshots) — SENT
+Source render: `outputs/world-cup-site-what-s-new-2026-06-15.pdf` (`_render_whatsnew_2026-06-15.py`). **Sent to the group 15 June 2026** (confirmed by Mohammed on 16 June 2026; an earlier note in this file wrongly inferred it was an unsent draft, on the basis of a missing log entry — the inference was wrong, the edition shipped). Covered: **expected goals (xG)** on every played match; the **league split into Join and League tabs**; and the **self-updating app** (the home-screen PWA now refreshes itself in the background).
 
 ### 13 June 2026 — Compare-tab edition (3pp PDF, screenshots)
 Source: `raw/processed/2026-06-13 World Cup site — what's new for the group.md`. Covered:
