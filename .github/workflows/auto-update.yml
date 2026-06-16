@@ -37,6 +37,20 @@ jobs:
         continue-on-error: true
         run: python3 scripts/fetch_goals.py
 
+      # Light, self-healing xG enrich: pulls TheStatsAPI shotmap xG for any completed
+      # match that still lacks it (skips the full market sweep and the props harvest).
+      # Makes NO API call when nothing is missing, so it is free to run every cycle;
+      # when a match is missing xG it retries each 15-min cycle until the shotmap is
+      # published, so xG lands within ~15 min of full-time instead of the next morning.
+      # continue-on-error so a StatsAPI hiccup never blocks the score commit; the daily
+      # statsapi-update workflow remains the full-sweep backstop.
+      - name: Enrich newly-completed matches with xG (StatsAPI, light)
+        id: xg
+        continue-on-error: true
+        env:
+          STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
+        run: python3 scripts/fetch_statsapi.py --only-missing-xg
+
       # Once the group stage finishes, build the knockout bracket and resolve each
       # round's teams from completed results. No-ops while groups are in progress.
       # continue-on-error so a feed hiccup here never blocks the score commit
@@ -47,15 +61,15 @@ jobs:
         run: python3 scripts/generate_knockout.py --from-feed
 
       - name: Recompute model and timeline snapshot
-        if: steps.fetch.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
         run: node update.js --date "$(date -u +%F)"
 
       - name: Rebuild site
-        if: steps.fetch.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
         run: python3 build.py
 
       - name: Commit and publish
-        if: steps.fetch.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

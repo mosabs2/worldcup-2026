@@ -17,6 +17,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "src", "data.js")
 MAP = os.path.join(ROOT, "src", "statsapi-map.json")
 
+# --only-missing-xg: light, self-healing mode for the 15-minute auto-update flow.
+# Enriches ONLY completed group matches that still lack xG, and skips the full
+# market/odds sweep and the props harvest. Short-circuits with no API call at all
+# when nothing is missing, so it is free to run every cycle; when a match is
+# missing xG it retries each cycle until TheStatsAPI publishes the shotmap.
+ONLY_XG = "--only-missing-xg" in sys.argv
+
 def implied_1x2(payload):
     if not payload: return None
     bms = (payload.get("data") or {}).get("bookmakers") or []
@@ -78,6 +85,18 @@ data = json.loads(m0.group(1))
 codemap = json.load(open(MAP))["teamIds"]    # their tm_id -> our code
 our_by_pair = {frozenset((m["team1"], m["team2"])): m for m in data["matches"] if m.get("stage") == "group"}
 
+# Light mode short-circuit: if no completed match is missing xG, make no API call.
+if ONLY_XG:
+    missing = [m for m in our_by_pair.values()
+               if m.get("status") == "completed" and m.get("score") and "xg" not in m]
+    if not missing:
+        print("only-missing-xg: all completed matches already have xG; no API call made")
+        gh = os.environ.get("GITHUB_OUTPUT")
+        if gh:
+            with open(gh, "a") as f: f.write("changed=false\n")
+        sys.exit(0)
+    print(f"only-missing-xg: {len(missing)} completed match(es) lack xG; enriching those")
+
 # ---- fetch finals matches -------------------------------------------------
 finals = paged_matches()
 
@@ -87,9 +106,10 @@ for sm in finals:
     if not hc or not ac: continue
     ours = our_by_pair.get(frozenset((hc, ac)))
     if not ours: continue
+    if ONLY_XG and "xg" in ours: continue   # already enriched; skip (no shotmap call)
     home_is_t1 = (hc == ours["team1"])
     mid = sm["id"]
-    if sm.get("odds_available"):
+    if sm.get("odds_available") and not ONLY_XG:
         op = implied_1x2(api(f"/matches/{mid}/odds"))
         if op:
             ours["market"] = (op if home_is_t1 else

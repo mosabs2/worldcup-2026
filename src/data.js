@@ -1433,7 +1433,11 @@ const WC_DATA = {
      "m": "90'+6'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.94,
+    "team2": 0.51
+   }
   },
   {
    "id": "M018",
