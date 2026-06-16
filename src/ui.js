@@ -311,13 +311,22 @@
     root.append(el('div', { class: 'formrow no-print' }, sel), wrap);
     function draw(g) {
       wrap.innerHTML = '';
+      const today = todayLocal();
       const ms = D.matches.filter(m => !g || m.group === g);
       const byDay = {};
       ms.forEach(m => { (byDay[dayLocal(m.dateET)] = byDay[dayLocal(m.dateET)] || []).push(m); });
-      for (const day of Object.keys(byDay).sort()) {
-        wrap.append(el('h2', { class: 'section' }, fmtD(byDay[day][0].dateET, localTZ)),
+      const days = Object.keys(byDay).sort();
+      // Land on today's matchday; if none today, the next upcoming day; else the last day played.
+      const target = days.indexOf(today) !== -1 ? today : (days.find(d => d > today) || days[days.length - 1]);
+      let targetEl = null;
+      for (const day of days) {
+        const head = el('h2', { class: 'section', style: 'scroll-margin-top:120px' },
+          fmtD(byDay[day][0].dateET, localTZ) + (day === today ? ' · Today' : ''));
+        wrap.append(head,
           el('div', { class: 'grid g2' }, byDay[day].sort((a, b) => a.dateET.localeCompare(b.dateET)).map(m => matchCard(m))));
+        if (day === target) targetEl = head;
       }
+      if (targetEl) requestAnimationFrame(() => targetEl.scrollIntoView({ block: 'start' }));
     }
     draw('');
   }
