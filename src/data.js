@@ -4697,13 +4697,19 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-17",
-  "matchesCounted": 21,
+  "matchesCounted": 22,
   "topScorers": [
    {
     "player": "Lionel Messi",
     "team": "ARG",
     "goals": 3,
     "pens": 0
+   },
+   {
+    "player": "Harry Kane",
+    "team": "ENG",
+    "goals": 2,
+    "pens": 1
    },
    {
     "player": "Kai Havertz",
@@ -4780,12 +4786,6 @@ const WC_DATA = {
    {
     "player": "Aymen Hussein",
     "team": "IRQ",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Boualem Khoukhi",
-    "team": "QAT",
     "goals": 1,
     "pens": 0
    }

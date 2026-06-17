@@ -876,5 +876,77 @@
 "red": 0
 }
 }
+},
+"mt_028383092": {
+"scorers": [
+{
+"pid": "pl_7269793",
+"player": "Harry Kane",
+"team": "ENG",
+"goals": 2,
+"pens": 1
+},
+{
+"pid": "pl_74192414",
+"player": "Martin Baturina",
+"team": "CRO",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_84024944",
+"player": "Petar Musa",
+"team": "CRO",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_29113080",
+"player": "Jude Bellingham",
+"team": "ENG",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_13083574",
+"player": "Marcus Rashford",
+"team": "ENG",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_61009241",
+"player": "Elliot Anderson",
+"team": "ENG",
+"assists": 1
+},
+{
+"pid": "pl_08343894",
+"player": "Declan Rice",
+"team": "ENG",
+"assists": 1
+},
+{
+"pid": "pl_161413",
+"player": "Ivan Perišić",
+"team": "CRO",
+"assists": 1
+},
+{
+"pid": "pl_58628595",
+"player": "Petar Sučić",
+"team": "CRO",
+"assists": 1
+},
+{
+"pid": "pl_45126714",
+"player": "Bukayo Saka",
+"team": "ENG",
+"assists": 1
+}
+],
+"cards": {}
 }
 }
