@@ -65,3 +65,12 @@ jobs:
       # inconsistent, so a silent staleness emails the repo owner instead of hiding.
       - name: Watchdog — data consistency self-check
         run: python3 scripts/health_check.py
+
+      # Push a phone alert (via ntfy) if any step above failed. Topic is a secret;
+      # never fails the job itself.
+      - name: Alert phone on failure
+        if: failure()
+        run: |
+          curl -s -H "Title: ⚠ World Cup site — daily enrich failed" -H "Priority: high" -H "Tags: warning" \
+            -d "The daily StatsAPI enrich failed (watchdog or a step errored). Check: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}" || true

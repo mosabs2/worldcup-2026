@@ -104,3 +104,13 @@ jobs:
       # a green check. Last step so the data still publishes; the red is the alarm.
       - name: Watchdog — data consistency self-check
         run: python3 scripts/health_check.py
+
+      # Push a phone alert (via ntfy) if ANY step above failed — the watchdog, a
+      # feed fetch, the build. Runs only on failure; the topic is a secret so it
+      # is not exposed in this public repo. Never fails the job itself (|| true).
+      - name: Alert phone on failure
+        if: failure()
+        run: |
+          curl -s -H "Title: ⚠ World Cup site — update failed" -H "Priority: high" -H "Tags: warning" \
+            -d "A scheduled update failed (the watchdog caught stale/inconsistent data, or a step errored). Check: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}" || true
