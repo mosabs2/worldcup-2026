@@ -37,12 +37,15 @@
      explicit "Match alerts" button in the app, not an auto-prompt. -->
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
+window.WC_OS_STATUS = "waiting-for-sdk";   // becomes initializing -> ready, or init-error:<msg>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 OneSignalDeferred.push(async function (OneSignal) {
+  window.WC_OS = OneSignal;
+  window.WC_OS_STATUS = "initializing";
   try {
     await OneSignal.init({ appId: "c86b42d9-2e6b-40b5-8512-0f11c857decf", allowLocalhostAsSecureOrigin: true });
-    window.WC_OS = OneSignal;   // expose for the in-app "Match alerts" button
-  } catch (e) { /* push optional: never block the app */ }
+    window.WC_OS_STATUS = "ready";
+  } catch (e) { window.WC_OS_STATUS = "init-error: " + ((e && e.message) || String(e)); }
 });
 </script>
 <script>
