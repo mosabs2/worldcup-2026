@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-17",
-  "asOfNote": "Results through 18 matches, auto-synced from the ESPN public feed 2026-06-17 02:01 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 19 matches, auto-synced from the ESPN public feed 2026-06-17 04:48 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1500,13 +1500,38 @@ const WC_DATA = {
    "team1": "ARG",
    "team2": "ALG",
    "venueId": "KC",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 0
+   },
    "market": {
     "h": 0.679,
     "x": 0.208,
     "a": 0.113,
     "book": "Pinnacle"
+   },
+   "goals": [
+    {
+     "t": "ARG",
+     "p": "Lionel Messi",
+     "m": "17'"
+    },
+    {
+     "t": "ARG",
+     "p": "Lionel Messi",
+     "m": "60'"
+    },
+    {
+     "t": "ARG",
+     "p": "Lionel Messi",
+     "m": "76'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.25,
+    "team2": 0.33
    }
   },
   {
