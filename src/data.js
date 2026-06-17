@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-17",
-  "asOfNote": "Results through 21 matches, auto-synced from the ESPN public feed 2026-06-17 19:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 22 matches, auto-synced from the ESPN public feed 2026-06-17 22:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1628,14 +1628,51 @@ const WC_DATA = {
    "team1": "ENG",
    "team2": "CRO",
    "venueId": "DAL",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 4,
+    "team2": 2
+   },
    "market": {
     "h": 0.5548,
     "x": 0.2581,
     "a": 0.1871,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "ENG",
+     "p": "Harry Kane",
+     "m": "12'",
+     "pen": true
+    },
+    {
+     "t": "CRO",
+     "p": "Martin Baturina",
+     "m": "36'"
+    },
+    {
+     "t": "ENG",
+     "p": "Harry Kane",
+     "m": "42'"
+    },
+    {
+     "t": "CRO",
+     "p": "Petar Musa",
+     "m": "45'+5'"
+    },
+    {
+     "t": "ENG",
+     "p": "Jude Bellingham",
+     "m": "47'"
+    },
+    {
+     "t": "ENG",
+     "p": "Marcus Rashford",
+     "m": "85'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M023",
@@ -4937,6 +4974,10 @@ const WC_DATA = {
     "goals": 4
    },
    {
+    "team": "ENG",
+    "goals": 4
+   },
+   {
     "team": "FRA",
     "goals": 3
    },
@@ -4962,10 +5003,6 @@ const WC_DATA = {
    },
    {
     "team": "NED",
-    "goals": 2
-   },
-   {
-    "team": "JPN",
     "goals": 2
    }
   ],
