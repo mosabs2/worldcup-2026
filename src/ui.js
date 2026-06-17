@@ -1407,11 +1407,25 @@
     renderHeader();
     renderTab();
   }
+  // How old is the published snapshot? The site auto-publishes every 15 min during
+  // matches and hourly otherwise, so anything older than ~2.5h means the pipeline is
+  // stuck — surface that to the reader rather than showing stale data as if it were live.
+  function freshBadge() {
+    const t = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) ? new Date(WC_BUILT_AT) : null;
+    if (!t || isNaN(t.getTime())) return '';
+    const mins = Math.max(0, Math.round((Date.now() - t.getTime()) / 60000));
+    const age = mins < 1 ? 'just now' : mins < 60 ? mins + 'm ago'
+      : Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm ago';
+    const stale = mins >= 150;
+    return '<span class="fresh' + (stale ? ' stale' : '') + '">'
+      + (stale ? '⚠ data ' : '● updated ') + age + '</span><br>';
+  }
+
   function renderHeader() {
     const asof = document.getElementById('asof');
     const nLocal = Object.keys(localOv).length;
     const nLive = Object.keys(liveNow).length;
-    asof.innerHTML = 'Data as of ' + D.meta.asOf +
+    asof.innerHTML = freshBadge() + 'Data as of ' + D.meta.asOf +
       (nLocal && !whatIf.on ? '<br>+' + nLocal + ' local result' + (nLocal === 1 ? '' : 's') : '') +
       (nLive ? '<br><b>● LIVE: ' + nLive + ' match' + (nLive === 1 ? '' : 'es') + '</b>' : '<br>10,000-run Monte Carlo');
     const wbtn = document.getElementById('whatif');
@@ -1453,6 +1467,7 @@
     });
     setTimeout(pollLive, 2500);
     setTimeout(autoReconcile, 1500);   // self-heal on load: catch finals the published snapshot missed
+    setInterval(renderHeader, 60000);  // keep the "updated N ago" freshness badge ticking
     document.addEventListener('visibilitychange', () => { if (!document.hidden) autoReconcile(); });
     window.addEventListener('focus', autoReconcile);   // and whenever the app returns to the foreground
     document.getElementById('refresh').addEventListener('click', refreshScores);

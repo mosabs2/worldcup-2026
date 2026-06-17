@@ -30,6 +30,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,{{FAVICON}}">
 <meta name="color-scheme" content="light dark">
+<script>window.WC_BUILT_AT="{{BUILT_AT}}";</script>
 <script>
 /* Resolve the effective theme before first paint (no flash). Stored mode is auto|light|dark. */
 (function(){try{var raw=localStorage.getItem('wc26.theme.v1');var m='auto';if(raw){try{m=JSON.parse(raw);}catch(e){m=raw;}}var dark=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}catch(e){}})();

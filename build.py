@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Inline src/ modules into a single self-contained index.html."""
-import pathlib, re, urllib.parse
+import datetime, pathlib, re, urllib.parse
+
+# Machine-readable publish timestamp (UTC ISO-8601) for the on-site freshness
+# badge: the page can show "updated N minutes ago" and flag a stale snapshot.
+BUILT_AT = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 SRC = pathlib.Path(__file__).parent / "src"
 OUT = pathlib.Path(__file__).parent / "index.html"
@@ -27,7 +31,8 @@ html = (shell
     .replace("{{UI}}", (SRC / "ui.js").read_text())
     .replace("{{MONOGRAM_WHITE}}", svg_body(mono_w))
     .replace("{{MONOGRAM_BLUE}}", svg_body(mono_b))
-    .replace("{{FAVICON}}", favicon))
+    .replace("{{FAVICON}}", favicon)
+    .replace("{{BUILT_AT}}", BUILT_AT))
 
 assert not re.search(r"\{\{[A-Z_]+\}\}", html), "unresolved placeholder: " + str(re.findall(r"\{\{[A-Z_]+\}\}", html)[:3])
 OUT.write_text(html)

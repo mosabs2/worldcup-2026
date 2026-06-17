@@ -96,3 +96,11 @@ jobs:
           git commit -m "auto-update: scores synced from ESPN feed $(date -u '+%Y-%m-%d %H:%M UTC')"
           git pull --rebase origin main
           git push
+
+      # Watchdog (runs every cycle, NOT swallowed): fails the job red if the
+      # published data is internally inconsistent — e.g. the props boards lag the
+      # matches played. A red scheduled job emails the repo owner, so a silent
+      # staleness like the 15 Jun props freeze surfaces instead of hiding behind
+      # a green check. Last step so the data still publishes; the red is the alarm.
+      - name: Watchdog — data consistency self-check
+        run: python3 scripts/health_check.py

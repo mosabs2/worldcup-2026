@@ -68,6 +68,8 @@ header {
 .masthead .sub { font-size: 11.5px; opacity: .82; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
 .masthead .spacer { flex: 1; }
 .asof { font-size: 11px; opacity: .85; text-align: right; line-height: 1.4; }
+.asof .fresh { font-weight: 600; color: #9be7b4; opacity: .95; }
+.asof .fresh.stale { color: #ffd34d; font-weight: 700; }
 .whatif-pill {
   background: #FFD34D; color: #4A3A00; font-size: 11px; font-weight: 700;
   padding: 4px 10px; border-radius: 99px; cursor: pointer; border: none; letter-spacing: .04em;

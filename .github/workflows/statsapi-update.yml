@@ -60,3 +60,8 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+      # Watchdog (NOT swallowed): fail red if the published data is internally
+      # inconsistent, so a silent staleness emails the repo owner instead of hiding.
+      - name: Watchdog — data consistency self-check
+        run: python3 scripts/health_check.py
