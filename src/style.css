@@ -70,6 +70,18 @@ header {
 .asof { font-size: 11px; opacity: .85; text-align: right; line-height: 1.4; }
 .asof .fresh { font-weight: 600; color: #9be7b4; opacity: .95; }
 .asof .fresh.stale { color: #ffd34d; font-weight: 700; }
+.mine-hero { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-end; }
+.mine-hero .big { font-size: 30px; font-weight: 800; line-height: 1; }
+.mine-hero .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; opacity: .7; margin-top: 4px; }
+.mine-select { font-size: 15px; padding: 8px 10px; width: 100%; max-width: 340px; border-radius: 8px; }
+.mine-alive { margin: 4px 0 0 18px; }
+.mine-alive li { margin: 2px 0; }
+.st-hit { color: #1a7f37; font-weight: 700; }
+.st-miss { color: #c1121f; font-weight: 700; }
+.st-live { color: #8a6d00; font-weight: 600; }
+:root[data-theme="dark"] .st-hit { color: #4ac26b; }
+:root[data-theme="dark"] .st-miss { color: #ff8a80; }
+:root[data-theme="dark"] .st-live { color: #e4c04a; }
 .whatif-pill {
   background: #FFD34D; color: #4A3A00; font-size: 11px; font-weight: 700;
   padding: 4px 10px; border-radius: 99px; cursor: pointer; border: none; letter-spacing: .04em;
