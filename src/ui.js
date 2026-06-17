@@ -855,11 +855,84 @@
       + 'Rank #' + myRank + ' of ' + total + ' · ' + me.pts + ' pts (ceiling ' + me.max + ')\n'
       + (T[champ] ? 'My champion: ' + T[champ].flag + ' ' + T[champ].name + ' — ' + champStatus + '\n' : '')
       + 'Live standings: https://mosabs2.github.io/worldcup-2026/#mine';
+
+    // Draw the MAS-brand monogram (from the masthead SVG) onto the card canvas.
+    async function drawMonogram(c, x, y, size) {
+      const svgEl = document.querySelector('header .mono svg');
+      if (!svgEl) return;
+      let s = new XMLSerializer().serializeToString(svgEl)
+        .replace('width="100%"', 'width="' + size + '"').replace('height="100%"', 'height="' + size + '"');
+      const url = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
+      try {
+        await new Promise((res) => { const img = new Image(); img.onload = () => { c.drawImage(img, x, y, size, size); res(); }; img.onerror = res; img.src = url; });
+      } finally { URL.revokeObjectURL(url); }
+    }
+
+    // Render the detailed square scorecard (1080×1080) to a PNG blob.
+    async function makeCardBlob() {
+      try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
+      const W = 1080, H = 1080, P = 84;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const c = cv.getContext('2d');
+      const F = (px, wt) => (wt || '400') + ' ' + px + 'px Inter, -apple-system, system-ui, sans-serif';
+      c.fillStyle = '#0E1E91'; c.fillRect(0, 0, W, H);
+      c.strokeStyle = 'rgba(255,255,255,0.14)'; c.lineWidth = 2; c.strokeRect(P / 2, P / 2, W - P, H - P);
+      await drawMonogram(c, P, P - 8, 96);
+      c.fillStyle = 'rgba(255,255,255,0.9)'; c.font = F(32, '800'); c.fillText('WORLD CUP 2026', P + 124, P + 34);
+      c.fillStyle = 'rgba(255,255,255,0.55)'; c.font = F(24, '600'); c.fillText('FAMILY LEAGUE', P + 124, P + 72);
+      let y = P + 196;
+      let ns = 72; c.font = F(ns, '800');
+      while (c.measureText(mine).width > W - 2 * P && ns > 34) { ns -= 4; c.font = F(ns, '800'); }
+      c.fillStyle = '#fff'; c.fillText(mine, P, y); y += 36;
+      const divider = () => { c.strokeStyle = 'rgba(255,255,255,0.18)'; c.lineWidth = 2; c.beginPath(); c.moveTo(P, y); c.lineTo(W - P, y); c.stroke(); y += 70; };
+      divider();
+      c.fillStyle = 'rgba(255,255,255,0.6)'; c.font = F(28, '700'); c.fillText('RANK', P, y);
+      c.font = F(104, '800'); const rt = '#' + myRank; c.fillStyle = '#FFD34D'; c.fillText(rt, P, y + 96);
+      const rw = c.measureText(rt).width;
+      c.fillStyle = 'rgba(255,255,255,0.7)'; c.font = F(36, '600'); c.fillText('of ' + total, P + rw + 24, y + 96);
+      y += 160;
+      c.fillStyle = 'rgba(255,255,255,0.92)'; c.font = F(40, '700'); c.fillText('Points ' + me.pts + '        Ceiling ' + me.max, P, y);
+      y += 34; divider();
+      c.fillStyle = '#fff'; c.font = F(42, '700'); c.fillText('🏆 Champion  ' + (T[champ] ? T[champ].flag + ' ' + T[champ].name : '—'), P, y);
+      y += 60;
+      c.fillStyle = champCls === 'st-hit' ? '#7CE2A0' : champCls === 'st-miss' ? '#FF9A90' : '#FFD34D';
+      c.font = F(36, '700'); c.fillText(champStatus, P + 52, y); y += 64;
+      const sorted = alive.slice().sort((a, b) => b[1] - a[1]);
+      if (sorted.length) {
+        const nm = sorted[0][0].replace(/^(Finalist|Champion)\s/, '');
+        c.fillStyle = 'rgba(255,255,255,0.88)'; c.font = F(36, '600');
+        c.fillText('🔥 In play: ' + nm + '  ' + pct(sorted[0][1]), P, y);
+      }
+      c.fillStyle = 'rgba(255,255,255,0.72)'; c.font = F(30, '600'); c.fillText('Play  →  mosabs2.github.io/worldcup-2026', P, H - P + 8);
+      return await new Promise((res) => cv.toBlob(res, 'image/png'));
+    }
+
+    async function shareCard(btn) {
+      const old = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+      try {
+        const blob = await makeCardBlob();
+        if (!blob) throw new Error('no blob');
+        const file = new File([blob], 'world-cup-league-' + mine.replace(/\s+/g, '-').toLowerCase() + '.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try { await navigator.share({ files: [file], text: shareTxt }); } catch (e) { /* user cancelled */ }
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = file.name;
+          document.body.append(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 8000);
+          toast('Card image downloaded — attach it in WhatsApp.');
+        }
+      } catch (e) { toast('Could not create the image; the text share still works.'); }
+      finally { btn.disabled = false; btn.textContent = old; }
+    }
+
     root.append(el('div', { class: 'card no-print' },
       el('h3', null, 'Share your standing'),
       el('div', { class: 'formrow' },
-        el('button', { class: 'btn small', onclick: () => { navigator.clipboard.writeText(shareTxt); toast('Copied — paste it into the family chat.'); } }, 'Copy summary'),
-        el('a', { class: 'btn small ghost', href: 'https://wa.me/?text=' + encodeURIComponent(shareTxt), target: '_blank', style: 'display:inline-block;text-decoration:none' }, 'Share on WhatsApp'))));
+        el('button', { class: 'btn small', onclick: (e) => shareCard(e.target) }, '📲 Share card'),
+        el('button', { class: 'btn small ghost', onclick: () => { navigator.clipboard.writeText(shareTxt); toast('Copied — paste it into the family chat.'); } }, 'Copy text'),
+        el('a', { class: 'btn small ghost', href: 'https://wa.me/?text=' + encodeURIComponent(shareTxt), target: '_blank', style: 'display:inline-block;text-decoration:none' }, 'Text on WhatsApp')),
+      el('p', { class: 'tiny', style: 'margin-top:8px' }, 'Share card makes an image for WhatsApp, Messages or Instagram. On a phone it opens the share sheet; on a computer it downloads the image.')));
   }
 
   function renderLeague(root) {
