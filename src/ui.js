@@ -1616,6 +1616,29 @@
     if (n > 0) toast(n + ' new result' + (n === 1 ? '' : 's') + ' came in; probabilities recomputed.');
   }
 
+  // Self-update: if the server has a newer build than the one this page is running,
+  // reload to pick up new code (and data). Without this, a phone that keeps the app
+  // in memory keeps the OLD front-end after a deploy — live scores still refresh via
+  // autoReconcile, but the page's code (e.g. the share-card layout) does not. Checks
+  // on load and whenever the app returns to the foreground; guarded against loops.
+  let lastUpdateCheck = 0;
+  async function checkForUpdate() {
+    if (typeof WC_BUILT_AT === 'undefined' || !WC_BUILT_AT) return;
+    const now = Date.now();
+    if (now - lastUpdateCheck < 30e3) return;
+    lastUpdateCheck = now;
+    try {
+      const r = await fetch('./version.json?cb=' + now, { cache: 'no-store' });
+      if (!r.ok) return;
+      const v = await r.json();
+      if (!v || !v.builtAt || v.builtAt === WC_BUILT_AT) return;
+      let prev = ''; try { prev = sessionStorage.getItem('wc26.reloadedTo') || ''; } catch (e) {}
+      if (prev === v.builtAt) return;              // already reloaded toward this build; don't loop
+      try { sessionStorage.setItem('wc26.reloadedTo', v.builtAt); } catch (e) {}
+      location.reload();
+    } catch (e) { /* offline or version.json missing: ignore */ }
+  }
+
   // ---------- shell ----------
   function refresh() {
     recompute();
@@ -1682,9 +1705,10 @@
     });
     setTimeout(pollLive, 2500);
     setTimeout(autoReconcile, 1500);   // self-heal on load: catch finals the published snapshot missed
+    setTimeout(checkForUpdate, 3000);  // self-update on load if a newer build is deployed
     setInterval(renderHeader, 60000);  // keep the "updated N ago" freshness badge ticking
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) autoReconcile(); });
-    window.addEventListener('focus', autoReconcile);   // and whenever the app returns to the foreground
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { checkForUpdate(); autoReconcile(); } });
+    window.addEventListener('focus', () => { checkForUpdate(); autoReconcile(); });   // returning to the foreground
     document.getElementById('refresh').addEventListener('click', refreshScores);
     document.getElementById('whatif').addEventListener('click', () => {
       whatIf.on = !whatIf.on;

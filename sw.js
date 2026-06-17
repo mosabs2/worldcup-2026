@@ -3,7 +3,7 @@
 // clips), with a cache fallback so it still opens offline. Bump VERSION only
 // to force a hard cache purge; day-to-day content freshness needs no bump,
 // because every navigation goes to the network first.
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'wc26-' + VERSION;
 const OFFLINE_URLS = ['./', './index.html', './manifest.json'];
 

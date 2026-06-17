@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Inline src/ modules into a single self-contained index.html."""
-import datetime, pathlib, re, urllib.parse
+import datetime, json, pathlib, re, urllib.parse
 
 # Machine-readable publish timestamp (UTC ISO-8601) for the on-site freshness
 # badge: the page can show "updated N minutes ago" and flag a stale snapshot.
@@ -36,4 +36,6 @@ html = (shell
 
 assert not re.search(r"\{\{[A-Z_]+\}\}", html), "unresolved placeholder: " + str(re.findall(r"\{\{[A-Z_]+\}\}", html)[:3])
 OUT.write_text(html)
-print(f"built index.html ({len(html)//1024} KB)")
+# Tiny version marker the page polls to detect a new deploy and self-update.
+(pathlib.Path(__file__).parent / "version.json").write_text(json.dumps({"builtAt": BUILT_AT}))
+print(f"built index.html ({len(html)//1024} KB); version {BUILT_AT}")
