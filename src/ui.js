@@ -320,38 +320,14 @@
 
   // In-app control to enable web-push match alerts (goals + kick-offs). Stays quiet
   // where push can't work; on iPhone it explains Apple's Add-to-Home-Screen rule.
+  // Match alerts run through the family Telegram channel — works on every phone with
+  // no install or permission dance. (The web-push path was dropped after iOS refused
+  // to mint push tokens for the installed PWA; 17 June 2026.)
   function renderAlertsCard(root) {
-    const ua = navigator.userAgent || '';
-    const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
-    if (isIOS && !standalone) {
-      root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
-        el('h3', null, '🔔 Match alerts'),
-        el('p', { class: 'tiny', style: 'margin:0' },
-          'To get goal and kick-off alerts on iPhone: tap the Share button, then "Add to Home Screen". Open the site from that new icon and an Enable button will appear here. (Apple only allows alerts for home-screen apps.)')));
-      return;
-    }
-    const status = el('span', { class: 'tiny', style: 'margin-left:10px' }, 'Goals and kick-offs, the moment they happen.');
-    const btn = el('button', { class: 'btn small' }, '🔔 Enable match alerts');
-    const detail = () => { try { const p = WC_OS.User.PushSubscription; return 'perm=' + WC_OS.Notifications.permission + ' · optedIn=' + p.optedIn + ' · id=' + (p.id || 'none') + ' · token=' + (p.token ? 'yes' : 'no'); } catch (e) { return 'n/a'; } };
-    const sync = () => { try { if (window.WC_OS_STATUS !== 'ready') { status.textContent = 'Status: ' + (window.WC_OS_STATUS || 'starting'); return; } const on = WC_OS.User.PushSubscription.optedIn; btn.textContent = on ? '✓ Alerts on — tap to turn off' : '🔔 Enable match alerts'; status.textContent = detail(); } catch (e) {} };
-    btn.addEventListener('click', async () => {
-      const st = window.WC_OS_STATUS || 'waiting-for-sdk';
-      if (st !== 'ready' || !window.WC_OS) { status.textContent = 'Status: ' + st + ' — tap again in a few seconds.'; return; }
-      try {
-        if (WC_OS.User.PushSubscription.optedIn) { await WC_OS.User.PushSubscription.optOut(); status.textContent = 'Alerts turned off.'; }
-        else {
-          await WC_OS.Notifications.requestPermission();
-          try { await WC_OS.User.PushSubscription.optIn(); } catch (e) {}
-          status.textContent = 'permission=' + WC_OS.Notifications.permission + ' · subscribed=' + (WC_OS.User.PushSubscription.optedIn);
-        }
-      } catch (e) { status.textContent = 'Error: ' + ((e && e.message) || e); }
-      setTimeout(sync, 1500);
-    });
     root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
       el('h3', null, '🔔 Match alerts'),
-      el('div', { class: 'formrow' }, btn, status)));
-    sync();
+      el('p', { class: 'tiny', style: 'margin:0 0 8px' }, 'Kick-offs and goals are posted live to the family Telegram channel — works on any phone, nothing to install.'),
+      el('a', { class: 'btn small', href: 'https://t.me/MoSabsWC26', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '📣 Join on Telegram')));
   }
 
   function renderToday(root) {
