@@ -871,39 +871,65 @@
     // Render the detailed square scorecard (1080×1080) to a PNG blob.
     async function makeCardBlob() {
       try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
-      const W = 1080, H = 1080, P = 84;
+      const W = 1080, H = 1080, P = 80;
       const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
       const c = cv.getContext('2d');
       const F = (px, wt) => (wt || '400') + ' ' + px + 'px Inter, -apple-system, system-ui, sans-serif';
+      const WHITE = '#fff', MUTE = 'rgba(255,255,255,0.6)', SUB = 'rgba(255,255,255,0.85)', GOLD = '#FFD34D';
+      const stColor = cl => cl === 'st-hit' ? '#7CE2A0' : cl === 'st-miss' ? '#FF9A90' : '#FFD34D';
       c.fillStyle = '#0E1E91'; c.fillRect(0, 0, W, H);
       c.strokeStyle = 'rgba(255,255,255,0.14)'; c.lineWidth = 2; c.strokeRect(P / 2, P / 2, W - P, H - P);
-      await drawMonogram(c, P, P - 8, 96);
-      c.fillStyle = 'rgba(255,255,255,0.9)'; c.font = F(32, '800'); c.fillText('WORLD CUP 2026', P + 124, P + 34);
-      c.fillStyle = 'rgba(255,255,255,0.55)'; c.font = F(24, '600'); c.fillText('FAMILY LEAGUE', P + 124, P + 72);
-      let y = P + 196;
-      let ns = 72; c.font = F(ns, '800');
-      while (c.measureText(mine).width > W - 2 * P && ns > 34) { ns -= 4; c.font = F(ns, '800'); }
-      c.fillStyle = '#fff'; c.fillText(mine, P, y); y += 36;
-      const divider = () => { c.strokeStyle = 'rgba(255,255,255,0.18)'; c.lineWidth = 2; c.beginPath(); c.moveTo(P, y); c.lineTo(W - P, y); c.stroke(); y += 70; };
-      divider();
-      c.fillStyle = 'rgba(255,255,255,0.6)'; c.font = F(28, '700'); c.fillText('RANK', P, y);
-      c.font = F(104, '800'); const rt = '#' + myRank; c.fillStyle = '#FFD34D'; c.fillText(rt, P, y + 96);
+      await drawMonogram(c, P, P - 6, 88);
+      c.fillStyle = SUB; c.font = F(30, '800'); c.fillText('WORLD CUP 2026', P + 112, P + 32);
+      c.fillStyle = MUTE; c.font = F(22, '600'); c.fillText('FAMILY LEAGUE', P + 112, P + 64);
+      let y = P + 150;
+      let ns = 60; c.font = F(ns, '800');
+      while (c.measureText(mine).width > W - 2 * P && ns > 32) { ns -= 4; c.font = F(ns, '800'); }
+      c.fillStyle = WHITE; c.fillText(mine, P, y); y += 22;
+      const div = () => { c.strokeStyle = 'rgba(255,255,255,0.16)'; c.lineWidth = 2; c.beginPath(); c.moveTo(P, y); c.lineTo(W - P, y); c.stroke(); y += 46; };
+      const label = t => { c.fillStyle = MUTE; c.font = F(22, '700'); c.fillText(t, P, y); y += 40; };
+      div();
+      // rank + points
+      c.font = F(76, '800'); const rt = '#' + myRank; c.fillStyle = GOLD; c.fillText(rt, P, y + 58);
       const rw = c.measureText(rt).width;
-      c.fillStyle = 'rgba(255,255,255,0.7)'; c.font = F(36, '600'); c.fillText('of ' + total, P + rw + 24, y + 96);
-      y += 160;
-      c.fillStyle = 'rgba(255,255,255,0.92)'; c.font = F(40, '700'); c.fillText('Points ' + me.pts + '        Ceiling ' + me.max, P, y);
-      y += 34; divider();
-      c.fillStyle = '#fff'; c.font = F(42, '700'); c.fillText('🏆 Champion  ' + (T[champ] ? T[champ].flag + ' ' + T[champ].name : '—'), P, y);
-      y += 60;
-      c.fillStyle = champCls === 'st-hit' ? '#7CE2A0' : champCls === 'st-miss' ? '#FF9A90' : '#FFD34D';
-      c.font = F(36, '700'); c.fillText(champStatus, P + 52, y); y += 64;
+      c.fillStyle = MUTE; c.font = F(30, '600'); c.fillText('of ' + total, P + rw + 18, y + 58);
+      c.fillStyle = SUB; c.font = F(32, '700'); c.fillText(me.pts + ' pts  ·  ceiling ' + me.max, P, y + 102);
+      y += 150; div();
+      // your bracket — group winners, finalists, champion
+      label('YOUR BRACKET');
+      c.fillStyle = WHITE; c.font = F(30, '600');
+      c.fillText('Group winners  ' + gwHits + ' of ' + gwRes + ' resolved', P, y); y += 50;
+      c.fillStyle = MUTE; c.font = F(30, '600'); c.fillText('Finalists', P, y);
+      let fx = P + 200;
+      (me.e.f || []).filter(fc => T[fc]).forEach(fc => {
+        const out = resolved.finalists ? !resolved.finalists.includes(fc) : elim(fc);
+        const txt = T[fc].flag + ' ' + T[fc].name;
+        c.font = F(30, out ? '500' : '700'); c.fillStyle = out ? 'rgba(255,255,255,0.45)' : WHITE;
+        c.fillText(txt, fx, y);
+        const tw = c.measureText(txt).width;
+        if (out) { c.strokeStyle = 'rgba(255,255,255,0.45)'; c.lineWidth = 2; c.beginPath(); c.moveTo(fx, y - 10); c.lineTo(fx + tw, y - 10); c.stroke(); }
+        fx += tw + 34;
+      });
+      y += 50;
+      c.fillStyle = MUTE; c.font = F(30, '600'); c.fillText('Champion', P, y);
+      c.fillStyle = WHITE; c.font = F(30, '700'); const ct = (T[champ] ? T[champ].flag + ' ' + T[champ].name : '—'); c.fillText(ct, P + 200, y);
+      const ctw = c.measureText(ct).width;
+      c.fillStyle = stColor(champCls); c.font = F(28, '700'); c.fillText('· ' + champStatus, P + 200 + ctw + 16, y);
+      y += 22; div();
+      // model — the live still-in-play probabilities, as on the My League window
       const sorted = alive.slice().sort((a, b) => b[1] - a[1]);
       if (sorted.length) {
-        const nm = sorted[0][0].replace(/^(Finalist|Champion)\s/, '');
-        c.fillStyle = 'rgba(255,255,255,0.88)'; c.font = F(36, '600');
-        c.fillText('🔥 In play: ' + nm + '  ' + pct(sorted[0][1]), P, y);
+        label('MODEL — STILL IN PLAY FOR YOU');
+        c.font = F(30, '600');
+        sorted.forEach(a => {
+          c.textAlign = 'left'; c.fillStyle = SUB; c.fillText(a[0], P, y);
+          c.textAlign = 'right'; c.fillStyle = GOLD; c.fillText(pct(a[1]), W - P, y);
+          c.textAlign = 'left'; y += 48;
+        });
+      } else if (!resolved.champion) {
+        label('MODEL'); c.fillStyle = SUB; c.font = F(28, '500'); c.fillText('Your knockout picks are all decided.', P, y);
       }
-      c.fillStyle = 'rgba(255,255,255,0.72)'; c.font = F(30, '600'); c.fillText('Play  →  mosabs2.github.io/worldcup-2026', P, H - P + 8);
+      c.fillStyle = MUTE; c.font = F(28, '600'); c.fillText('Play  →  mosabs2.github.io/worldcup-2026', P, H - P + 6);
       return await new Promise((res) => cv.toBlob(res, 'image/png'));
     }
 
