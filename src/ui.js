@@ -325,9 +325,11 @@
   // to mint push tokens for the installed PWA; 17 June 2026.)
   function renderAlertsCard(root) {
     root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
-      el('h3', null, '🔔 Match alerts'),
-      el('p', { class: 'tiny', style: 'margin:0 0 8px' }, 'Kick-offs and goals are posted live to the family Telegram channel — works on any phone, nothing to install.'),
-      el('a', { class: 'btn small', href: 'https://t.me/MoSabsWC26', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '📣 Join on Telegram')));
+      el('h3', null, '🔔 Alerts & your standing'),
+      el('p', { class: 'tiny', style: 'margin:0 0 8px' }, 'Live goals & kick-offs in the channel. Or message the bot your name for your rank, picks and Golden Boot — replies in English or Arabic.'),
+      el('div', { class: 'formrow' },
+        el('a', { class: 'btn small', href: 'https://t.me/MoSabsWC26', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '📣 Join channel'),
+        el('a', { class: 'btn small ghost', href: 'https://t.me/MoSabsWCBot', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '🤖 Ask the bot'))));
   }
 
   function renderToday(root) {
