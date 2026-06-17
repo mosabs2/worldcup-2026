@@ -366,7 +366,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-17",
-  "asOfNote": "Results through 19 matches, auto-synced from the ESPN public feed 2026-06-17 04:48 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 20 matches, auto-synced from the ESPN public feed 2026-06-17 09:54 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1904,13 +1904,45 @@ const WC_DATA = {
    "team1": "AUT",
    "team2": "JOR",
    "venueId": "SF",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 1
+   },
    "market": {
     "h": 0.7082,
     "x": 0.1862,
     "a": 0.1057,
     "book": "Pinnacle"
+   },
+   "goals": [
+    {
+     "t": "AUT",
+     "p": "Romano Schmid",
+     "m": "21'"
+    },
+    {
+     "t": "JOR",
+     "p": "Ali Olwan",
+     "m": "50'"
+    },
+    {
+     "t": "AUT",
+     "p": "Yazan Al-Arab",
+     "m": "76'",
+     "og": true
+    },
+    {
+     "t": "AUT",
+     "p": "Marko Arnautovic",
+     "m": "90'+12'",
+     "pen": true
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.79,
+    "team2": 0.56
    }
   },
   {
@@ -5413,24 +5445,24 @@ const WC_HISTORY = [
  },
  {
   "date": "2026-06-17",
-  "label": "Model v1.0 · after 19 matches",
+  "label": "Model v1.0 · after 20 matches",
   "probs": {
-   "FRA": 8.03,
-   "ARG": 7.68,
-   "USA": 6.16,
-   "ESP": 5.44,
-   "POR": 5.31,
-   "ENG": 5.19,
-   "GER": 5.15,
-   "BRA": 4.5,
-   "MEX": 4.27,
-   "MAR": 3.83,
-   "NED": 3.56,
-   "BEL": 3.32,
-   "COL": 3.09,
-   "CRO": 2.94,
-   "NOR": 2.46,
-   "JPN": 2.22
+   "FRA": 8.32,
+   "ARG": 7.76,
+   "USA": 5.94,
+   "ENG": 5.92,
+   "POR": 5.56,
+   "ESP": 5.5,
+   "GER": 5.18,
+   "BRA": 4.44,
+   "MEX": 4.36,
+   "MAR": 3.46,
+   "NED": 3.39,
+   "BEL": 3.25,
+   "COL": 2.81,
+   "CRO": 2.65,
+   "AUT": 2.42,
+   "NOR": 2.41
   }
  }
 ];

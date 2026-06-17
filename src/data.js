@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-17",
-  "asOfNote": "Results through 19 matches, auto-synced from the ESPN public feed 2026-06-17 04:48 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 20 matches, auto-synced from the ESPN public feed 2026-06-17 09:54 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1542,13 +1542,45 @@ const WC_DATA = {
    "team1": "AUT",
    "team2": "JOR",
    "venueId": "SF",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 1
+   },
    "market": {
     "h": 0.7082,
     "x": 0.1862,
     "a": 0.1057,
     "book": "Pinnacle"
+   },
+   "goals": [
+    {
+     "t": "AUT",
+     "p": "Romano Schmid",
+     "m": "21'"
+    },
+    {
+     "t": "JOR",
+     "p": "Ali Olwan",
+     "m": "50'"
+    },
+    {
+     "t": "AUT",
+     "p": "Yazan Al-Arab",
+     "m": "76'",
+     "og": true
+    },
+    {
+     "t": "AUT",
+     "p": "Marko Arnautovic",
+     "m": "90'+12'",
+     "pen": true
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.79,
+    "team2": 0.56
    }
   },
   {
