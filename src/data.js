@@ -3,8 +3,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-16",
-  "asOfNote": "Results through 17 matches, auto-synced from the ESPN public feed 2026-06-16 21:52 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-17",
+  "asOfNote": "Results through 18 matches, auto-synced from the ESPN public feed 2026-06-17 02:01 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1447,13 +1447,49 @@ const WC_DATA = {
    "team1": "IRQ",
    "team2": "NOR",
    "venueId": "BOS",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 4
+   },
    "market": {
     "h": 0.0676,
     "x": 0.1352,
     "a": 0.7971,
     "book": "Pinnacle"
+   },
+   "goals": [
+    {
+     "t": "NOR",
+     "p": "Erling Haaland",
+     "m": "29'"
+    },
+    {
+     "t": "IRQ",
+     "p": "Aymen Hussein",
+     "m": "39'"
+    },
+    {
+     "t": "NOR",
+     "p": "Erling Haaland",
+     "m": "43'"
+    },
+    {
+     "t": "NOR",
+     "p": "Leo Østigard",
+     "m": "76'"
+    },
+    {
+     "t": "NOR",
+     "p": "Aymen Hussein",
+     "m": "90'+6'",
+     "og": true
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.76,
+    "team2": 3.01
    }
   },
   {
