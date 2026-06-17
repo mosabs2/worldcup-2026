@@ -318,7 +318,38 @@
     ['teams', 'Teams'], ['mena', 'MENA'], ['join', 'Join'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About'], ['geeks', 'For Geeks']];
 
+  // In-app control to enable web-push match alerts (goals + kick-offs). Stays quiet
+  // where push can't work; on iPhone it explains Apple's Add-to-Home-Screen rule.
+  function renderAlertsCard(root) {
+    const ua = navigator.userAgent || '';
+    const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    if (isIOS && !standalone) {
+      root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
+        el('h3', null, '🔔 Match alerts'),
+        el('p', { class: 'tiny', style: 'margin:0' },
+          'To get goal and kick-off alerts on iPhone: tap the Share button, then "Add to Home Screen". Open the site from that new icon and an Enable button will appear here. (Apple only allows alerts for home-screen apps.)')));
+      return;
+    }
+    const status = el('span', { class: 'tiny', style: 'margin-left:10px' }, 'Goals and kick-offs, the moment they happen.');
+    const btn = el('button', { class: 'btn small' }, '🔔 Enable match alerts');
+    const sync = () => { try { const on = window.WC_OS && WC_OS.User.PushSubscription.optedIn; btn.textContent = on ? '✓ Alerts on — tap to turn off' : '🔔 Enable match alerts'; if (on) status.textContent = 'Goal & kick-off alerts are on.'; } catch (e) {} };
+    btn.addEventListener('click', async () => {
+      if (!window.WC_OS) { status.textContent = 'Alerts are still loading — try again in a moment.'; return; }
+      try {
+        if (WC_OS.User.PushSubscription.optedIn) { await WC_OS.User.PushSubscription.optOut(); }
+        else { await WC_OS.Notifications.requestPermission(); if (WC_OS.User.PushSubscription.optIn) await WC_OS.User.PushSubscription.optIn(); }
+      } catch (e) {}
+      setTimeout(sync, 800);
+    });
+    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
+      el('h3', null, '🔔 Match alerts'),
+      el('div', { class: 'formrow' }, btn, status)));
+    sync();
+  }
+
   function renderToday(root) {
+    renderAlertsCard(root);
     const today = todayLocal();
     const todays = D.matches.filter(m => dayLocal(m.dateET) === today).sort((a, b) => a.dateET.localeCompare(b.dateET));
     const done = D.matches.filter(m => effScore(m) && dayLocal(m.dateET) < today).sort((a, b) => b.dateET.localeCompare(a.dateET)).slice(0, 6);

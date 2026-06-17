@@ -31,6 +31,20 @@
 <link rel="icon" href="data:image/svg+xml,{{FAVICON}}">
 <meta name="color-scheme" content="light dark">
 <script>window.WC_BUILT_AT="{{BUILT_AT}}";</script>
+<!-- OneSignal web-push (match-start + goal alerts). Its worker lives in the
+     /worldcup-2026/onesignal/ scope (dashboard-configured) so it never touches
+     the scores PWA worker at /worldcup-2026/. Subscription is driven by the
+     explicit "Match alerts" button in the app, not an auto-prompt. -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function (OneSignal) {
+  try {
+    await OneSignal.init({ appId: "c86b42d9-2e6b-40b5-8512-0f11c857decf", allowLocalhostAsSecureOrigin: true });
+    window.WC_OS = OneSignal;   // expose for the in-app "Match alerts" button
+  } catch (e) { /* push optional: never block the app */ }
+});
+</script>
 <script>
 /* Resolve the effective theme before first paint (no flash). Stored mode is auto|light|dark. */
 (function(){try{var raw=localStorage.getItem('wc26.theme.v1');var m='auto';if(raw){try{m=JSON.parse(raw);}catch(e){m=raw;}}var dark=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}catch(e){}})();
