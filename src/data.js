@@ -4617,6 +4617,23 @@ const WC_DATA = {
     "tg": 235,
     "n": "Rashed",
     "locked": "2026-06-15"
+   },
+   {
+    "gb": {
+     "p": "Yamal",
+     "t": "ESP"
+    },
+    "as": {
+     "p": "Valverde",
+     "t": "URU"
+    },
+    "cards": "POR",
+    "goals": "ESP",
+    "mena": "MAR",
+    "host": "USA",
+    "tg": 153,
+    "n": "Abdullah Mubarak",
+    "locked": "2026-06-17"
    }
   ],
   "propsDeadline": "Open — TBC"
