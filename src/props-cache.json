@@ -1,0 +1,838 @@
+{
+"mt_209798581": {
+"scorers": [
+{
+"pid": "pl_30158287",
+"player": "Romano Schmid",
+"team": "AUT",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_84705367",
+"player": "Ali Olwan",
+"team": "JOR",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_377527",
+"player": "Marko Arnautović",
+"team": "AUT",
+"goals": 1,
+"pens": 1
+}
+],
+"assists": [
+{
+"pid": "pl_72935230",
+"player": "Xaver Schlager",
+"team": "AUT",
+"assists": 1
+},
+{
+"pid": "pl_45116124",
+"player": "Noor Al-Rawabdeh",
+"team": "JOR",
+"assists": 1
+}
+],
+"cards": {
+"AUT": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_028389471": {
+"scorers": [
+{
+"pid": "pl_080525",
+"player": "Lionel Messi",
+"team": "ARG",
+"goals": 3,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_7941211",
+"player": "Rodrigo De Paul",
+"team": "ARG",
+"assists": 1
+},
+{
+"pid": "pl_45106670",
+"player": "Nicolás González",
+"team": "ARG",
+"assists": 1
+}
+],
+"cards": {}
+},
+"mt_517473168": {
+"scorers": [
+{
+"pid": "pl_61928103",
+"player": "Erling Haaland",
+"team": "NOR",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_72907414",
+"player": "Aymen Hussein",
+"team": "IRQ",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_61968089",
+"player": "Leo Østigård",
+"team": "NOR",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_57527456",
+"player": "David Möller Wolfe",
+"team": "NOR",
+"assists": 1
+},
+{
+"pid": "pl_13495135",
+"player": "Martin Ødegaard",
+"team": "NOR",
+"assists": 1
+},
+{
+"pid": "pl_45177802",
+"player": "Amir Al-Ammari",
+"team": "IRQ",
+"assists": 1
+}
+],
+"cards": {
+"IRQ": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_209797283": {
+"scorers": [
+{
+"pid": "pl_57255528",
+"player": "Kylian Mbappé",
+"team": "FRA",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_96339201",
+"player": "Bradley Barcola",
+"team": "FRA",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_83885386",
+"player": "Ibrahim Mbaye",
+"team": "SEN",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_84704697",
+"player": "Michael Olise",
+"team": "FRA",
+"assists": 1
+},
+{
+"pid": "pl_3860382",
+"player": "Adrien Rabiot",
+"team": "FRA",
+"assists": 1
+},
+{
+"pid": "pl_72093207",
+"player": "Iliman Ndiaye",
+"team": "SEN",
+"assists": 1
+}
+],
+"cards": {}
+},
+"mt_986264843": {
+"scorers": [
+{
+"pid": "pl_30263406",
+"player": "Elijah Just",
+"team": "NZL",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_57289117",
+"player": "Ramin Rezaeian",
+"team": "IRN",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_45224605",
+"player": "Mohammad Mohebi",
+"team": "IRN",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_57289117",
+"player": "Ramin Rezaeian",
+"team": "IRN",
+"assists": 1
+},
+{
+"pid": "pl_187931",
+"player": "Chris Wood",
+"team": "NZL",
+"assists": 2
+}
+],
+"cards": {
+"IRN": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_209798066": {
+"scorers": [
+{
+"pid": "pl_29720715",
+"player": "Abdulelah Al-Amri",
+"team": "KSA",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_57334423",
+"player": "Maximiliano Araújo",
+"team": "URU",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [],
+"cards": {
+"KSA": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_370102747": {
+"scorers": [
+{
+"pid": "pl_96388140",
+"player": "Emam Ashour",
+"team": "EGY",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_4016958",
+"player": "Mohamed Salah",
+"team": "EGY",
+"assists": 1
+}
+],
+"cards": {
+"BEL": {
+"yellow": 2,
+"red": 0
+},
+"EGY": {
+"yellow": 2,
+"red": 0
+}
+}
+},
+"mt_517473171": {
+"scorers": [],
+"assists": [],
+"cards": {
+"ESP": {
+"yellow": 1,
+"red": 0
+},
+"CPV": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_209798753": {
+"scorers": [
+{
+"pid": "pl_72797991",
+"player": "Yasin Ayari",
+"team": "SWE",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_29627593",
+"player": "Alexander Isak",
+"team": "SWE",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_29161960",
+"player": "Omar Rekik",
+"team": "TUN",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_84500047",
+"player": "Viktor Gyökeres",
+"team": "SWE",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_30888670",
+"player": "Mattias Svanberg",
+"team": "SWE",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_29627593",
+"player": "Alexander Isak",
+"team": "SWE",
+"assists": 2
+},
+{
+"pid": "pl_84500047",
+"player": "Viktor Gyökeres",
+"team": "SWE",
+"assists": 1
+},
+{
+"pid": "pl_61680998",
+"player": "Hannibal Mejbri",
+"team": "TUN",
+"assists": 1
+},
+{
+"pid": "pl_25773026",
+"player": "Lucas Bergvall",
+"team": "SWE",
+"assists": 1
+}
+],
+"cards": {
+"TUN": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_028389435": {
+"scorers": [
+{
+"pid": "pl_30485505",
+"player": "Amad Diallo",
+"team": "CIV",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_45289486",
+"player": "Wilfried Singo",
+"team": "CIV",
+"assists": 1
+}
+],
+"cards": {
+"CIV": {
+"yellow": 3,
+"red": 0
+},
+"ECU": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_465851856": {
+"scorers": [
+{
+"pid": "pl_4089246",
+"player": "Virgil van Dijk",
+"team": "NED",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_96479964",
+"player": "Keito Nakamura",
+"team": "JPN",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_45171497",
+"player": "Crysencio Summerville",
+"team": "NED",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_84552007",
+"player": "Daichi Kamada",
+"team": "JPN",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_30263610",
+"player": "Ryan Gravenberch",
+"team": "NED",
+"assists": 2
+},
+{
+"pid": "pl_84084982",
+"player": "Takefusa Kubo",
+"team": "JPN",
+"assists": 1
+},
+{
+"pid": "pl_13648481",
+"player": "Koki Ogawa",
+"team": "JPN",
+"assists": 1
+}
+],
+"cards": {
+"NED": {
+"yellow": 3,
+"red": 0
+}
+}
+},
+"mt_732520954": {
+"scorers": [
+{
+"pid": "pl_57318988",
+"player": "Felix Nmecha",
+"team": "GER",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_97677622",
+"player": "Livano Comenencia",
+"team": "CUW",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_29820785",
+"player": "Nico Schlotterbeck",
+"team": "GER",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_45857110",
+"player": "Kai Havertz",
+"team": "GER",
+"goals": 2,
+"pens": 1
+},
+{
+"pid": "pl_29232822",
+"player": "Jamal Musiala",
+"team": "GER",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_74250712",
+"player": "Nathaniel Brown",
+"team": "GER",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_84552049",
+"player": "Deniz Undav",
+"team": "GER",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_74250712",
+"player": "Nathaniel Brown",
+"team": "GER",
+"assists": 1
+},
+{
+"pid": "pl_3878734",
+"player": "Joshua Kimmich",
+"team": "GER",
+"assists": 2
+},
+{
+"pid": "pl_96978770",
+"player": "Florian Wirtz",
+"team": "GER",
+"assists": 1
+},
+{
+"pid": "pl_84552049",
+"player": "Deniz Undav",
+"team": "GER",
+"assists": 2
+}
+],
+"cards": {}
+},
+"mt_028389414": {
+"scorers": [
+{
+"pid": "pl_36078038",
+"player": "Nestory Irankunda",
+"team": "AUS",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_08974143",
+"player": "Connor Metcalfe",
+"team": "AUS",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_40849197",
+"player": "Paul Okon-Engstler",
+"team": "AUS",
+"assists": 1
+}
+],
+"cards": {
+"TUR": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_517473267": {
+"scorers": [
+{
+"pid": "pl_5287874",
+"player": "John McGinn",
+"team": "SCO",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [],
+"cards": {
+"SCO": {
+"yellow": 3,
+"red": 0
+},
+"HAI": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_153637518": {
+"scorers": [
+{
+"pid": "pl_36550037",
+"player": "Ismael Saibari",
+"team": "MAR",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_96248304",
+"player": "Vinícius Júnior",
+"team": "BRA",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_72501523",
+"player": "Bruno Guimarães",
+"team": "BRA",
+"assists": 1
+},
+{
+"pid": "pl_45856981",
+"player": "Brahim Díaz",
+"team": "MAR",
+"assists": 1
+}
+],
+"cards": {
+"BRA": {
+"yellow": 2,
+"red": 0
+}
+}
+},
+"mt_641919660": {
+"scorers": [
+{
+"pid": "pl_6965248",
+"player": "Breel Embolo",
+"team": "SUI",
+"goals": 1,
+"pens": 1
+},
+{
+"pid": "pl_6469950",
+"player": "Boualem Khoukhi",
+"team": "QAT",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [],
+"cards": {
+"SUI": {
+"yellow": 1,
+"red": 0
+},
+"QAT": {
+"yellow": 2,
+"red": 0
+}
+}
+},
+"mt_517473281": {
+"scorers": [
+{
+"pid": "pl_30247840",
+"player": "Folarin Balogun",
+"team": "USA",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_57938932",
+"player": "Mauricio",
+"team": "PAR",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_61055591",
+"player": "Giovanni Reyna",
+"team": "USA",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_25536128",
+"player": "Alexander Freeman",
+"team": "USA",
+"assists": 1
+},
+{
+"pid": "pl_84756582",
+"player": "Malik Tillman",
+"team": "USA",
+"assists": 1
+},
+{
+"pid": "pl_30842560",
+"player": "Christian Pulišić",
+"team": "USA",
+"assists": 1
+},
+{
+"pid": "pl_61034316",
+"player": "Julio Enciso",
+"team": "PAR",
+"assists": 1
+}
+],
+"cards": {
+"USA": {
+"yellow": 1,
+"red": 0
+},
+"PAR": {
+"yellow": 5,
+"red": 0
+}
+}
+},
+"mt_641915402": {
+"scorers": [
+{
+"pid": "pl_30227261",
+"player": "Jovo Lukić",
+"team": "BIH",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_72933740",
+"player": "Cyle Larin",
+"team": "CAN",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_8390883",
+"player": "Sead Kolašinac",
+"team": "BIH",
+"assists": 1
+},
+{
+"pid": "pl_83280977",
+"player": "Promise David",
+"team": "CAN",
+"assists": 1
+}
+],
+"cards": {
+"BIH": {
+"yellow": 3,
+"red": 0
+},
+"CAN": {
+"yellow": 2,
+"red": 0
+}
+}
+},
+"mt_153637955": {
+"scorers": [
+{
+"pid": "pl_13600011",
+"player": "Ladislav Krejčí",
+"team": "CZE",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_72015363",
+"player": "Hwang In-beom",
+"team": "KOR",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_08087109",
+"player": "Hyeon-gyu Oh",
+"team": "KOR",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_0127277",
+"player": "Vladimír Coufal",
+"team": "CZE",
+"assists": 1
+},
+{
+"pid": "pl_30284551",
+"player": "Kang-in Lee",
+"team": "KOR",
+"assists": 1
+},
+{
+"pid": "pl_72015363",
+"player": "Hwang In-beom",
+"team": "KOR",
+"assists": 1
+}
+],
+"cards": {
+"KOR": {
+"yellow": 1,
+"red": 0
+}
+}
+},
+"mt_153637999": {
+"scorers": [
+{
+"pid": "pl_08314452",
+"player": "Julián Quiñones",
+"team": "MEX",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_9877931",
+"player": "Raúl Jiménez",
+"team": "MEX",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_13661937",
+"player": "Roberto Alvarado",
+"team": "MEX",
+"assists": 1
+},
+{
+"pid": "pl_84688245",
+"player": "Erik Lira",
+"team": "MEX",
+"assists": 1
+}
+],
+"cards": {
+"RSA": {
+"yellow": 2,
+"red": 2
+},
+"MEX": {
+"yellow": 1,
+"red": 1
+}
+}
+}
+}

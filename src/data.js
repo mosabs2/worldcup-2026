@@ -4599,9 +4599,15 @@ const WC_DATA = {
   "propsDeadline": "Open — TBC"
  },
  "propsLive": {
-  "asOf": "2026-06-15",
-  "matchesCounted": 12,
+  "asOf": "2026-06-17",
+  "matchesCounted": 20,
   "topScorers": [
+   {
+    "player": "Lionel Messi",
+    "team": "ARG",
+    "goals": 3,
+    "pens": 0
+   },
    {
     "player": "Kai Havertz",
     "team": "GER",
@@ -4609,8 +4615,26 @@ const WC_DATA = {
     "pens": 1
    },
    {
+    "player": "Elijah Just",
+    "team": "NZL",
+    "goals": 2,
+    "pens": 0
+   },
+   {
+    "player": "Erling Haaland",
+    "team": "NOR",
+    "goals": 2,
+    "pens": 0
+   },
+   {
     "player": "Folarin Balogun",
     "team": "USA",
+    "goals": 2,
+    "pens": 0
+   },
+   {
+    "player": "Kylian Mbappé",
+    "team": "FRA",
     "goals": 2,
     "pens": 0
    },
@@ -4627,8 +4651,26 @@ const WC_DATA = {
     "pens": 1
    },
    {
+    "player": "Marko Arnautović",
+    "team": "AUT",
+    "goals": 1,
+    "pens": 1
+   },
+   {
+    "player": "Abdulelah Al-Amri",
+    "team": "KSA",
+    "goals": 1,
+    "pens": 0
+   },
+   {
     "player": "Alexander Isak",
     "team": "SWE",
+    "goals": 1,
+    "pens": 0
+   },
+   {
+    "player": "Ali Olwan",
+    "team": "JOR",
     "goals": 1,
     "pens": 0
    },
@@ -4639,56 +4681,14 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Aymen Hussein",
+    "team": "IRQ",
+    "goals": 1,
+    "pens": 0
+   },
+   {
     "player": "Boualem Khoukhi",
     "team": "QAT",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Connor Metcalfe",
-    "team": "AUS",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Crysencio Summerville",
-    "team": "NED",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Cyle Larin",
-    "team": "CAN",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Daichi Kamada",
-    "team": "JPN",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Deniz Undav",
-    "team": "GER",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Felix Nmecha",
-    "team": "GER",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Giovanni Reyna",
-    "team": "USA",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Hwang In-beom",
-    "team": "KOR",
     "goals": 1,
     "pens": 0
    }
@@ -4705,6 +4705,12 @@ const WC_DATA = {
     "team": "GER",
     "assists": 2,
     "goals": 1
+   },
+   {
+    "player": "Chris Wood",
+    "team": "NZL",
+    "assists": 2,
+    "goals": 0
    },
    {
     "player": "Joshua Kimmich",
@@ -4731,14 +4737,32 @@ const WC_DATA = {
     "goals": 1
    },
    {
+    "player": "Ramin Rezaeian",
+    "team": "IRN",
+    "assists": 1,
+    "goals": 1
+   },
+   {
     "player": "Viktor Gyökeres",
     "team": "SWE",
     "assists": 1,
     "goals": 1
    },
    {
+    "player": "Adrien Rabiot",
+    "team": "FRA",
+    "assists": 1,
+    "goals": 0
+   },
+   {
     "player": "Alexander Freeman",
     "team": "USA",
+    "assists": 1,
+    "goals": 0
+   },
+   {
+    "player": "Amir Al-Ammari",
+    "team": "IRQ",
     "assists": 1,
     "goals": 0
    },
@@ -4757,30 +4781,6 @@ const WC_DATA = {
    {
     "player": "Christian Pulišić",
     "team": "USA",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Erik Lira",
-    "team": "MEX",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Florian Wirtz",
-    "team": "GER",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Hannibal Mejbri",
-    "team": "TUN",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Julio Enciso",
-    "team": "PAR",
     "assists": 1,
     "goals": 0
    }
@@ -4829,6 +4829,18 @@ const WC_DATA = {
     "points": 3
    },
    {
+    "team": "BEL",
+    "yellow": 2,
+    "red": 0,
+    "points": 2
+   },
+   {
+    "team": "EGY",
+    "yellow": 2,
+    "red": 0,
+    "points": 2
+   },
+   {
     "team": "BRA",
     "yellow": 2,
     "red": 0,
@@ -4845,18 +4857,6 @@ const WC_DATA = {
     "yellow": 2,
     "red": 0,
     "points": 2
-   },
-   {
-    "team": "TUN",
-    "yellow": 1,
-    "red": 0,
-    "points": 1
-   },
-   {
-    "team": "ECU",
-    "yellow": 1,
-    "red": 0,
-    "points": 1
    }
   ],
   "teamGoals": [
@@ -4871,6 +4871,22 @@ const WC_DATA = {
    {
     "team": "USA",
     "goals": 4
+   },
+   {
+    "team": "NOR",
+    "goals": 4
+   },
+   {
+    "team": "FRA",
+    "goals": 3
+   },
+   {
+    "team": "ARG",
+    "goals": 3
+   },
+   {
+    "team": "AUT",
+    "goals": 3
    },
    {
     "team": "MEX",
@@ -4891,25 +4907,9 @@ const WC_DATA = {
    {
     "team": "JPN",
     "goals": 2
-   },
-   {
-    "team": "CZE",
-    "goals": 1
-   },
-   {
-    "team": "CAN",
-    "goals": 1
-   },
-   {
-    "team": "BIH",
-    "goals": 1
-   },
-   {
-    "team": "PAR",
-    "goals": 1
    }
   ],
-  "note": "Golden Boot from shot data; assists and cards from official player stats (may lag a match); team goals from results. MENA and host props resolve on the bracket."
+  "note": "Golden Boot from shot data; assists and cards from official match player stats; team goals from results. MENA and host props resolve on the bracket."
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };
