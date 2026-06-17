@@ -1321,9 +1321,15 @@
 
     const cal = calibration();
     const mll = cal.model.ll, kll = cal.market.ll, mbr = cal.model.brier, kbr = cal.market.brier;
-    const verdict = kll > mll * 1.03 ? 'the market has been a touch behind our model'
-      : kll < mll * 0.97 ? 'the market has been a touch sharper than our model'
+    const ahead = kll > mll * 1.03, behind = kll < mll * 0.97;
+    const verdict = ahead ? 'the market has been a touch behind our model'
+      : behind ? 'the market has been a touch sharper than our model'
       : 'the two have been comparable';
+    const brag = behind
+      ? 'The gap is small and no surprise against the sharpest book in the world; the model is holding its own, and we treat the market as a reference, not a crutch.'
+      : ahead
+        ? 'A homemade model edging the sharpest book in the world, even this early, is the result worth bragging about.'
+        : 'A homemade model sitting level with the sharpest book in the world is the result worth bragging about.';
     root.append(card('Did we need to buy the market? The live backtest',
       P('A subscription to a professional data feed gives us the bookmakers’ own probabilities (their closing odds, with the bookmaker’s margin removed). The bookmakers, Pinnacle especially, are the sharpest forecasters in football. So the honest question is: does our homemade model add anything, or should we just show the market’s numbers?'),
       P('We test it continuously. For every match played so far (' + cal.n + ' games), we take the model’s pre-match probabilities (using only earlier results, no peeking) and the market’s closing probabilities, and score both against what actually happened using log-loss and the Brier score. Both reward confident correct calls and punish confident wrong ones; lower is sharper. These numbers update live as games complete.'),
@@ -1331,9 +1337,9 @@
         el('tr', null, ['Metric (lower = sharper)', 'Our model', 'Market'].map((h, i) => el('th', { class: i ? 'num' : '' }, h))),
         el('tr', null, el('td', null, 'Log-loss'), el('td', { class: 'num' }, el('b', null, mll.toFixed(2))), el('td', { class: 'num' }, kll.toFixed(2))),
         el('tr', null, el('td', null, 'Brier score'), el('td', { class: 'num' }, el('b', null, mbr.toFixed(2))), el('td', { class: 'num' }, kbr.toFixed(2)))),
-      P(el('b', null, 'The honest verdict (live, ' + cal.n + ' games). '), 'On the games played so far, ' + verdict + '. The sample is still small, so treat it as directional, not a victory lap. But a homemade model sitting level with the sharpest book in the world is the result worth bragging about.'),
-      P(el('b', null, 'Why it can. '), 'Two reasons. First, our base ratings are themselves seeded from data the market has already digested, so we are not starting from scratch. Second, the opening round was chaos: the market had Switzerland firm favourites against Qatar (it finished 1-1) and Türkiye over Australia (Australia won), and a confident wrong call is punished hard, so the market’s very confidence cost it on the upsets. ',
-        el('b', null, 'What we did with the finding. '), 'We did not throw away our model to chase the market. Instead the market line is shown on each match as a reference, and the paid feed’s real value, the expected-goals data, is used to temper the rating updates as described above. We bought sharper inputs, not a replacement brain.')));
+      P(el('b', null, 'The honest verdict (live, ' + cal.n + ' games). '), 'On the games played so far, ' + verdict + '. The sample is still small, so treat it as directional, not a victory lap. ' + brag),
+      behind ? null : P(el('b', null, 'Why it can. '), 'Two reasons. First, our base ratings are themselves seeded from data the market has already digested, so we are not starting from scratch. Second, the opening round was chaos: the market had Switzerland firm favourites against Qatar (it finished 1-1) and Türkiye over Australia (Australia won), and a confident wrong call is punished hard, so the market’s very confidence cost it on the upsets.'),
+      P(el('b', null, 'What we did with the finding. '), 'We did not throw away our model to chase the market. Instead the market line is shown on each match as a reference, and the paid feed’s real value, the expected-goals data, is used to temper the rating updates as described above. We bought sharper inputs, not a replacement brain.')));
 
     root.append(card('Two more live stats: the deserved table and the shock board',
       P(el('b', null, 'The deserved table (xG) — on the Groups tab. '), 'Toggle "Deserved (xG)" on Groups and the standings rebuild from expected goals instead of actual goals: in each played match the side that created the better chances takes the points (a draw if the two xG totals are within ' + DESERVED_DRAW + '), then we tally and rank. The "vs actual" arrow shows the gap between where a side actually sits and where the chances say it deserves to: an up arrow means it has been unlucky, a down arrow means it is riding its luck. It is the cleanest one-glance answer to "is this team for real, or has the scoreline flattered them?" — bearing in mind it is only a game or two per side so far.'),
