@@ -1614,7 +1614,11 @@ const WC_DATA = {
      "m": "45'+5'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.7,
+    "team2": 0.8
+   }
   },
   {
    "id": "M022",
@@ -4656,7 +4660,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-17",
-  "matchesCounted": 20,
+  "matchesCounted": 21,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -4823,6 +4827,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Arthur Masuaku",
+    "team": "COD",
+    "assists": 1,
+    "goals": 0
+   },
+   {
     "player": "Brahim Díaz",
     "team": "MAR",
     "assists": 1,
@@ -4831,12 +4841,6 @@ const WC_DATA = {
    {
     "player": "Bruno Guimarães",
     "team": "BRA",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Christian Pulišić",
-    "team": "USA",
     "assists": 1,
     "goals": 0
    }
@@ -4885,6 +4889,12 @@ const WC_DATA = {
     "points": 3
    },
    {
+    "team": "POR",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
     "team": "BEL",
     "yellow": 2,
     "red": 0,
@@ -4904,12 +4914,6 @@ const WC_DATA = {
    },
    {
     "team": "QAT",
-    "yellow": 2,
-    "red": 0,
-    "points": 2
-   },
-   {
-    "team": "CAN",
     "yellow": 2,
     "red": 0,
     "points": 2

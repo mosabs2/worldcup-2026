@@ -834,5 +834,47 @@
 "red": 1
 }
 }
+},
+"mt_732520442": {
+"scorers": [
+{
+"pid": "pl_58872495",
+"player": "João Neves",
+"team": "POR",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_57243197",
+"player": "Yoane Wissa",
+"team": "COD",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_72571429",
+"player": "Pedro Neto",
+"team": "POR",
+"assists": 1
+},
+{
+"pid": "pl_4041951",
+"player": "Arthur Masuaku",
+"team": "COD",
+"assists": 1
+}
+],
+"cards": {
+"POR": {
+"yellow": 3,
+"red": 0
+},
+"COD": {
+"yellow": 1,
+"red": 0
+}
+}
 }
 }
