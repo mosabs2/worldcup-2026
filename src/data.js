@@ -4162,6 +4162,29 @@ const WC_DATA = {
     ],
     "c": "GER",
     "locked": "2026-06-16"
+   },
+   {
+    "n": "Abdullah Mubarak",
+    "w": {
+     "A": "KOR",
+     "B": "QAT",
+     "C": "MAR",
+     "D": "TUR",
+     "E": "GER",
+     "F": "NED",
+     "G": "EGY",
+     "H": "KSA",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "ENG"
+    },
+    "f": [
+     "MAR",
+     "FRA"
+    ],
+    "c": "MAR",
+    "locked": "2026-06-17"
    }
   ],
   "scoring": {
