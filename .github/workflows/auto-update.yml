@@ -1,15 +1,20 @@
 name: Auto-update scores
 
 # Matches run in North America: kickoffs fall roughly 16:00-03:00 UTC
-# (19:00-06:00 Kuwait), with the latest games ending ~06:00 UTC. The schedule
-# fires every 15 minutes inside that window so a full-time result publishes
-# within ~15 min of the final whistle (was every 2 hours). Each run is a quick
-# no-op when nothing has changed, so the dense cadence is cheap (public repo =
-# free Actions). Nothing runs during the quiet Kuwait daytime (07:00-15:59 UTC).
+# (19:00-06:00 Kuwait), with the latest games ending ~06:00 UTC. Inside that
+# window the schedule fires every 15 minutes so a full-time result publishes
+# within ~15 min of the final whistle. Outside it (the Kuwait daytime, 07:00-
+# 15:59 UTC) it fires hourly as a backstop rather than going dark for nine hours:
+# GitHub can silently drop scheduled runs, so the old daytime blackout could leave
+# the published page frozen on an overnight snapshot all morning. The hourly pass
+# also retries the light --only-missing-xg enrich, so xG that lands late still
+# fills in during the day. Each run is a quick no-op when nothing has changed, so
+# the cadence is cheap (public repo = free Actions).
 on:
   schedule:
-    - cron: '*/15 16-23 * * *'
-    - cron: '*/15 0-6 * * *'
+    - cron: '*/15 16-23 * * *'   # match window: every 15 min
+    - cron: '*/15 0-6 * * *'     # match window past midnight UTC: every 15 min
+    - cron: '0 7-15 * * *'       # Kuwait daytime backstop: hourly (was a 9h blackout)
   workflow_dispatch: {}
 
 permissions:

@@ -7285,14 +7285,16 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
     toastTimer = setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4200);
   }
 
-  async function refreshScores() {
-    const btn = document.getElementById('refresh');
-    btn.disabled = true; btn.textContent = 'Checking…';
+  // Core: pull finals for matches kicked off in the last 96h straight from the ESPN
+  // feed, apply them as local overrides and recompute. Returns the count applied,
+  // -1 when nothing is pending, or null on a network error. No UI side effects —
+  // callers own the button state and toasts, so this can run silently on load too.
+  async function pullFinals() {
+    const now = new Date();
+    const pending = D.matches.filter(m => m.status !== 'completed' && !localOv[m.id] &&
+      new Date(m.dateET) <= now && (now - new Date(m.dateET)) < 96 * 3600e3);
+    if (!pending.length) return -1;
     try {
-      const now = new Date();
-      const pending = D.matches.filter(m => m.status !== 'completed' && !localOv[m.id] &&
-        new Date(m.dateET) <= now && (now - new Date(m.dateET)) < 96 * 3600e3);
-      if (!pending.length) { toast('No matches awaiting results right now.'); return; }
       const days = [...new Set(pending.map(etDate))].sort();
       const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
       const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
@@ -7314,13 +7316,39 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
         localOv[match.id] = [g1, g2]; n++;
       }
       if (n) { lsSet(LS.ov, localOv); refresh(); }
-      toast(n ? n + ' new result' + (n === 1 ? '' : 's') + ' pulled; all probabilities recomputed.'
-              : 'Feed reached; no new final scores yet.');
+      return n;
     } catch (err) {
-      toast('Could not reach the scores feed; try again in a minute.');
+      return null;
+    }
+  }
+
+  // Manual ↻ Scores button: pull finals with full button-state + toast feedback.
+  async function refreshScores() {
+    const btn = document.getElementById('refresh');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      const n = await pullFinals();
+      toast(n === null ? 'Could not reach the scores feed; try again in a minute.'
+          : n === -1   ? 'No matches awaiting results right now.'
+          : n          ? n + ' new result' + (n === 1 ? '' : 's') + ' pulled; all probabilities recomputed.'
+                       : 'Feed reached; no new final scores yet.');
     } finally {
       btn.disabled = false; btn.textContent = '↻ Scores';
     }
+  }
+
+  // Silent self-heal: on page load and whenever the app returns to the foreground,
+  // pull any finals the published snapshot is missing so an opened page is always
+  // current without a manual tap. The published site only rebuilds on a schedule
+  // (and GitHub can drop scheduled runs), so this closes the gap client-side. Only
+  // toasts when it actually applied something; throttled to at most once a minute.
+  let lastReconcile = 0;
+  async function autoReconcile() {
+    const now = Date.now();
+    if (now - lastReconcile < 60e3) return;
+    lastReconcile = now;
+    const n = await pullFinals();
+    if (n > 0) toast(n + ' new result' + (n === 1 ? '' : 's') + ' came in; probabilities recomputed.');
   }
 
   // ---------- shell ----------
@@ -7374,6 +7402,9 @@ const WC_MAP = {"proj": {"lon0": -98.0, "lat0": 38.0, "k": 0.7880107536067219, "
       if (tabs.some(([id]) => id === h) && h !== activeTab) { activeTab = h; renderTab(); }
     });
     setTimeout(pollLive, 2500);
+    setTimeout(autoReconcile, 1500);   // self-heal on load: catch finals the published snapshot missed
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) autoReconcile(); });
+    window.addEventListener('focus', autoReconcile);   // and whenever the app returns to the foreground
     document.getElementById('refresh').addEventListener('click', refreshScores);
     document.getElementById('whatif').addEventListener('click', () => {
       whatIf.on = !whatIf.on;
