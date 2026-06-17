@@ -179,41 +179,44 @@ def api(token, method, params):
         return json.load(r)
 
 def run():
+    # One short polling cycle, designed to be launched by cron every minute. It
+    # long-polls ~50s for any waiting messages, answers them, and exits — so it can
+    # never get stuck or crash-loop; cron simply runs it again next minute. flock
+    # stops two cycles overlapping (which Telegram would reject with a 409).
     lock = open(LOCK_FILE, "w")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
-        return  # another instance is already running
+        return  # previous cycle still polling
     if not os.path.exists(TOKEN_FILE):
-        log("no token; exit"); return
+        return
     token = open(TOKEN_FILE).read().strip()
     try:
         offset = int(open(OFFSET_FILE).read().strip())
     except Exception:
         offset = 0
-    log("bot loop started (offset=%d)" % offset)
-    while True:
-        try:
-            res = api(token, "getUpdates", {"offset": offset, "timeout": 30})
-            for u in res.get("result", []):
-                offset = u["update_id"] + 1
-                msg = u.get("message") or u.get("channel_post")
-                if not msg or "text" not in msg:
-                    continue
-                chat_id = msg["chat"]["id"]
-                if msg["chat"].get("type") != "private":
-                    continue  # only answer DMs, ignore channel/group noise
-                try:
-                    reply = build_reply(msg["text"])
-                except Exception as ex:
-                    reply = "Sorry, something went wrong. Try again in a moment."
-                    log("reply err: %s" % ex)
-                api(token, "sendMessage", {"chat_id": chat_id, "text": reply, "disable_web_page_preview": "true"})
-            open(OFFSET_FILE, "w").write(str(offset))
-        except urllib.error.HTTPError as e:
-            log("http %s; sleep" % e.code); time.sleep(5)
-        except Exception as ex:
-            log("loop err %s; sleep" % ex); time.sleep(5)
+    try:
+        res = api(token, "getUpdates", {"offset": offset, "timeout": 50})
+        handled = 0
+        for u in res.get("result", []):
+            offset = u["update_id"] + 1
+            msg = u.get("message")
+            if not msg or "text" not in msg or msg.get("chat", {}).get("type") != "private":
+                continue
+            try:
+                reply = build_reply(msg["text"])
+            except Exception as ex:
+                reply = "Sorry, something went wrong — try again in a moment."
+                log("reply err: %s" % ex)
+            api(token, "sendMessage", {"chat_id": msg["chat"]["id"], "text": reply, "disable_web_page_preview": "true"})
+            handled += 1
+        open(OFFSET_FILE, "w").write(str(offset))
+        if handled:
+            log("handled %d message(s)" % handled)
+    except urllib.error.HTTPError as e:
+        log("http %s %s" % (e.code, e.read().decode()[:120]))
+    except Exception as ex:
+        log("cycle err %s" % ex)
 
 if __name__ == "__main__":
     if len(sys.argv) > 2 and sys.argv[1] == "--test":
