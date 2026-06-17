@@ -269,6 +269,14 @@ tr.exhibition-row td:first-child { box-shadow: inset 3px 0 0 #C7A234; color: #9A
   .masthead h1 { font-size: 15px; }
   .masthead .sub { display: none; }
   .masthead .lockup-divider { display: none; }
+  /* let the masthead wrap on phones so the control pills aren't cut off the edge,
+     and drop the freshness/as-of block onto its own full-width, left-aligned line
+     instead of being squeezed between the title and the buttons. */
+  .masthead { flex-wrap: wrap; gap: 6px; row-gap: 10px; }
+  .masthead .spacer { display: none; }
+  .masthead .mono { width: 30px; height: 38px; }
+  .asof { order: 10; flex-basis: 100%; text-align: left; font-size: 11px; opacity: .9; }
+  .whatif-pill { padding: 5px 8px; font-size: 10px; letter-spacing: 0; }
   main { padding: 16px 12px 50px; }
   nav button { padding: 9px 10px; font-size: 12.5px; }
   .card { overflow-x: auto; }   /* wide tables scroll inside their card instead of clipping */
