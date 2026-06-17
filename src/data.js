@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-17",
-  "asOfNote": "Results through 20 matches, auto-synced from the ESPN public feed 2026-06-17 09:54 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 21 matches, auto-synced from the ESPN public feed 2026-06-17 19:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1591,14 +1591,30 @@ const WC_DATA = {
    "team1": "POR",
    "team2": "COD",
    "venueId": "HOU",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.7453,
     "x": 0.1693,
     "a": 0.0855,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "POR",
+     "p": "João Neves",
+     "m": "6'"
+    },
+    {
+     "t": "COD",
+     "p": "Yoane Wissa",
+     "m": "45'+5'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M022",
