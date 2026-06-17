@@ -19,6 +19,7 @@ TOKEN_FILE = os.path.expanduser("~/.claude/telegram-bot-token")
 STATE = os.path.expanduser("~/.claude/jobs/wc-notify-state.json")
 LOGDIR = os.path.expanduser("~/.claude/jobs/logs")
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=%s"
+SUMMARY = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=%s"
 
 def log(m):
     os.makedirs(LOGDIR, exist_ok=True)
@@ -35,6 +36,23 @@ def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": "wc-notify/1.0"})
     with urllib.request.urlopen(req, timeout=20) as r:
         return json.load(r)
+
+def latest_goal(eid):
+    """Most recent scoring play (scorer, minute, tag) from the ESPN summary feed."""
+    try:
+        s = fetch(SUMMARY % eid)
+    except Exception:
+        return None
+    goals = [k for k in (s or {}).get("keyEvents", []) if k.get("scoringPlay")]
+    if not goals:
+        return None
+    k = goals[-1]
+    parts = k.get("participants") or []
+    scorer = ((parts[0].get("athlete") or {}).get("displayName")) if parts else None
+    minute = (k.get("clock") or {}).get("displayValue")
+    ttext = ((k.get("type") or {}).get("text") or "")
+    tag = " (pen)" if "Penalty" in ttext else (" (OG)" if "Own" in ttext else "")
+    return (scorer, minute, tag)
 
 def post(text):
     data = urllib.parse.urlencode({"chat_id": CHAT, "text": text, "disable_web_page_preview": "true"}).encode()
@@ -83,10 +101,19 @@ for eid, e in events.items():
             else:
                 tot = asc + bsc
                 if tot > prev.get("total", tot):
-                    scorer = an if asc > prev.get("a", asc) else bn
-                    post("⚽ GOAL — %s\n%s %d - %d %s   (%s)" % (scorer, an, asc, bsc, bn, clock))
+                    g = latest_goal(eid)
+                    line = "⚽ GOAL!  %s %d - %d %s" % (an, asc, bsc, bn)
+                    if g and g[0]:
+                        line += "\n%s%s%s" % (g[0], (" " + g[1] + "'") if g[1] else "", g[2])
+                    elif clock:
+                        line += "   (%s)" % clock
+                    post(line)
                 prev["total"] = tot
             prev["a"], prev["b"] = asc, bsc
+        elif statename == "post":
+            if prev.get("kickoff") and not prev.get("ft"):
+                post("🏁 Full time — %s %d - %d %s" % (an, asc, bsc, bn))
+                prev["ft"] = True
         prev["state"] = statename
         state[eid] = prev
     except Exception as ex:
