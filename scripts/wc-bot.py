@@ -175,7 +175,7 @@ def build_reply(text, d=None):
 # ---- telegram loop -------------------------------------------------------
 def api(token, method, params):
     data = urllib.parse.urlencode(params).encode()
-    with urllib.request.urlopen("https://api.telegram.org/bot%s/%s" % (token, method), data=data, timeout=40) as r:
+    with urllib.request.urlopen("https://api.telegram.org/bot%s/%s" % (token, method), data=data, timeout=65) as r:
         return json.load(r)
 
 def run():
