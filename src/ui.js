@@ -333,7 +333,7 @@
     }
     const status = el('span', { class: 'tiny', style: 'margin-left:10px' }, 'Goals and kick-offs, the moment they happen.');
     const btn = el('button', { class: 'btn small' }, '🔔 Enable match alerts');
-    const sync = () => { try { const on = window.WC_OS && WC_OS.User && WC_OS.User.PushSubscription && WC_OS.User.PushSubscription.optedIn; if (on) { btn.textContent = '✓ Alerts on — tap to turn off'; status.textContent = 'Goal & kick-off alerts are on.'; } } catch (e) {} };
+    const sync = () => { try { const on = window.WC_OS_STATUS === 'ready' && WC_OS.User && WC_OS.User.PushSubscription && WC_OS.User.PushSubscription.optedIn; btn.textContent = on ? '✓ Alerts on — tap to turn off' : '🔔 Enable match alerts'; if (on) status.textContent = 'Goal & kick-off alerts are on.'; } catch (e) {} };
     btn.addEventListener('click', async () => {
       const st = window.WC_OS_STATUS || 'waiting-for-sdk';
       if (st !== 'ready' || !window.WC_OS) { status.textContent = 'Status: ' + st + ' — tap again in a few seconds.'; return; }
