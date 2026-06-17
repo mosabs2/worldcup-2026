@@ -15,7 +15,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: statsapi-update
+  # Shared with auto-update: both push to this repo, so serialise them to avoid a
+  # git push race (they collide at 08:00 UTC). cancel-in-progress: false = queue, not drop.
+  group: site-publish
   cancel-in-progress: false
 
 jobs:
