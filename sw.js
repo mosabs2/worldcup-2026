@@ -3,7 +3,13 @@
 // clips), with a cache fallback so it still opens offline. Bump VERSION only
 // to force a hard cache purge; day-to-day content freshness needs no bump,
 // because every navigation goes to the network first.
-const VERSION = 'v2';
+// OneSignal v16 push runs inside THIS worker (page scope /worldcup-2026/) rather
+// than a separate sub-folder worker — iOS only creates a push token for a worker
+// whose scope covers the page. Wrapped so a OneSignal CDN hiccup can never break
+// the app's own offline / self-update behaviour.
+try { importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js'); } catch (e) {}
+
+const VERSION = 'v3';
 const CACHE = 'wc26-' + VERSION;
 const OFFLINE_URLS = ['./', './index.html', './manifest.json'];
 
@@ -15,7 +21,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await Promise.all(keys.filter((k) => k.startsWith('wc26-') && k !== CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
   })());
 });

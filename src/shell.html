@@ -45,8 +45,8 @@ OneSignalDeferred.push(async function (OneSignal) {
   try {
     await OneSignal.init({
       appId: "c86b42d9-2e6b-40b5-8512-0f11c857decf",
-      serviceWorkerPath: "worldcup-2026/onesignal/OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/worldcup-2026/onesignal/" },
+      serviceWorkerPath: "worldcup-2026/sw.js",
+      serviceWorkerParam: { scope: "/worldcup-2026/" },
       allowLocalhostAsSecureOrigin: true,
     });
     window.WC_OS_STATUS = "ready";
