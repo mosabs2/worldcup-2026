@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-18",
-  "asOfNote": "Results through 25 matches, auto-synced from the ESPN public feed 2026-06-18 18:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 26 matches, auto-synced from the ESPN public feed 2026-06-18 21:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1803,14 +1803,46 @@ const WC_DATA = {
    "team1": "SUI",
    "team2": "BIH",
    "venueId": "LA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 4,
+    "team2": 1
+   },
    "market": {
     "h": 0.6145,
     "x": 0.2268,
     "a": 0.1587,
     "book": "Bet365"
-   }
+   },
+   "goals": [
+    {
+     "t": "SUI",
+     "p": "Johan Manzambi",
+     "m": "74'"
+    },
+    {
+     "t": "SUI",
+     "p": "Rubén Vargas",
+     "m": "84'"
+    },
+    {
+     "t": "SUI",
+     "p": "Johan Manzambi",
+     "m": "90'"
+    },
+    {
+     "t": "BIH",
+     "p": "Ermin Mahmic",
+     "m": "90'+3'"
+    },
+    {
+     "t": "SUI",
+     "p": "Granit Xhaka",
+     "m": "90'+7'",
+     "pen": true
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M027",
@@ -5089,6 +5121,10 @@ const WC_DATA = {
     "goals": 7
    },
    {
+    "team": "SUI",
+    "goals": 5
+   },
+   {
     "team": "SWE",
     "goals": 5
    },
@@ -5126,10 +5162,6 @@ const WC_DATA = {
    },
    {
     "team": "KOR",
-    "goals": 2
-   },
-   {
-    "team": "CZE",
     "goals": 2
    }
   ],
