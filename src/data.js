@@ -1597,10 +1597,10 @@ const WC_DATA = {
     "team2": 1
    },
    "market": {
-    "h": 0.7453,
-    "x": 0.1693,
-    "a": 0.0855,
-    "book": "Pinnacle"
+    "h": 0.7337,
+    "x": 0.1803,
+    "a": 0.086,
+    "book": "Bet365"
    },
    "goals": [
     {
@@ -1634,10 +1634,10 @@ const WC_DATA = {
     "team2": 2
    },
    "market": {
-    "h": 0.5548,
-    "x": 0.2581,
-    "a": 0.1871,
-    "book": "Pinnacle"
+    "h": 0.5726,
+    "x": 0.2452,
+    "a": 0.1822,
+    "book": "Bet365"
    },
    "goals": [
     {
@@ -1692,10 +1692,10 @@ const WC_DATA = {
     "team2": 0
    },
    "market": {
-    "h": 0.4243,
-    "x": 0.2977,
-    "a": 0.278,
-    "book": "Pinnacle"
+    "h": 0.4012,
+    "x": 0.2946,
+    "a": 0.3041,
+    "book": "Bet365"
    },
    "goals": [
     {
@@ -1724,10 +1724,10 @@ const WC_DATA = {
     "team2": 3
    },
    "market": {
-    "h": 0.1038,
-    "x": 0.1946,
-    "a": 0.7016,
-    "book": "Pinnacle"
+    "h": 0.0951,
+    "x": 0.1901,
+    "a": 0.7148,
+    "book": "Bet365"
    },
    "goals": [
     {
@@ -1768,10 +1768,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5432,
-    "x": 0.2498,
-    "a": 0.207,
-    "book": "Pinnacle"
+    "h": 0.5179,
+    "x": 0.2633,
+    "a": 0.2189,
+    "book": "Bet365"
    }
   },
   {
@@ -1785,10 +1785,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6069,
-    "x": 0.2292,
-    "a": 0.1638,
-    "book": "Pinnacle"
+    "h": 0.6145,
+    "x": 0.2268,
+    "a": 0.1587,
+    "book": "Bet365"
    }
   },
   {
@@ -1802,10 +1802,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7481,
-    "x": 0.1661,
-    "a": 0.0859,
-    "book": "Pinnacle"
+    "h": 0.7319,
+    "x": 0.173,
+    "a": 0.0951,
+    "book": "Bet365"
    }
   },
   {
@@ -1819,10 +1819,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4763,
-    "x": 0.2861,
-    "a": 0.2376,
-    "book": "Pinnacle"
+    "h": 0.4628,
+    "x": 0.2875,
+    "a": 0.2497,
+    "book": "Bet365"
    }
   },
   {
@@ -1836,10 +1836,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5979,
-    "x": 0.2188,
-    "a": 0.1833,
-    "book": "Pinnacle"
+    "h": 0.5919,
+    "x": 0.2187,
+    "a": 0.1894,
+    "book": "Bet365"
    }
   },
   {
@@ -1853,10 +1853,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1849,
-    "x": 0.2627,
-    "a": 0.5524,
-    "book": "Pinnacle"
+    "h": 0.1894,
+    "x": 0.2631,
+    "a": 0.5475,
+    "book": "Bet365"
    }
   },
   {
@@ -1870,10 +1870,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8779,
-    "x": 0.0795,
-    "a": 0.0426,
-    "book": "Pinnacle"
+    "h": 0.8722,
+    "x": 0.0864,
+    "a": 0.0413,
+    "book": "Bet365"
    }
   },
   {
@@ -1887,10 +1887,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4762,
-    "x": 0.281,
-    "a": 0.2429,
-    "book": "Pinnacle"
+    "h": 0.4727,
+    "x": 0.2909,
+    "a": 0.2364,
+    "book": "Bet365"
    }
   },
   {
@@ -1904,10 +1904,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5663,
-    "x": 0.2431,
-    "a": 0.1906,
-    "book": "Pinnacle"
+    "h": 0.5496,
+    "x": 0.2502,
+    "a": 0.2002,
+    "book": "Bet365"
    }
   },
   {
@@ -1921,10 +1921,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6254,
-    "x": 0.2062,
-    "a": 0.1684,
-    "book": "Pinnacle"
+    "h": 0.6103,
+    "x": 0.2252,
+    "a": 0.1645,
+    "book": "Bet365"
    }
   },
   {
@@ -1938,10 +1938,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8743,
-    "x": 0.0886,
-    "a": 0.0371,
-    "book": "Pinnacle"
+    "h": 0.8688,
+    "x": 0.0861,
+    "a": 0.0451,
+    "book": "Bet365"
    }
   },
   {
@@ -1955,10 +1955,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1385,
-    "x": 0.2281,
-    "a": 0.6334,
-    "book": "Pinnacle"
+    "h": 0.1455,
+    "x": 0.2364,
+    "a": 0.6181,
+    "book": "Bet365"
    }
   },
   {
@@ -1972,10 +1972,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8701,
-    "x": 0.0913,
-    "a": 0.0386,
-    "book": "Pinnacle"
+    "h": 0.8603,
+    "x": 0.0946,
+    "a": 0.0451,
+    "book": "Bet365"
    }
   },
   {
@@ -1989,10 +1989,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6737,
-    "x": 0.2037,
-    "a": 0.1226,
-    "book": "Pinnacle"
+    "h": 0.6645,
+    "x": 0.2097,
+    "a": 0.1258,
+    "book": "Bet365"
    }
   },
   {
@@ -2006,10 +2006,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6548,
-    "x": 0.2265,
-    "a": 0.1187,
-    "book": "Pinnacle"
+    "h": 0.6292,
+    "x": 0.236,
+    "a": 0.1348,
+    "book": "Bet365"
    }
   },
   {
@@ -2023,10 +2023,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1779,
-    "x": 0.2281,
-    "a": 0.5941,
-    "book": "Pinnacle"
+    "h": 0.172,
+    "x": 0.2366,
+    "a": 0.5914,
+    "book": "Bet365"
    }
   },
   {
@@ -2040,10 +2040,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5789,
-    "x": 0.2526,
-    "a": 0.1685,
-    "book": "Pinnacle"
+    "h": 0.6045,
+    "x": 0.2373,
+    "a": 0.1582,
+    "book": "Bet365"
    }
   },
   {
@@ -2057,10 +2057,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.8472,
-    "x": 0.1139,
-    "a": 0.0389,
-    "book": "Pinnacle"
+    "h": 0.8774,
+    "x": 0.0948,
+    "a": 0.0279,
+    "book": "Bet365"
    }
   },
   {
@@ -2074,10 +2074,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4528,
-    "x": 0.2648,
-    "a": 0.2823,
-    "book": "Pinnacle"
+    "h": 0.4135,
+    "x": 0.2797,
+    "a": 0.3068,
+    "book": "Bet365"
    }
   },
   {
@@ -2091,10 +2091,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1415,
-    "x": 0.2184,
-    "a": 0.6401,
-    "book": "Pinnacle"
+    "h": 0.1582,
+    "x": 0.2373,
+    "a": 0.6045,
+    "book": "Bet365"
    }
   },
   {
@@ -2108,10 +2108,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7728,
-    "x": 0.1465,
-    "a": 0.0806,
-    "book": "Pinnacle"
+    "h": 0.7913,
+    "x": 0.1357,
+    "a": 0.073,
+    "book": "Bet365"
    }
   },
   {
@@ -2125,10 +2125,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7149,
-    "x": 0.178,
-    "a": 0.1071,
-    "book": "Pinnacle"
+    "h": 0.7758,
+    "x": 0.1514,
+    "a": 0.0728,
+    "book": "Bet365"
    }
   },
   {
@@ -2142,10 +2142,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1502,
-    "x": 0.254,
-    "a": 0.5959,
-    "book": "Pinnacle"
+    "h": 0.1455,
+    "x": 0.2364,
+    "a": 0.6181,
+    "book": "Bet365"
    }
   },
   {
@@ -2159,10 +2159,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6435,
-    "x": 0.2233,
-    "a": 0.1331,
-    "book": "Pinnacle"
+    "h": 0.6438,
+    "x": 0.2201,
+    "a": 0.1361,
+    "book": "Bet365"
    }
   },
   {
@@ -2176,10 +2176,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4527,
-    "x": 0.2781,
-    "a": 0.2693,
-    "book": "Pinnacle"
+    "h": 0.4472,
+    "x": 0.2846,
+    "a": 0.2683,
+    "book": "Bet365"
    }
   },
   {
@@ -2193,10 +2193,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6168,
-    "x": 0.2271,
-    "a": 0.1561,
-    "book": "Betfair Exchange"
+    "h": 0.5906,
+    "x": 0.252,
+    "a": 0.1575,
+    "book": "Bet365"
    }
   },
   {
@@ -2210,10 +2210,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1626,
-    "x": 0.1883,
-    "a": 0.6491,
-    "book": "Pinnacle"
+    "h": 0.1336,
+    "x": 0.2078,
+    "a": 0.6586,
+    "book": "Bet365"
    }
   },
   {
@@ -2227,10 +2227,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.7293,
-    "x": 0.1738,
-    "a": 0.097,
-    "book": "Pinnacle"
+    "h": 0.7242,
+    "x": 0.1712,
+    "a": 0.1046,
+    "book": "Bet365"
    }
   },
   {
@@ -2244,10 +2244,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2063,
-    "x": 0.2651,
-    "a": 0.5286,
-    "book": "Pinnacle"
+    "h": 0.2002,
+    "x": 0.2716,
+    "a": 0.5282,
+    "book": "Bet365"
    }
   },
   {
@@ -2261,10 +2261,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1647,
-    "x": 0.2386,
-    "a": 0.5966,
-    "book": "Pinnacle"
+    "h": 0.1701,
+    "x": 0.2339,
+    "a": 0.596,
+    "book": "Bet365"
    }
   },
   {
@@ -2278,10 +2278,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1931,
-    "x": 0.2495,
-    "a": 0.5574,
-    "book": "Pinnacle"
+    "h": 0.1876,
+    "x": 0.2606,
+    "a": 0.5518,
+    "book": "Bet365"
    }
   },
   {
@@ -2295,10 +2295,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.054,
-    "x": 0.1114,
-    "a": 0.8346,
-    "book": "Pinnacle"
+    "h": 0.0554,
+    "x": 0.1108,
+    "a": 0.8337,
+    "book": "Bet365"
    }
   },
   {
@@ -2312,10 +2312,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4428,
-    "x": 0.2745,
-    "a": 0.2827,
-    "book": "Pinnacle"
+    "h": 0.4474,
+    "x": 0.2763,
+    "a": 0.2763,
+    "book": "Bet365"
    }
   },
   {
@@ -2329,10 +2329,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1047,
-    "x": 0.1769,
-    "a": 0.7184,
-    "book": "Pinnacle"
+    "h": 0.0951,
+    "x": 0.1901,
+    "a": 0.7148,
+    "book": "Bet365"
    }
   },
   {
@@ -2346,10 +2346,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.3412,
-    "x": 0.255,
-    "a": 0.4038,
-    "book": "Betfair Exchange"
+    "h": 0.3478,
+    "x": 0.2609,
+    "a": 0.3913,
+    "book": "Bet365"
    }
   },
   {
@@ -2363,10 +2363,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4485,
-    "x": 0.2806,
-    "a": 0.2709,
-    "book": "Pinnacle"
+    "h": 0.4374,
+    "x": 0.2939,
+    "a": 0.2687,
+    "book": "Bet365"
    }
   },
   {
@@ -2380,10 +2380,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2243,
-    "x": 0.2629,
-    "a": 0.5128,
-    "book": "Pinnacle"
+    "h": 0.217,
+    "x": 0.261,
+    "a": 0.522,
+    "book": "Bet365"
    }
   },
   {
@@ -2397,10 +2397,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.6828,
-    "x": 0.1997,
-    "a": 0.1175,
-    "book": "Pinnacle"
+    "h": 0.7159,
+    "x": 0.1861,
+    "a": 0.098,
+    "book": "Bet365"
    }
   },
   {
@@ -2414,10 +2414,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.3483,
-    "x": 0.2619,
-    "a": 0.3898,
-    "book": "Betfair Exchange"
+    "h": 0.3432,
+    "x": 0.2551,
+    "a": 0.4017,
+    "book": "Bet365"
    }
   },
   {
@@ -2431,10 +2431,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.16,
-    "x": 0.2245,
-    "a": 0.6155,
-    "book": "Pinnacle"
+    "h": 0.1643,
+    "x": 0.2182,
+    "a": 0.6175,
+    "book": "Bet365"
    }
   },
   {
@@ -2448,10 +2448,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.457,
-    "x": 0.3022,
-    "a": 0.2408,
-    "book": "Pinnacle"
+    "h": 0.4573,
+    "x": 0.3024,
+    "a": 0.2404,
+    "book": "Bet365"
    }
   },
   {
@@ -2465,10 +2465,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0809,
-    "x": 0.1507,
-    "a": 0.7684,
-    "book": "Pinnacle"
+    "h": 0.0849,
+    "x": 0.1495,
+    "a": 0.7656,
+    "book": "Bet365"
    }
   },
   {
@@ -2482,10 +2482,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.1136,
-    "x": 0.1384,
-    "a": 0.748,
-    "book": "Pinnacle"
+    "h": 0.1043,
+    "x": 0.1565,
+    "a": 0.7392,
+    "book": "Bet365"
    }
   },
   {
@@ -2499,10 +2499,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.5851,
-    "x": 0.2461,
-    "a": 0.1688,
-    "book": "Pinnacle"
+    "h": 0.5811,
+    "x": 0.2477,
+    "a": 0.1712,
+    "book": "Bet365"
    }
   },
   {
@@ -2516,10 +2516,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2674,
-    "x": 0.2827,
-    "a": 0.4499,
-    "book": "Pinnacle"
+    "h": 0.2744,
+    "x": 0.2916,
+    "a": 0.434,
+    "book": "Bet365"
    }
   },
   {
@@ -2533,10 +2533,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.4098,
-    "x": 0.2835,
-    "a": 0.3067,
-    "book": "Pinnacle"
+    "h": 0.4416,
+    "x": 0.2792,
+    "a": 0.2792,
+    "book": "Bet365"
    }
   },
   {
@@ -2550,10 +2550,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.2521,
-    "x": 0.3116,
-    "a": 0.4363,
-    "book": "Pinnacle"
+    "h": 0.3231,
+    "x": 0.3022,
+    "a": 0.3747,
+    "book": "Bet365"
    }
   },
   {
@@ -2567,10 +2567,10 @@ const WC_DATA = {
    "status": "scheduled",
    "score": null,
    "market": {
-    "h": 0.0685,
-    "x": 0.128,
-    "a": 0.8035,
-    "book": "Pinnacle"
+    "h": 0.0852,
+    "x": 0.1339,
+    "a": 0.7809,
+    "book": "Bet365"
    }
   }
  ],
