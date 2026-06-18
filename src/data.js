@@ -1704,7 +1704,11 @@ const WC_DATA = {
      "m": "90'+5'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.31,
+    "team2": 0.74
+   }
   },
   {
    "id": "M024",
@@ -4712,7 +4716,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-18",
-  "matchesCounted": 22,
+  "matchesCounted": 23,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -4891,8 +4895,8 @@ const WC_DATA = {
     "goals": 0
    },
    {
-    "player": "Bruno Guimarães",
-    "team": "BRA",
+    "player": "Brandon Thomas-Asante",
+    "team": "GHA",
     "assists": 1,
     "goals": 0
    }

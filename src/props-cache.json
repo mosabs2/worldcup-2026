@@ -948,5 +948,34 @@
 }
 ],
 "cards": {}
+},
+"mt_370102032": {
+"scorers": [
+{
+"pid": "pl_02935210",
+"player": "Caleb Yirenkyi",
+"team": "GHA",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_29752791",
+"player": "Brandon Thomas-Asante",
+"team": "GHA",
+"assists": 1
+}
+],
+"cards": {
+"GHA": {
+"yellow": 1,
+"red": 0
+},
+"PAN": {
+"yellow": 2,
+"red": 0
+}
+}
 }
 }
