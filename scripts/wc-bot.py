@@ -140,6 +140,25 @@ def build_reply(text, d=None):
     e = me["e"]
     resolved = len(gw)
     gw_hits = sum(1 for g, win in gw.items() if (e.get("w") or {}).get(g) == win)
+    # Honest rank line. Pre-resolution everyone is level on 0 pts (no group finished
+    # yet), so do NOT tell each person they are "#1" — say the table hasn't started.
+    # Otherwise flag shared ranks as ties rather than implying a sole position.
+    my_rank = me["rank"]; is_exh = bool(e.get("exhibition"))
+    tied = sum(1 for r in rows if not r["e"].get("exhibition") and r.get("rank") == my_rank)
+    if is_exh:
+        rank_en = "Your line: exhibition (not ranked)  ·  %d pts" % me["pts"]
+        rank_ar = "خطّك: استعراضي (خارج الترتيب)  ·  %d نقطة" % me["pts"]
+    elif resolved == 0:
+        rank_en = ("No group has finished yet, so all %d entries are level on 0 pts — "
+                   "nobody is ahead. The table starts moving when the first group completes." % total)
+        rank_ar = ("لم تكتمل أي مجموعة بعد، فجميع المشاركين الـ%d متعادلون على 0 نقطة — "
+                   "لا أحد متقدّم. يبدأ الترتيب بالتحرّك عند اكتمال أول مجموعة." % total)
+    elif tied > 1:
+        rank_en = "Rank: tied #%s of %d (level with %d others)  ·  %d pts so far" % (my_rank, total, tied - 1, me["pts"])
+        rank_ar = "الترتيب: متعادل #%s من %d (مع %d آخرين)  ·  %d نقطة حتى الآن" % (my_rank, total, tied - 1, me["pts"])
+    else:
+        rank_en = "Rank: #%s of %d  ·  %d pts so far" % (my_rank, total, me["pts"])
+        rank_ar = "الترتيب: #%s من %d  ·  %d نقطة حتى الآن" % (my_rank, total, me["pts"])
     champ = e.get("c"); fins = [c for c in (e.get("f") or []) if T.get(c)]
     pe = next((p for p in d["league"].get("props", []) if (p.get("n") or "").lower() == name.lower()), None)
     pl = d.get("propsLive") or {}
@@ -147,7 +166,7 @@ def build_reply(text, d=None):
 
     if ar:
         lines = ["🏆 " + name + " — دوري كأس العالم",
-                 "الترتيب: #%s من %d  ·  %d نقطة حتى الآن" % (me["rank"], total, me["pts"]),
+                 rank_ar,
                  "أبطال المجموعات: %d صحيحة من %d محسومة" % (gw_hits, resolved),
                  "بطلك: %s %s" % (fl(champ), nm(champ)) if champ else "بطلك: —",
                  "نهائيك: " + ("، ".join(fl(c) + " " + nm(c) for c in fins) if fins else "—")]
@@ -160,7 +179,7 @@ def build_reply(text, d=None):
         return "\n".join(lines)
 
     lines = ["🏆 " + name + " — your World Cup league",
-             "Rank: #%s of %d  ·  %d pts so far" % (me["rank"], total, me["pts"]),
+             rank_en,
              "Group winners right: %d of %d resolved" % (gw_hits, resolved),
              "Your champion: %s %s" % (fl(champ), nm(champ)) if champ else "Your champion: —",
              "Your finalists: " + (", ".join(fl(c) + " " + nm(c) for c in fins) if fins else "—")]
