@@ -329,7 +329,10 @@
       el('p', { class: 'tiny', style: 'margin:0 0 8px' }, 'Live goals & kick-offs in the channel. Or message the bot your name for your rank, picks and Golden Boot — replies in English or Arabic.'),
       el('div', { class: 'formrow' },
         el('a', { class: 'btn small', href: 'https://t.me/MoSabsWC26', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '📣 Join channel'),
-        el('a', { class: 'btn small ghost', href: 'https://t.me/MoSabsWCBot', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '🤖 Ask the bot'))));
+        el('a', { class: 'btn small ghost', href: 'https://t.me/MoSabsWCBot', target: '_blank', rel: 'noopener', style: 'display:inline-block;text-decoration:none' }, '🤖 Ask the bot')),
+      el('p', { class: 'tiny', style: 'margin:8px 0 0; opacity:.75' }, 'Channel won’t open? Use the ',
+        el('a', { href: 'https://t.me/+ztLuhI2ERY83YmRk', target: '_blank', rel: 'noopener' }, 'direct invite link'),
+        '.')));
   }
 
   function renderToday(root) {
