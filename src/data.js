@@ -1789,7 +1789,11 @@ const WC_DATA = {
      "pen": true
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.02,
+    "team2": 1.37
+   }
   },
   {
    "id": "M026",
