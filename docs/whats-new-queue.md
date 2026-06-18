@@ -4,14 +4,17 @@ Running list of user-facing changes to announce on the **next** "What's New" fly
 Do **not** generate a flyer from this automatically — Mohammed triggers it. When a flyer ships,
 move shipped items to the Announced log at the bottom with the flyer date.
 
-**Baseline:** the last *sent* "What's New" flyer was **16 June 2026**. The queue below is empty;
-add new user-facing changes here as they ship, for the next edition.
+**Baseline:** the last *rendered* "What's New" edition is **18 June 2026** (Telegram channel + bot).
+Add new user-facing changes here as they ship, for the next edition.
 
 ## Queued — to announce next time
 
-_(empty — nothing new since the 16 June 2026 edition)_
+_(empty — Telegram channel, bot, My League, share card and self-healing/self-updating all covered by the 17 and 18 June editions)_
 
 ## Announced log
+
+### 18 June 2026 — Telegram channel + bot edition (2pp PDF, text-forward) — RENDERED
+Source render: `outputs/world-cup-site-what-s-new-2026-06-18.pdf` (`_render_whatsnew_2026-06-18.py`). Rendered on Mohammed's request; sending to the group is Mohammed's call. Lead focus with full how-to: the **Telegram match-day channel** (@MoSabsWC26 — kick-offs, goals with scorer+minute, full-time, and the Commissioner banter), with join steps including the **invite-link fallback** (t.me/+ztLuhI2ERY83YmRk) for the cache "channel doesn't exist" glitch; and the **private league bot** (@MoSabsWCBot — DM your name for rank/picks/Golden Boot, EN/AR). Plus a brief recap of My League + share card, self-healing scores / self-updating app, and the public self-grading model. Tone: informative and funny.
 
 ### 16 June 2026 — "What's new on the site" edition (1pp PDF, text-forward) — SENT
 Source render: `outputs/world-cup-site-what-s-new-2026-06-16.pdf` (`_render_whatsnew_2026-06-16.py`). Sent to the group 16 June 2026. Covered: **lands on today** (the Matches tab auto-scrolls to today's matchday); **dark mode**; **goal scorers, live as it happens**; and **expected goals (xG) + the sharper model**. Note: xG had also featured in the 15 June edition below, so it received a second mention here (harmless overlap, flagged for the record).
