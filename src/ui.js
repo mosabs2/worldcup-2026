@@ -1666,18 +1666,45 @@
     renderHeader();
     renderTab();
   }
-  // How old is the published snapshot? The site auto-publishes every 15 min during
-  // matches and hourly otherwise, so anything older than ~2.5h means the pipeline is
-  // stuck — surface that to the reader rather than showing stale data as if it were live.
+  // How old is the published snapshot, and does that age actually matter right now?
+  // The site auto-publishes every few minutes while a match is live (or a final is
+  // pending) and otherwise sits still by design, so between matches an old snapshot
+  // is correct, not a fault. Only raise the ⚠ "stuck pipeline" flag when something
+  // SHOULD be updating: a match is live, or one kicked off in the last ~3h whose final
+  // has not published yet. Otherwise show a calm state plus the next kickoff — this is
+  // what kept reading as "broken" overnight when in fact nothing was wrong.
   function freshBadge() {
     const t = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) ? new Date(WC_BUILT_AT) : null;
     if (!t || isNaN(t.getTime())) return '';
-    const mins = Math.max(0, Math.round((Date.now() - t.getTime()) / 60000));
+    const now = Date.now();
+    const mins = Math.max(0, Math.round((now - t.getTime()) / 60000));
     const age = mins < 1 ? 'just now' : mins < 60 ? mins + 'm ago'
       : Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm ago';
-    const stale = mins >= 150;
-    return '<span class="fresh' + (stale ? ' stale' : '') + '">'
-      + (stale ? '⚠ data ' : '● updated ') + age + '</span><br>';
+    // Scan fixtures for the next kickoff and any just-kicked-off match awaiting its final.
+    let nextKO = null, pendingFinal = false;
+    (D.matches || []).forEach(m => {
+      if (!m.dateET || effScore(m)) return;          // skip matches that already have a score
+      const ko = new Date(m.dateET).getTime();
+      if (isNaN(ko)) return;
+      if (ko > now) { if (nextKO === null || ko < nextKO) nextKO = ko; }
+      else if (now - ko < 3 * 3600e3) pendingFinal = true;
+    });
+    const liveCount = (typeof liveNow !== 'undefined' && liveNow) ? Object.keys(liveNow).length : 0;
+    if (liveCount > 0 || pendingFinal) {
+      // Staleness is meaningful now: a live match or an unpublished final.
+      const stale = mins >= 150;
+      return '<span class="fresh' + (stale ? ' stale' : '') + '">'
+        + (stale ? '⚠ data ' : '● updated ') + age + '</span><br>';
+    }
+    // Between matches: an old snapshot is expected, so no alarm. Show the next kickoff.
+    let label = '● up to date';
+    if (nextKO !== null) {
+      const d = new Date(nextKO);
+      const ko = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const sameDay = d.toDateString() === new Date(now).toDateString();
+      label = '● up to date · next ' + (sameDay ? ko : d.toLocaleDateString([], { weekday: 'short' }) + ' ' + ko);
+    }
+    return '<span class="fresh">' + label + '</span><br>';
   }
 
   function renderHeader() {
