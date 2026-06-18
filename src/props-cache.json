@@ -1039,5 +1039,41 @@
 "red": 0
 }
 }
+},
+"mt_209798567": {
+"scorers": [
+{
+"pid": "pl_29621892",
+"player": "Michal Sadílek",
+"team": "CZE",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_30136133",
+"player": "Teboho Mokoena",
+"team": "RSA",
+"goals": 1,
+"pens": 1
+}
+],
+"assists": [
+{
+"pid": "pl_25782536",
+"player": "Alexandr Sojka",
+"team": "CZE",
+"assists": 1
+}
+],
+"cards": {
+"CZE": {
+"yellow": 1,
+"red": 0
+},
+"RSA": {
+"yellow": 2,
+"red": 0
+}
+}
 }
 }

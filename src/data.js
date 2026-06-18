@@ -4763,7 +4763,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-18",
-  "matchesCounted": 24,
+  "matchesCounted": 25,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -4826,6 +4826,12 @@ const WC_DATA = {
     "pens": 1
    },
    {
+    "player": "Teboho Mokoena",
+    "team": "RSA",
+    "goals": 1,
+    "pens": 1
+   },
+   {
     "player": "Abbosbek Fayzullaev",
     "team": "UZB",
     "goals": 1,
@@ -4846,12 +4852,6 @@ const WC_DATA = {
    {
     "player": "Ali Olwan",
     "team": "JOR",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Amad Diallo",
-    "team": "CIV",
     "goals": 1,
     "pens": 0
    }
@@ -4930,6 +4930,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Alexandr Sojka",
+    "team": "CZE",
+    "assists": 1,
+    "goals": 0
+   },
+   {
     "player": "Amir Al-Ammari",
     "team": "IRQ",
     "assists": 1,
@@ -4940,20 +4946,14 @@ const WC_DATA = {
     "team": "COD",
     "assists": 1,
     "goals": 0
-   },
-   {
-    "player": "Brahim Díaz",
-    "team": "MAR",
-    "assists": 1,
-    "goals": 0
    }
   ],
   "teamCards": [
    {
     "team": "RSA",
-    "yellow": 2,
+    "yellow": 4,
     "red": 2,
-    "points": 8
+    "points": 10
    },
    {
     "team": "PAR",
