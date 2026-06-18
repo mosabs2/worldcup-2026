@@ -3,8 +3,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-17",
-  "asOfNote": "Results through 22 matches, auto-synced from the ESPN public feed 2026-06-17 22:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-18",
+  "asOfNote": "Results through 23 matches, auto-synced from the ESPN public feed 2026-06-18 01:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1686,14 +1686,25 @@ const WC_DATA = {
    "team1": "GHA",
    "team2": "PAN",
    "venueId": "TOR",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 0
+   },
    "market": {
     "h": 0.4243,
     "x": 0.2977,
     "a": 0.278,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "GHA",
+     "p": "Caleb Yirenkyi",
+     "m": "90'+5'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M024",
@@ -4700,7 +4711,7 @@ const WC_DATA = {
   "propsDeadline": "Open — TBC"
  },
  "propsLive": {
-  "asOf": "2026-06-17",
+  "asOf": "2026-06-18",
   "matchesCounted": 22,
   "topScorers": [
    {
