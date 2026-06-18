@@ -3094,6 +3094,29 @@ const WC_DATA = {
  "league": {
   "entries": [
    {
+    "n": "Souad",
+    "w": {
+     "A": "KOR",
+     "B": "QAT",
+     "C": "MAR",
+     "D": "USA",
+     "E": "GER",
+     "F": "SWE",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "POR",
+     "L": "CRO"
+    },
+    "f": [
+     "ESP",
+     "ENG"
+    ],
+    "c": "ESP",
+    "locked": "2026-06-18"
+   },
+   {
     "n": "Abdullah Khaled",
     "w": {
      "A": "MEX",
@@ -4320,6 +4343,40 @@ const WC_DATA = {
    "champion": 10
   },
   "props": [
+   {
+    "gb": {
+     "p": "Messi",
+     "t": "ARG"
+    },
+    "as": {
+     "p": "Olise",
+     "t": "FRA"
+    },
+    "cards": "RSA",
+    "goals": "GER",
+    "mena": "MAR",
+    "host": "USA",
+    "tg": 299,
+    "n": "Souad",
+    "locked": "2026-06-18"
+   },
+   {
+    "gb": {
+     "p": "Mbappe",
+     "t": "FRA"
+    },
+    "as": {
+     "p": "Messi",
+     "t": "ARG"
+    },
+    "cards": "ENG",
+    "goals": "GER",
+    "mena": "MAR",
+    "host": "MEX",
+    "tg": 306,
+    "n": "Fahad Ali",
+    "locked": "2026-06-18"
+   },
    {
     "gb": {
      "p": "Messi",
