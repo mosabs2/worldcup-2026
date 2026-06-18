@@ -3,9 +3,14 @@
 
 Cron-launched on the Mac mini every 20 min during the match window. Finds a match
 that's in play (and hasn't been bantered in the last ~25 min), builds a factual
-context (score, minute, group, the league's group-winner pick tallies for the two
-teams, the live Golden Boot leader), and asks the mini's Claude to write ONE short,
-good-natured comment grounded strictly in those facts. Posts it to @MoSabsWC26.
+context (score, minute, group, the league's group-winner pick tallies, the
+finalist/champion pick counts for the two teams, and the live provisional league
+leader), and asks the mini's Claude to write ONE short, good-natured comment
+grounded strictly in those facts. Posts it to @MoSabsWC26.
+
+Anti-repetition: each post rotates a different lead ANGLE, and the script feeds
+Claude its own recent posts and tells it not to echo them. The Golden Boot was
+dropped (once a leader is uncatchable it is a stale, repetitive hook).
 
 Deliberately infrequent and grounded so it never spams or invents. Bot token from
 ~/.claude/telegram-bot-token; Claude auth from ~/.claude/oauth-token. Stdlib only.
@@ -25,6 +30,14 @@ DATA_URL = "https://raw.githubusercontent.com/mosabs2/worldcup-2026/main/src/dat
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=%s"
 GAP = 1500  # don't banter the same match within 25 min
 
+# Rotated lead angle, so successive posts don't fixate on one hook.
+ANGLES = [
+    "the action on the pitch — the scoreline, the drama, the clock",
+    "how the league's GROUP-WINNER picks for these two teams are faring on this result",
+    "who in the league has one of these teams as a FINALIST or CHAMPION pick",
+    "the LIVE LEAGUE TABLE — who is on top right now and who is chasing",
+]
+
 def log(m):
     os.makedirs(LOGDIR, exist_ok=True)
     with open(os.path.join(LOGDIR, "wc-banter-%s.log" % dt.date.today().isoformat()), "a") as f:
@@ -38,30 +51,74 @@ def get_data():
     import re
     return json.loads(re.search(r"const WC_DATA = (\{.*?\});\nif", raw, 16).group(1))
 
+def prov_leader(d):
+    """Top entrant on the live provisional table (current group leaders -> points)."""
+    teams = d["teams"]; groups = sorted({t["group"] for t in teams})
+    leaders = {}
+    for g in groups:
+        codes = [t["code"] for t in teams if t["group"] == g]
+        tb = {c: {"P": 0, "pts": 0, "gf": 0, "ga": 0} for c in codes}
+        for mt in d["matches"]:
+            if mt.get("group") != g:
+                continue
+            sc = mt.get("score")
+            if mt.get("status") == "completed" and sc and mt["team1"] in tb and mt["team2"] in tb:
+                a, b, ga, gb = mt["team1"], mt["team2"], sc["team1"], sc["team2"]
+                tb[a]["P"] += 1; tb[b]["P"] += 1
+                tb[a]["gf"] += ga; tb[a]["ga"] += gb; tb[b]["gf"] += gb; tb[b]["ga"] += ga
+                if ga > gb: tb[a]["pts"] += 3
+                elif gb > ga: tb[b]["pts"] += 3
+                else: tb[a]["pts"] += 1; tb[b]["pts"] += 1
+        if any(tb[c]["P"] >= 1 for c in codes):
+            leaders[g] = sorted(codes, key=lambda c: (-tb[c]["pts"], -(tb[c]["gf"] - tb[c]["ga"]), -tb[c]["gf"], c))[0]
+    if not leaders:
+        return None
+    gw = d["league"]["scoring"]["groupWinner"]
+    best = None
+    for e in d["league"]["entries"]:
+        if e.get("exhibition"):
+            continue
+        pts = sum(gw for g, w in leaders.items() if (e.get("w") or {}).get(g) == w)
+        if best is None or pts > best[1]:
+            best = (e["n"], pts)
+    return best
+
 def league_context(d, code_a, code_b, group):
     T = {t["code"]: t for t in d["teams"]}
     nm = lambda c: (T.get(c) or {}).get("name", c)
+    ents = d["league"]["entries"]
+    N = len(ents)
     lines = []
     if group:
-        c = Counter((e.get("w") or {}).get(group) for e in d["league"]["entries"])
-        a, b = c.get(code_a, 0), c.get(code_b, 0)
+        c = Counter((e.get("w") or {}).get(group) for e in ents)
         lines.append("Group %s winner picks: %s %d, %s %d (of %d entrants)." %
-                     (group, nm(code_a), a, nm(code_b), b, len(d["league"]["entries"])))
-    pl = d.get("propsLive") or {}
-    ls = (pl.get("topScorers") or [None])[0]
-    if ls:
-        lines.append("Golden Boot leader: %s on %d." % (ls["player"], ls["goals"]))
+                     (group, nm(code_a), c.get(code_a, 0), nm(code_b), c.get(code_b, 0), N))
+    for code in (code_a, code_b):
+        fin = sum(1 for e in ents if code in (e.get("f") or []))
+        ch = sum(1 for e in ents if e.get("c") == code)
+        if fin or ch:
+            lines.append("%s: %d entrant(s) have them as a finalist, %d as champion." % (nm(code), fin, ch))
+    lead = prov_leader(d)
+    if lead:
+        lines.append("Live provisional league leader right now: %s on %d pts." % (lead[0], lead[1]))
     return " ".join(lines)
 
-def claude_comment(context):
+def claude_comment(context, angle, recent):
+    recent_block = ""
+    if recent:
+        recent_block = ("\n\nYour RECENT posts — do NOT repeat their wording or their angle:\n"
+                        + "\n".join("- " + r for r in recent))
     prompt = (
         "You are the witty Commissioner of a family World Cup 2026 predictions league, "
         "posting ONE short live comment to the family Telegram channel.\n\n"
         "FACTS (the only things you may use — do NOT invent goals, stats, players or events):\n"
         + context +
+        "\n\nFor THIS post, lead with: " + angle + ". "
+        "If the facts above don't support that angle, pick another angle that they do support."
+        + recent_block +
         "\n\nWrite ONE comment, maximum two short sentences, good-natured and either funny or sharp. "
-        "British English. At most one emoji. No hashtags. You may name a league participant only if given in the facts. "
-        "Output ONLY the comment text, nothing else."
+        "British English. At most one emoji. No hashtags. Do NOT mention the Golden Boot or any top-scorer race. "
+        "You may name a league participant only if given in the facts. Output ONLY the comment text, nothing else."
     )
     env = os.environ.copy()
     try:
@@ -83,6 +140,16 @@ def post(text):
     data = urllib.parse.urlencode({"chat_id": CHAT, "text": text, "disable_web_page_preview": "true"}).encode()
     urllib.request.urlopen("https://api.telegram.org/bot%s/sendMessage" % open(TOKEN_FILE).read().strip(), data=data, timeout=20)
 
+def load_state():
+    try:
+        s = json.load(open(STATE))
+    except Exception:
+        s = {}
+    if "m" not in s:  # migrate the old flat {eid: ts} format
+        s = {"m": {k: v for k, v in s.items() if isinstance(v, (int, float))}, "recent": [], "n": 0}
+    s.setdefault("m", {}); s.setdefault("recent", []); s.setdefault("n", 0)
+    return s
+
 def pick_match(test=False):
     d = get_data()
     now = dt.datetime.now(dt.timezone.utc)
@@ -93,15 +160,12 @@ def pick_match(test=False):
                 events[e["id"]] = e
         except Exception as ex:
             log("fetch err %s" % ex)
-    try:
-        state = json.load(open(STATE))
-    except Exception:
-        state = {}
+    state = load_state()
     cand = []
     for eid, e in events.items():
         comp = e["competitions"][0]
         st = ((comp.get("status") or {}).get("type") or {}).get("state")
-        if test or (st == "in" and time.time() - state.get(eid, 0) > GAP):
+        if test or (st == "in" and time.time() - state["m"].get(eid, 0) > GAP):
             cand.append((eid, e))
     if not cand:
         return None
@@ -124,17 +188,21 @@ def main():
     if not picked:
         return
     eid, ctx, state = picked
-    comment = claude_comment(ctx)
+    angle = ANGLES[state["n"] % len(ANGLES)]
+    comment = claude_comment(ctx, angle, state.get("recent", []))
     if not comment:
         return
     if test:
+        print("ANGLE  :", angle)
         print("CONTEXT:", ctx)
         print("COMMENT:", comment)
         return
     post(comment)
-    state[eid] = time.time()
+    state["m"][eid] = time.time()
+    state["n"] = state.get("n", 0) + 1
+    state["recent"] = (state.get("recent", []) + [comment])[-4:]
     json.dump(state, open(STATE, "w"))
-    log("posted: " + comment.replace("\n", " "))
+    log("posted [%s]: %s" % (angle.split(" — ")[0][:24], comment.replace("\n", " ")))
 
 if __name__ == "__main__":
     main()
