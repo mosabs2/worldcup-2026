@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-18",
-  "asOfNote": "Results through 23 matches, auto-synced from the ESPN public feed 2026-06-18 01:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 24 matches, auto-synced from the ESPN public feed 2026-06-18 04:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1718,14 +1718,40 @@ const WC_DATA = {
    "team1": "UZB",
    "team2": "COL",
    "venueId": "MEX",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 3
+   },
    "market": {
     "h": 0.1038,
     "x": 0.1946,
     "a": 0.7016,
     "book": "Pinnacle"
-   }
+   },
+   "goals": [
+    {
+     "t": "COL",
+     "p": "Daniel Muñoz",
+     "m": "40'"
+    },
+    {
+     "t": "UZB",
+     "p": "Abbosbek Fayzullaev",
+     "m": "60'"
+    },
+    {
+     "t": "COL",
+     "p": "Luis Díaz",
+     "m": "65'"
+    },
+    {
+     "t": "COL",
+     "p": "Jáminton Campaz",
+     "m": "90'+9'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M025",
@@ -4716,7 +4742,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-18",
-  "matchesCounted": 23,
+  "matchesCounted": 24,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -4779,6 +4805,12 @@ const WC_DATA = {
     "pens": 1
    },
    {
+    "player": "Abbosbek Fayzullaev",
+    "team": "UZB",
+    "goals": 1,
+    "pens": 0
+   },
+   {
     "player": "Abdulelah Al-Amri",
     "team": "KSA",
     "goals": 1,
@@ -4799,12 +4831,6 @@ const WC_DATA = {
    {
     "player": "Amad Diallo",
     "team": "CIV",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Aymen Hussein",
-    "team": "IRQ",
     "goals": 1,
     "pens": 0
    }
@@ -4843,6 +4869,12 @@ const WC_DATA = {
    {
     "player": "Hwang In-beom",
     "team": "KOR",
+    "assists": 1,
+    "goals": 1
+   },
+   {
+    "player": "Luis Díaz",
+    "team": "COL",
     "assists": 1,
     "goals": 1
    },
@@ -4891,12 +4923,6 @@ const WC_DATA = {
    {
     "player": "Brahim Díaz",
     "team": "MAR",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Brandon Thomas-Asante",
-    "team": "GHA",
     "assists": 1,
     "goals": 0
    }
@@ -5009,6 +5035,10 @@ const WC_DATA = {
     "goals": 3
    },
    {
+    "team": "COL",
+    "goals": 3
+   },
+   {
     "team": "MEX",
     "goals": 2
    },
@@ -5018,10 +5048,6 @@ const WC_DATA = {
    },
    {
     "team": "AUS",
-    "goals": 2
-   },
-   {
-    "team": "NED",
     "goals": 2
    }
   ],

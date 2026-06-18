@@ -977,5 +977,67 @@
 "red": 0
 }
 }
+},
+"mt_986264782": {
+"scorers": [
+{
+"pid": "pl_13676137",
+"player": "Daniel Muñoz",
+"team": "COL",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_74179207",
+"player": "Abbosbek Fayzullaev",
+"team": "UZB",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_30131344",
+"player": "Luis Díaz",
+"team": "COL",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_72560360",
+"player": "Jaminton Campaz",
+"team": "COL",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_74271564",
+"player": "Gustavo Puerta",
+"team": "COL",
+"assists": 1
+},
+{
+"pid": "pl_30131344",
+"player": "Luis Díaz",
+"team": "COL",
+"assists": 1
+},
+{
+"pid": "pl_45195201",
+"player": "Cucho Hernández",
+"team": "COL",
+"assists": 1
+}
+],
+"cards": {
+"UZB": {
+"yellow": 1,
+"red": 0
+},
+"COL": {
+"yellow": 1,
+"red": 0
+}
+}
 }
 }
