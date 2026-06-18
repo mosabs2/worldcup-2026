@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-18",
-  "asOfNote": "Results through 24 matches, auto-synced from the ESPN public feed 2026-06-18 04:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 25 matches, auto-synced from the ESPN public feed 2026-06-18 18:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1765,14 +1765,31 @@ const WC_DATA = {
    "team1": "CZE",
    "team2": "RSA",
    "venueId": "ATL",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.5179,
     "x": 0.2633,
     "a": 0.2189,
     "book": "Bet365"
-   }
+   },
+   "goals": [
+    {
+     "t": "CZE",
+     "p": "Michal Sadílek",
+     "m": "6'"
+    },
+    {
+     "t": "RSA",
+     "p": "Teboho Mokoena",
+     "m": "83'",
+     "pen": true
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M026",
@@ -5051,7 +5068,7 @@ const WC_DATA = {
     "goals": 2
    },
    {
-    "team": "AUS",
+    "team": "CZE",
     "goals": 2
    }
   ],
