@@ -1842,7 +1842,11 @@ const WC_DATA = {
      "pen": true
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.04,
+    "team2": 0.23
+   }
   },
   {
    "id": "M027",
@@ -4856,7 +4860,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-18",
-  "matchesCounted": 25,
+  "matchesCounted": 26,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -4895,6 +4899,12 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Johan Manzambi",
+    "team": "SUI",
+    "goals": 2,
+    "pens": 0
+   },
+   {
     "player": "Kylian Mbappé",
     "team": "FRA",
     "goals": 2,
@@ -4908,6 +4918,12 @@ const WC_DATA = {
    },
    {
     "player": "Breel Embolo",
+    "team": "SUI",
+    "goals": 1,
+    "pens": 1
+   },
+   {
+    "player": "Granit Xhaka",
     "team": "SUI",
     "goals": 1,
     "pens": 1
@@ -4933,18 +4949,6 @@ const WC_DATA = {
    {
     "player": "Abdulelah Al-Amri",
     "team": "KSA",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Alexander Isak",
-    "team": "SWE",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Ali Olwan",
-    "team": "JOR",
     "goals": 1,
     "pens": 0
    }
@@ -4981,6 +4985,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Breel Embolo",
+    "team": "SUI",
+    "assists": 1,
+    "goals": 1
+   },
+   {
     "player": "Hwang In-beom",
     "team": "KOR",
     "assists": 1,
@@ -5001,6 +5011,12 @@ const WC_DATA = {
    {
     "player": "Ramin Rezaeian",
     "team": "IRN",
+    "assists": 1,
+    "goals": 1
+   },
+   {
+    "player": "Ruben Vargas",
+    "team": "SUI",
     "assists": 1,
     "goals": 1
    },
@@ -5027,18 +5043,6 @@ const WC_DATA = {
     "team": "CZE",
     "assists": 1,
     "goals": 0
-   },
-   {
-    "player": "Amir Al-Ammari",
-    "team": "IRQ",
-    "assists": 1,
-    "goals": 0
-   },
-   {
-    "player": "Arthur Masuaku",
-    "team": "COD",
-    "assists": 1,
-    "goals": 0
    }
   ],
   "teamCards": [
@@ -5047,6 +5051,12 @@ const WC_DATA = {
     "yellow": 4,
     "red": 2,
     "points": 10
+   },
+   {
+    "team": "BIH",
+    "yellow": 5,
+    "red": 1,
+    "points": 8
    },
    {
     "team": "PAR",
@@ -5079,12 +5089,6 @@ const WC_DATA = {
     "points": 3
    },
    {
-    "team": "BIH",
-    "yellow": 3,
-    "red": 0,
-    "points": 3
-   },
-   {
     "team": "POR",
     "yellow": 3,
     "red": 0,
@@ -5109,7 +5113,7 @@ const WC_DATA = {
     "points": 2
    },
    {
-    "team": "QAT",
+    "team": "SUI",
     "yellow": 2,
     "red": 0,
     "points": 2

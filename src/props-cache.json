@@ -1075,5 +1075,61 @@
 "red": 0
 }
 }
+},
+"mt_641915446": {
+"scorers": [
+{
+"pid": "pl_25186759",
+"player": "Johan Manzambi",
+"team": "SUI",
+"goals": 2,
+"pens": 0
+},
+{
+"pid": "pl_72561361",
+"player": "Ruben Vargas",
+"team": "SUI",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_58727425",
+"player": "Ermin Mahmic",
+"team": "BIH",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_3033157",
+"player": "Granit Xhaka",
+"team": "SUI",
+"goals": 1,
+"pens": 1
+}
+],
+"assists": [
+{
+"pid": "pl_6965248",
+"player": "Breel Embolo",
+"team": "SUI",
+"assists": 1
+},
+{
+"pid": "pl_72561361",
+"player": "Ruben Vargas",
+"team": "SUI",
+"assists": 1
+}
+],
+"cards": {
+"BIH": {
+"yellow": 2,
+"red": 1
+},
+"SUI": {
+"yellow": 1,
+"red": 0
+}
+}
 }
 }
