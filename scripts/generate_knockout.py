@@ -162,11 +162,6 @@ def bracket_skeleton(data, order, thirds_assign):
     """Build all 32 KO match objects: R32 with teams (where known) + routed R16..Final."""
     tpl = data['r32Template']  # already in bracket order
 
-    def slot_team(side):
-        if side['type'] == 'group':
-            return order[side['group']][side['place'] - 1] if order else None
-        return thirds_assign.get(None)  # placeholder; handled per-slot below
-
     ko = []
     r32_ids = []
     for slot in tpl:
@@ -394,8 +389,12 @@ def main():
               "the full R16..Final routing are still built.")
 
     ko = bracket_skeleton(data, order, assign)
-    resolved = resolve(ko)
+    # Merge BEFORE resolving: bracket_skeleton builds fresh, score-less match
+    # objects, so resolve() can only propagate teams to R16+ once the recorded
+    # scores have been copied back onto the completed feeders. Resolving first
+    # (the old order) left every round past R32 permanently TBD.
     data = merge_into_data(data, ko)
+    resolved = resolve(ko)
 
     ko_n = len([m for m in data['matches'] if m['stage'] != 'group'])
     if ko_n != 32:

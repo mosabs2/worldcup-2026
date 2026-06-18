@@ -81,6 +81,8 @@ def shotmap_goals(payload, home_is_t1, t1, t2):
 # ---- load our data + map --------------------------------------------------
 raw = open(DATA).read()
 m0 = re.search(r"const WC_DATA = (\{.*?\});\nif \(typeof module", raw, re.S)
+if not m0:
+    sys.exit("ERROR: could not parse WC_DATA from src/data.js (shape changed?)")
 data = json.loads(m0.group(1))
 codemap = json.load(open(MAP))["teamIds"]    # their tm_id -> our code
 our_by_pair = {frozenset((m["team1"], m["team2"])): m for m in data["matches"] if m.get("stage") == "group"}
@@ -102,7 +104,8 @@ finals = paged_matches()
 
 enriched_xg = enriched_mkt = enriched_goals = 0
 for sm in finals:
-    hc = codemap.get(sm["home_team"]["id"]); ac = codemap.get(sm["away_team"]["id"])
+    hc = codemap.get((sm.get("home_team") or {}).get("id"))
+    ac = codemap.get((sm.get("away_team") or {}).get("id"))
     if not hc or not ac: continue
     ours = our_by_pair.get(frozenset((hc, ac)))
     if not ours: continue
@@ -136,4 +139,4 @@ open(DATA, "w").write(new)
 print(f"enriched: {enriched_mkt} market, {enriched_xg} xG, {enriched_goals} goals-backfill (of {len(finals)} finals matches)")
 gh = os.environ.get("GITHUB_OUTPUT")
 if gh:
-    with open(gh, "a") as f: f.write(f"changed={'true' if (enriched_mkt or enriched_xg) else 'false'}\n")
+    with open(gh, "a") as f: f.write(f"changed={'true' if (enriched_mkt or enriched_xg or enriched_goals) else 'false'}\n")

@@ -29,6 +29,8 @@ def get(url):
 
 raw = open(DATA).read()
 m0 = re.search(r"const WC_DATA = (\{.*?\});\nif \(typeof module", raw, re.S)
+if not m0:
+    sys.exit("ERROR: could not parse WC_DATA from src/data.js (shape changed?)")
 data = json.loads(m0.group(1))
 idmap = json.load(open(MAP))["teamIds"]   # ESPN team id (str) -> our code
 
@@ -80,8 +82,10 @@ for d, ms in by_date.items():
         eid = ev_by_pair.get(frozenset((m["team1"], m["team2"])))
         if not eid:
             continue
-        goals = parse_goals(get(SUM.format(e=eid)))
-        m["goals"] = goals          # [] for a genuine goalless match
+        summary = get(SUM.format(e=eid))
+        if summary is None:         # fetch failed (timeout/5xx); leave for next cycle
+            continue                # rather than writing [] and marking it espn-done forever
+        m["goals"] = parse_goals(summary)   # [] only for a genuine goalless match
         m["goals_src"] = "espn"
         n += 1
 

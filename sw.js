@@ -23,11 +23,15 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   // Only manage same-origin GETs; let the ESPN feed, fonts, etc. pass straight through.
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== 'GET' || url.origin !== self.location.origin) return;
+  // version.json is the deploy marker the page polls to self-update — never cache it,
+  // or an offline resume could read a stale builtAt and skip a needed reload.
+  const noCache = url.pathname.endsWith('/version.json');
   e.respondWith((async () => {
     try {
       const fresh = await fetch(req);
-      if (fresh && fresh.ok) {
+      if (fresh && fresh.ok && !noCache) {
         const c = await caches.open(CACHE);
         c.put(req, fresh.clone());
       }

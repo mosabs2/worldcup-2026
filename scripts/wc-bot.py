@@ -139,7 +139,11 @@ def find_entries(query, d):
     names = {e["n"] for e in d["league"]["entries"]}
     hits = [n for n in names if q == n.lower()]
     if not hits:
-        hits = [n for n in names if q in n.lower() or n.lower() in q]
+        # query is a substring of a registered name ("type part of your name"). The
+        # reverse direction (name is a substring of the message) is intentionally
+        # dropped — a long message that merely contains someone's name should not
+        # surface their private card.
+        hits = [n for n in names if q in n.lower()]
     return sorted(set(hits))
 
 # ---- reply text ----------------------------------------------------------
@@ -276,16 +280,25 @@ def run():
         for u in res.get("result", []):
             offset = u["update_id"] + 1
             msg = u.get("message")
-            if not msg or "text" not in msg or msg.get("chat", {}).get("type") != "private":
-                continue
+            if msg and "text" in msg and msg.get("chat", {}).get("type") == "private":
+                try:
+                    reply = build_reply(msg["text"])
+                except Exception as ex:
+                    reply = "Sorry, something went wrong — try again in a moment."
+                    log("reply err: %s" % ex)
+                try:
+                    api(token, "sendMessage", {"chat_id": msg["chat"]["id"], "text": reply, "disable_web_page_preview": "true"})
+                    handled += 1
+                except Exception as ex:
+                    # a single un-sendable update (blocked bot, rate limit) must not
+                    # wedge the offset and re-poison every future cycle
+                    log("send err: %s" % ex)
+            # persist the advanced offset after EVERY update so a poison message is
+            # consumed once, not retried forever on the next cron cycle
             try:
-                reply = build_reply(msg["text"])
-            except Exception as ex:
-                reply = "Sorry, something went wrong — try again in a moment."
-                log("reply err: %s" % ex)
-            api(token, "sendMessage", {"chat_id": msg["chat"]["id"], "text": reply, "disable_web_page_preview": "true"})
-            handled += 1
-        open(OFFSET_FILE, "w").write(str(offset))
+                open(OFFSET_FILE, "w").write(str(offset))
+            except Exception:
+                pass
         if handled:
             log("handled %d message(s)" % handled)
     except urllib.error.HTTPError as e:

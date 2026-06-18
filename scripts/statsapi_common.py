@@ -67,7 +67,12 @@ def paged_matches():
     allm, page = [], 1
     while True:
         d = api(f"/matches?competition_id={COMP}&season=2026&per_page=50&page={page}")
-        items = (d or {}).get("data", [])
+        if d is None:   # request failed (retries exhausted) — not a genuine empty page;
+            # surface the partial harvest rather than silently treating it as the end
+            sys.stderr.write(f"paged_matches: page {page} request failed; "
+                             f"returning {len(allm)} match(es) harvested so far\n")
+            break
+        items = d.get("data", [])
         if not items: break
         allm += items
         meta = d.get("meta") or {}

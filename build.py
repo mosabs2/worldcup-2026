@@ -21,12 +21,22 @@ def svg_body(svg):
 
 favicon = urllib.parse.quote(svg_body(mono_b).replace('\n', ' '))
 
+def inline_json(text):
+    # These payloads are PURE JSON inlined verbatim into a <script> block. JSON's
+    # own escaping does not neutralise sequences that break out of an HTML script
+    # element ("</script>", "<!--") or the two line terminators JS treats as
+    # newlines (U+2028/U+2029). Escape '<' and '>' (every one lives inside a string
+    # literal here, so < is value-identical) plus the separators. Applied only
+    # to JSON payloads — never to engine.js/ui.js, whose '<' are real operators.
+    return (text.replace("<", "\\u003c").replace(">", "\\u003e")
+                .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+
 html = (shell
     .replace("{{CSS}}", (SRC / "style.css").read_text())
-    .replace("{{DATA}}", (SRC / "data.js").read_text())
-    .replace("{{HISTORY}}", (SRC / "history.json").read_text())
-    .replace("{{ESPNMAP}}", (SRC / "espn-map.json").read_text())
-    .replace("{{MAP}}", (SRC / "map.json").read_text())
+    .replace("{{DATA}}", inline_json((SRC / "data.js").read_text()))
+    .replace("{{HISTORY}}", inline_json((SRC / "history.json").read_text()))
+    .replace("{{ESPNMAP}}", inline_json((SRC / "espn-map.json").read_text()))
+    .replace("{{MAP}}", inline_json((SRC / "map.json").read_text()))
     .replace("{{ENGINE}}", (SRC / "engine.js").read_text())
     .replace("{{UI}}", (SRC / "ui.js").read_text())
     .replace("{{MONOGRAM_WHITE}}", svg_body(mono_w))

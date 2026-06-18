@@ -18,8 +18,15 @@ G_BOT = (22, 46, 104)         # #162E68
 WHITE = (255, 255, 255)
 SOFT = (205, 214, 245)        # subtitle tint
 
-FONT_BOLD = '/System/Library/Fonts/Supplemental/Arial Bold.ttf'
-FONT_REG = '/System/Library/Fonts/Supplemental/Arial.ttf'
+# Candidate font paths, tried in order: macOS first, then common Linux (CI) locations,
+# so the OG image renders with real type on a GitHub runner instead of the tiny
+# bitmap default. The first that loads wins.
+FONT_BOLD = ['/System/Library/Fonts/Supplemental/Arial Bold.ttf',
+             '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+             '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf']
+FONT_REG = ['/System/Library/Fonts/Supplemental/Arial.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf']
 
 
 def mono_png(px):
@@ -42,11 +49,13 @@ def vgrad(w, h, top, mid, bot):
     return img
 
 
-def font(path, size):
-    try:
-        return ImageFont.truetype(path, size)
-    except Exception:
-        return ImageFont.load_default()
+def font(paths, size):
+    for p in ([paths] if isinstance(paths, str) else paths):
+        try:
+            return ImageFont.truetype(p, size)
+        except Exception:
+            continue
+    return ImageFont.load_default()
 
 
 def og_image():

@@ -5,7 +5,7 @@
   --blue-light: #1C62B7;
   --blue-dark: #162E68;
   --gray: #5A5A5A;
-  --gray-light: #9A9A9A;
+  --gray-light: #707070;   /* ~4.6:1 on --bg; darkened from #9A9A9A for WCAG AA on small text */
   --line: #E4E7F0;
   --bg: #FAFBFD;
   --card: #FFFFFF;
@@ -22,7 +22,7 @@
   color-scheme: dark;
   --blue: #7d9bff;
   --gray: #9aa3b8;
-  --gray-light: #6b7488;
+  --gray-light: #8a93a8;   /* lightened from #6b7488 for AA contrast on the dark bg */
   --line: #2a3148;
   --bg: #0d1117;
   --card: #161c2c;
@@ -282,6 +282,7 @@ tr.exhibition-row td:first-child { box-shadow: inset 3px 0 0 #C7A234; color: #9A
   .card { overflow-x: auto; }   /* wide tables scroll inside their card instead of clipping */
   table { font-size: 12px; }
   .g2, .g3 { grid-template-columns: 1fr; }
+  input, select, textarea { font-size: 16px; }   /* stop iOS Safari auto-zooming on focus */
 }
 
 /* Print: clean MAS-brand snapshot of the active view */

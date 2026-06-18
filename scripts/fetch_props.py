@@ -26,6 +26,8 @@ CACHE = os.path.join(ROOT, "src", "props-cache.json")
 
 raw = open(DATA).read()
 m0 = re.search(r"const WC_DATA = (\{.*?\});\nif \(typeof module", raw, re.S)
+if not m0:
+    sys.exit("ERROR: could not parse WC_DATA from src/data.js (shape changed?)")
 data = json.loads(m0.group(1))
 codemap = json.load(open(MAP))["teamIds"]          # their tm_id -> our code
 
@@ -49,6 +51,16 @@ goals_board = sorted([{"team": t, "goals": g} for t, g in team_goals.items() if 
 # only cached once its data is ready (xg_available and both endpoints return),
 # so an unready match is simply retried on the next run.
 finals_done = [m for m in paged_matches() if m["status"] in ("finished", "completed")]
+# Guard against wiping live boards: if the StatsAPI match list came back empty (endpoint
+# down / rate-limited) but we already have published boards, keep them rather than
+# overwriting src/data.js with blank leaderboards. A transient outage should be a no-op,
+# not a regression that blanks the Golden Boot / assists / cards races.
+if not finals_done and data.get("propsLive"):
+    print("props: match list empty (API down?); keeping existing boards, no write")
+    gh = os.environ.get("GITHUB_OUTPUT")
+    if gh:
+        with open(gh, "a") as f: f.write("changed=false\n")
+    sys.exit(0)
 done_ids = {m["id"] for m in finals_done}
 newly = 0
 for sm in finals_done:
@@ -59,7 +71,9 @@ for sm in finals_done:
     shot = api(f"/matches/{mid}/shotmap")
     if not shot: continue
     ev = shot.get("event") or {}
-    hc = codemap.get(sm["home_team"]["id"]); ac = codemap.get(sm["away_team"]["id"])
+    hc = codemap.get((sm.get("home_team") or {}).get("id"))
+    ac = codemap.get((sm.get("away_team") or {}).get("id"))
+    if not hc or not ac: continue   # unmappable match (feed shape / non-WC fixture); skip safely
     side_code = {ev.get("home_team_id"): hc, ev.get("away_team_id"): ac}
     scorers = {}
     for s in (shot.get("data") or []):

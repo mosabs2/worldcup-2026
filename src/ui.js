@@ -55,8 +55,24 @@
     if (attrs) for (const k in attrs) {
       if (k === 'class') n.className = attrs[k];
       else if (k.startsWith('on')) n.addEventListener(k.slice(2), attrs[k]);
+      // XSS SINK: 'html' assigns innerHTML. Only ever pass first-party/baked strings
+      // here — NEVER remote feed data (scorer names, ESPN fields). Untrusted strings
+      // must go through the text-node path below (pass them as children).
       else if (k === 'html') n.innerHTML = attrs[k];
       else n.setAttribute(k, attrs[k]);
+    }
+    // Keyboard a11y: any non-native element wired with an onclick should also be
+    // operable by keyboard. Promote it to a button role with Enter/Space — except
+    // the modal backdrop (a click-outside affordance, not a control).
+    if (attrs && attrs.onclick && !/^(button|a|input|select|textarea)$/i.test(tag)
+        && !(typeof attrs.class === 'string' && attrs.class.indexOf('modal-bg') !== -1)) {
+      // role=button would flatten a <tr>'s row semantics for screen readers, so make
+      // table rows keyboard-operable (tabindex + Enter/Space) without overriding role.
+      if (attrs.role == null && !/^tr$/i.test(tag)) n.setAttribute('role', 'button');
+      if (n.getAttribute('tabindex') == null) n.setAttribute('tabindex', '0');
+      n.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); n.click(); }
+      });
     }
     for (const k of kids.flat()) if (k != null) n.append(k.nodeType ? k : document.createTextNode(k));
     return n;
@@ -182,13 +198,31 @@
   }
 
   // ---------- modals ----------
+  let lastFocus = null;
   function openModal(...kids) {
     closeModal();
-    const bg = el('div', { class: 'modal-bg', onclick: e => { if (e.target === bg) closeModal(); } },
-      el('div', { class: 'modal' }, el('button', { class: 'close', onclick: closeModal }, '×'), ...kids));
+    lastFocus = document.activeElement;
+    const dialog = el('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true', tabindex: '-1' },
+      el('button', { class: 'close', 'aria-label': 'Close', onclick: closeModal }, '×'), ...kids);
+    const bg = el('div', { class: 'modal-bg', onclick: e => { if (e.target === bg) closeModal(); } }, dialog);
+    bg.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
+      if (e.key !== 'Tab') return;
+      // focus trap: keep Tab inside the dialog
+      const f = dialog.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
     document.body.append(bg);
+    dialog.focus();
   }
-  function closeModal() { document.querySelectorAll('.modal-bg').forEach(n => n.remove()); }
+  function closeModal() {
+    document.querySelectorAll('.modal-bg').forEach(n => n.remove());
+    if (lastFocus && typeof lastFocus.focus === 'function') { try { lastFocus.focus(); } catch (e) {} }
+    lastFocus = null;
+  }
 
   // Plain-language read of actual xG against the scoreline (played games).
   function xgRead(m, sc) {
@@ -800,11 +834,18 @@
       return;
     }
 
-    // rank (the commissioner's exhibition entry is unranked, shown as ★)
-    let rank = 0, myRank = '★', total = 0;
+    // Live rank + total. Rank by PROVISIONAL points so the hero number agrees with the
+    // "live pts" shown beside it (the official-points order is the League leaderboard,
+    // and this mirrors the bot's prov_standings). Exhibition entries stay unranked (★).
+    let total = 0;
     rows.forEach(r => { if (!r.e.exhibition) total++; });
-    rows.forEach(r => { if (!r.e.exhibition) rank++; if (r.e.n === mine) myRank = r.e.exhibition ? '★' : rank; });
     const me = rows.find(r => r.e.n === mine);
+    let myRank = '★';
+    if (me && !me.e.exhibition) {
+      const provOrder = rows.filter(r => !r.e.exhibition).slice()
+        .sort((a, b) => b.prov - a.prov || b.exp - a.exp || b.pts - a.pts);
+      myRank = provOrder.findIndex(r => r.e.n === mine) + 1;
+    }
     const champ = me.e.c;
     const champCls = resolved.champion ? (resolved.champion === champ ? 'st-hit' : 'st-miss') : (champ && elim(champ) ? 'st-miss' : 'st-live');
     const champStatus = resolved.champion ? (resolved.champion === champ ? 'called it ✓' : 'out ✗')
@@ -1022,15 +1063,21 @@
     // leaders; official points only count finished groups + knockouts.
     const curRanks = {}; let rk = 0;
     rows.forEach(r => { if (!r.e.exhibition) { rk++; curRanks[r.e.n] = rk; } });
-    const curBuilt = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) || '';
-    let snap = lsGet(LS.provSnap, null); let prevRanks = {};
-    if (snap && snap.builtAt && snap.ranks) {
-      if (snap.builtAt !== curBuilt) { prevRanks = snap.ranks; lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: snap.ranks }); }
-      else { prevRanks = snap.prevRanks || {}; }
-    } else { lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: {} }); }
+    let prevRanks = {};
+    // Movement ▲▼ compares against the last PUBLISHED snapshot. In what-if mode the
+    // board reflects hypothetical results, so don't read the baseline from it OR write
+    // it back — that would corrupt the "since last update" diff with imaginary movement.
+    if (!whatIf.on) {
+      const curBuilt = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) || '';
+      const snap = lsGet(LS.provSnap, null);
+      if (snap && snap.builtAt && snap.ranks) {
+        if (snap.builtAt !== curBuilt) { prevRanks = snap.ranks; lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: snap.ranks }); }
+        else { prevRanks = snap.prevRanks || {}; }
+      } else { lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: {} }); }
+    }
     const moveArrow = name => {
       const p = prevRanks[name];
-      if (p == null || curRanks[name] == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
+      if (whatIf.on || p == null || curRanks[name] == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
       const d = p - curRanks[name];
       if (d > 0) return el('span', { style: 'color:#2e9e5b;font-weight:700;margin-left:4px' }, '▲' + d);
       if (d < 0) return el('span', { style: 'color:#c0392b;font-weight:700;margin-left:4px' }, '▼' + (-d));
@@ -1063,7 +1110,12 @@
     const cell = (code, win) => {
       if (!code || !T[code]) return el('td', { class: 'num muted' }, '—');
       const cls = win ? (win === code ? 'pick-hit' : 'pick-miss') : (elim(code) ? 'pick-miss' : '');
-      return el('td', { class: cls }, el('span', { class: 'teamcell', style: 'font-weight:500' }, el('span', { class: 'fl' }, T[code].flag), el('span', { class: 'nm' }, T[code].code)));
+      // a glyph in addition to the cell colour, so hit/miss is not conveyed by colour alone
+      const mark = cls === 'pick-hit' ? '✓ ' : cls === 'pick-miss' ? '✗ ' : '';
+      const title = cls === 'pick-hit' ? 'correct' : cls === 'pick-miss' ? 'wrong or eliminated' : '';
+      return el('td', { class: cls, title }, el('span', { class: 'teamcell', style: 'font-weight:500' },
+        mark ? el('span', { style: 'font-weight:700' }, mark) : null,
+        el('span', { class: 'fl' }, T[code].flag), el('span', { class: 'nm' }, T[code].code)));
     };
     root.append(el('div', { class: 'card' },
       el('h3', null, 'The selections board'),
@@ -1517,6 +1569,19 @@
   let liveGoals = {}; // matchId -> [goal,...] from the ESPN summary, fetched only for in-play matches
   const etDate = m => m.dateET.slice(0, 10).replace(/-/g, '');   // dateET already carries the Eastern offset
 
+  // Build a localOv entry for an auto-pulled final, attaching the shootout winner for
+  // a level knockout. Returns null for a level KO with no usable winner — better to
+  // leave it for manual entry or the published feed than to commit an unresolved draw
+  // the bracket cannot advance (mirrors fetch_scores.py's server-side handling).
+  function koOverrideEntry(match, g1, g2, winnerCode) {
+    const entry = [g1, g2];
+    if (match.stage !== 'group' && g1 === g2) {
+      if (winnerCode === match.team1 || winnerCode === match.team2) entry.push(winnerCode);
+      else return null;
+    }
+    return entry;
+  }
+
   // Parse ESPN summary keyEvents into our compact goal shape (mirrors fetch_goals.py).
   function parseEspnGoals(summary, ids) {
     const out = [];
@@ -1524,9 +1589,11 @@
       if (!k.scoringPlay) continue;
       const ttext = (k.type && k.type.text) || '';
       const code = ids[String((k.team && k.team.id) || '')];
-      const scorer = k.participants && k.participants[0] && k.participants[0].athlete && k.participants[0].athlete.displayName;
-      if (!code || !scorer) continue;
-      const g = { t: code, p: scorer, m: (k.clock && k.clock.displayValue) || '' };
+      const raw = k.participants && k.participants[0] && k.participants[0].athlete && k.participants[0].athlete.displayName;
+      if (!code || !raw) continue;
+      // sanitise the third-party name at the source so it's safe regardless of sink
+      const scorer = String(raw).replace(/[<>]/g, '').slice(0, 40);
+      const g = { t: code, p: scorer, m: String((k.clock && k.clock.displayValue) || '').replace(/[<>]/g, '').slice(0, 12) };
       if (ttext.indexOf('Penalty') !== -1) g.pen = true;
       if (ttext.indexOf('Own') !== -1) g.og = true;
       out.push(g);
@@ -1542,11 +1609,12 @@
       const ko = new Date(m.dateET).getTime();
       return now >= ko - 3600e3 && now <= ko + 4 * 3600e3;
     });
-    if (!near.length) { if (Object.keys(liveNow).length) { liveNow = {}; renderHeader(); renderTab(); } return; }
+    if (!near.length) { if (Object.keys(liveNow).length) { liveNow = {}; renderHeader(); renderTab({ background: true }); } return; }
     try {
       const days = [...new Set(near.map(etDate))].sort();
       const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
       const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
+      if (!r.ok) return;   // a 4xx/5xx error page is not score data
       const js = await r.json();
       const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
       const fresh = {};
@@ -1555,19 +1623,24 @@
       for (const e of (js.events || [])) {
         const st = e.status && e.status.type;
         if (!st) continue;
-        const sc = {};
+        const sc = {}; let winnerCode = null;
         for (const c of e.competitions[0].competitors) {
           const code = ids[String(c.team.id)] || c.team.abbreviation;
           sc[code] = parseInt(c.score, 10);
+          if (c.winner) winnerCode = code;   // ESPN flags the shootout winner on a level KO
         }
         const match = near.find(m => sc[m.team1] != null && sc[m.team2] != null);
         if (!match) continue;
         if (st.state === 'in') {
-          fresh[match.id] = { g1: sc[match.team1], g2: sc[match.team2], clock: st.shortDetail || '' };
+          const g1 = sc[match.team1], g2 = sc[match.team2];
+          fresh[match.id] = { g1: Number.isFinite(g1) ? g1 : '–', g2: Number.isFinite(g2) ? g2 : '–', clock: st.shortDetail || '' };
           inPlay.push([match.id, e.id]);
         } else if (st.name === 'STATUS_FULL_TIME' && st.completed && !localOv[match.id]) {
           const g1 = sc[match.team1], g2 = sc[match.team2];
-          if (g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15) { localOv[match.id] = [g1, g2]; finals++; }
+          if (g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15) {
+            const entry = koOverrideEntry(match, g1, g2, winnerCode);
+            if (entry) { localOv[match.id] = entry; finals++; }
+          }
         }
       }
       // live goals: hit the ESPN summary only for the in-play match(es), this poll only —
@@ -1582,8 +1655,8 @@
       }
       const changedLive = JSON.stringify(fresh) !== JSON.stringify(liveNow);
       liveNow = fresh;
-      if (finals) { lsSet(LS.ov, localOv); refresh(); toast(finals + ' final score' + (finals === 1 ? '' : 's') + ' came in; probabilities recomputed.'); }
-      else if (changedLive || goalsChanged) { renderHeader(); renderTab(); }
+      if (finals) { lsSet(LS.ov, localOv); refresh({ background: true }); toast(finals + ' final score' + (finals === 1 ? '' : 's') + ' came in; probabilities recomputed.'); }
+      else if (changedLive || goalsChanged) { renderHeader(); renderTab({ background: true }); }
     } catch (err) { /* silent: the live overlay is best-effort */ }
   }
   setInterval(pollLive, 180000);
@@ -1592,7 +1665,7 @@
   let toastTimer = null;
   function toast(msg) {
     document.querySelectorAll('.toast').forEach(n => n.remove());
-    const t = el('div', { class: 'toast' }, msg);
+    const t = el('div', { class: 'toast', role: 'status', 'aria-live': 'polite' }, msg);
     document.body.append(t);
     requestAnimationFrame(() => t.classList.add('show'));
     clearTimeout(toastTimer);
@@ -1612,24 +1685,28 @@
       const days = [...new Set(pending.map(etDate))].sort();
       const rng = days.length === 1 ? days[0] : days[0] + '-' + days[days.length - 1];
       const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=' + rng);
+      if (!r.ok) return null;   // treat a 4xx/5xx error page as a network failure, not "no finals"
       const js = await r.json();
       const ids = (typeof WC_ESPNMAP !== 'undefined' && WC_ESPNMAP.teamIds) || {};
       let n = 0;
       for (const e of (js.events || [])) {
         const st = e.status && e.status.type;
         if (!st || st.name !== 'STATUS_FULL_TIME' || !st.completed) continue;
-        const sc = {};
+        const sc = {}; let winnerCode = null;
         for (const c of e.competitions[0].competitors) {
           const code = ids[String(c.team.id)] || c.team.abbreviation;
           sc[code] = parseInt(c.score, 10);
+          if (c.winner) winnerCode = code;
         }
         const match = pending.find(m => sc[m.team1] != null && sc[m.team2] != null);
         if (!match) continue;
         const g1 = sc[match.team1], g2 = sc[match.team2];
         if (!(g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15)) continue;
-        localOv[match.id] = [g1, g2]; n++;
+        const entry = koOverrideEntry(match, g1, g2, winnerCode);   // skip a level KO with no winner
+        if (!entry) continue;
+        localOv[match.id] = entry; n++;
       }
-      if (n) { lsSet(LS.ov, localOv); refresh(); }
+      if (n) { lsSet(LS.ov, localOv); refresh({ background: true }); }
       return n;
     } catch (err) {
       return null;
@@ -1689,10 +1766,10 @@
   }
 
   // ---------- shell ----------
-  function refresh() {
+  function refresh(opts) {
     recompute();
     renderHeader();
-    renderTab();
+    renderTab(opts);
   }
   // How old is the published snapshot, and does that age actually matter right now?
   // The site auto-publishes every few minutes while a match is live (or a final is
@@ -1754,8 +1831,13 @@
         el('button', { class: 'btn small ghost', onclick: () => { whatIf.ov = {}; refresh(); } }, 'Reset what-ifs'));
     } else ban.style.display = 'none';
   }
-  function renderTab() {
+  function renderTab(opts) {
+    const bg = !!(opts && opts.background);
     const root = document.getElementById('view');
+    // A background re-render (a live poll tick, an auto-pulled final) must not destroy
+    // a form the user is filling, nor yank their scroll position to the top.
+    if (bg && fieldFocusedInView()) return;
+    const sx = window.scrollX, sy = window.scrollY;
     root.innerHTML = '';
     document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
     ({
@@ -1763,7 +1845,13 @@
       teams: renderTeams, mena: renderMena, join: renderJoin, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
       venues: renderVenues, model: renderModel, about: renderAbout, geeks: renderGeeks,
     })[activeTab](root);
-    window.scrollTo(0, 0);
+    if (bg) window.scrollTo(sx, sy); else window.scrollTo(0, 0);
+  }
+  // Is the user mid-entry in a control inside the main view? (guards background re-renders)
+  function fieldFocusedInView() {
+    const a = document.activeElement;
+    const view = document.getElementById('view');
+    return !!(a && view && view.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
   }
 
   function init() {

@@ -29,6 +29,8 @@ if now.date() > TOURNAMENT_END:
 
 raw = open(DATA).read()
 m0 = re.search(r'const WC_DATA = (\{.*?\});\nif \(typeof module', raw, re.S)
+if not m0:
+    out(False, "Could not parse WC_DATA from src/data.js (shape changed?); leaving untouched.")
 data = json.loads(m0.group(1))
 idmap = json.load(open(MAP))['teamIds']
 
