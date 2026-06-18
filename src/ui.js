@@ -10,7 +10,7 @@
   const PALETTE = ['#0E1E91', '#1C62B7', '#B3261E', '#1A7F4E', '#9A6B00', '#7B2D8E', '#0E7490', '#C2410C', '#5A5A5A', '#BE185D'];
 
   // ---------- state ----------
-  const LS = { ov: 'wc26.overrides.v1', league: 'wc26.league.v1', tab: 'wc26.tab.v1', theme: 'wc26.theme.v1', mine: 'wc26.mine.v1' };
+  const LS = { ov: 'wc26.overrides.v1', league: 'wc26.league.v1', tab: 'wc26.tab.v1', theme: 'wc26.theme.v1', mine: 'wc26.mine.v1', provSnap: 'wc26.provsnap.v1' };
   let localOv = lsGet(LS.ov, {});
   let whatIf = { on: false, ov: {} };
   let leagueLocal = lsGet(LS.league, []);
@@ -741,6 +741,7 @@
     const entries = (D.league.entries || []).map(e => ({ ...e, src: 'published' }))
       .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())).map(e => ({ ...e, src: 'local' })));
     const resolved = E.resolvedOutcomes(effData());
+    const prov = E.provisionalOutcomes(effData());
     const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
     const elim = c => {
       if (!T[c] || !resolved.groupWinners[T[c].group]) return false;
@@ -767,9 +768,10 @@
         if (resolved.champion) { const hit = resolved.champion === e.c ? sc.champion : 0; pts += hit; exp += hit; max += hit; }
         else { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
       }
-      return { e, pts, exp, max };
-    }).sort((a, b) => b.pts - a.pts || b.exp - a.exp);
-    return { sc, entries, resolved, allGroupsDone, elim, rows };
+      const provPts = E.scoreEntry(e, prov, sc).pts;
+      return { e, pts, exp, max, prov: provPts };
+    }).sort((a, b) => b.pts - a.pts || b.prov - a.prov || b.exp - a.exp);
+    return { sc, entries, resolved, prov, allGroupsDone, elim, rows };
   }
 
   // My League — a family member taps their name and sees their own standing,
@@ -810,12 +812,14 @@
 
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
       el('div', { class: 'mine-hero' },
-        el('div', null, el('div', { class: 'big' }, '#' + myRank), el('div', { class: 'lab' }, 'of ' + total)),
-        el('div', null, el('div', { class: 'big' }, '' + me.pts), el('div', { class: 'lab' }, 'points')),
+        el('div', null, el('div', { class: 'big' }, '#' + myRank), el('div', { class: 'lab' }, 'live rank, of ' + total)),
+        el('div', null, el('div', { class: 'big' }, '' + me.prov), el('div', { class: 'lab' }, 'live pts')),
         el('div', null, el('div', { class: 'big' }, me.exp.toFixed(1)), el('div', { class: 'lab' }, 'expected')),
         el('div', null, el('div', { class: 'big' }, '' + me.max), el('div', { class: 'lab' }, 'ceiling'))),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Points are locked in from results so far. Expected weighs every still-alive pick by its current chance; ceiling is your maximum if everything you have left lands.')));
+        'Rank and live points are provisional — scored on the current group leaders, so they move with every result. '
+        + 'Official points (locked from finished groups and knockouts): ' + me.pts + '. '
+        + 'Expected weighs every still-alive pick by its current chance; ceiling is your maximum if everything left lands.')));
 
     // picks + what is still alive
     let gwHits = 0, gwRes = 0;
@@ -1012,27 +1016,48 @@
     const { entries, resolved, elim, rows } = leagueStandings();
     if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Make your picks on the Join tab and send the code round.')); return; }
     // exhibition entries (the commissioner) are ranked for display but carry no prize position
+    // Provisional movement: the ▲▼ shows each entry's rank change since the last
+    // published update — compare the current provisional ranks against the snapshot
+    // stored from the previous build. Live points/rank come from current group
+    // leaders; official points only count finished groups + knockouts.
+    const curRanks = {}; let rk = 0;
+    rows.forEach(r => { if (!r.e.exhibition) { rk++; curRanks[r.e.n] = rk; } });
+    const curBuilt = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) || '';
+    let snap = lsGet(LS.provSnap, null); let prevRanks = {};
+    if (snap && snap.builtAt && snap.ranks) {
+      if (snap.builtAt !== curBuilt) { prevRanks = snap.ranks; lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: snap.ranks }); }
+      else { prevRanks = snap.prevRanks || {}; }
+    } else { lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: {} }); }
+    const moveArrow = name => {
+      const p = prevRanks[name];
+      if (p == null || curRanks[name] == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
+      const d = p - curRanks[name];
+      if (d > 0) return el('span', { style: 'color:#2e9e5b;font-weight:700;margin-left:4px' }, '▲' + d);
+      if (d < 0) return el('span', { style: 'color:#c0392b;font-weight:700;margin-left:4px' }, '▼' + (-d));
+      return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '–');
+    };
     let rankNo = 0;
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Leaderboard', el('span', { class: 'right' }, Object.keys(resolved.groupWinners).length + ' of 12 groups resolved')),
+      el('h3', null, 'Leaderboard', el('span', { class: 'right' }, Object.keys(resolved.groupWinners).length + ' of 12 groups final')),
       el('table', null,
         el('tr', null,
           el('th', null, '#'), el('th', null, 'Name'), el('th', null, 'Champion pick'),
-          el('th', { class: 'num' }, 'Points'), el('th', { class: 'num' }, 'Expected'), el('th', { class: 'num' }, 'Max')),
+          el('th', { class: 'num' }, 'Live'), el('th', { class: 'num' }, 'Points'), el('th', { class: 'num' }, 'Expected'), el('th', { class: 'num' }, 'Max')),
         rows.map(r => {
           const exh = r.e.exhibition;
           if (!exh) rankNo++;
           return el('tr', { class: exh ? 'exhibition-row' : '' },
-            el('td', null, exh ? '★' : rankNo),
+            el('td', null, exh ? '★' : rankNo, exh ? '' : moveArrow(r.e.n)),
             el('td', null, el('b', null, r.e.n),
               exh ? el('span', { class: 'exh-badge' }, 'EXHIBITION') : (r.e.src === 'local' ? el('span', { class: 'tiny' }, ' (local)') : '')),
             el('td', null, el('span', { class: 'teamcell' }, T[r.e.c] ? el('span', { class: 'fl' }, T[r.e.c].flag) : '', el('span', { class: 'nm' }, T[r.e.c] ? T[r.e.c].name : '—'))),
-            el('td', { class: 'num' }, el('b', null, r.pts)),
+            el('td', { class: 'num' }, el('b', null, r.prov)),
+            el('td', { class: 'num' }, r.pts),
             el('td', { class: 'num' }, r.exp.toFixed(1)),
             el('td', { class: 'num' }, r.max));
         })),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Points: locked in from resolved outcomes. Expected: the model weighs every pick by its current probability; this number moves with each result. Max: the ceiling if every still-alive pick lands. ★ The commissioner’s exhibition entry is shown for interest only and does not compete for prizes.')));
+        'Live: provisional points from the current group leaders — it moves with every result, and the ▲▼ shows each entry’s rank change since the last update. Points: official, locked in only from finished groups and knockouts (so still 0 until the first group completes). Expected: the model weighs every pick by its current probability. Max: the ceiling if every still-alive pick lands. ★ The commissioner’s exhibition entry is shown for interest only and does not compete for prizes.')));
 
     // selections board: everyone's picks side by side
     const cell = (code, win) => {

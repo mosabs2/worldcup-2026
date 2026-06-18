@@ -414,9 +414,28 @@
     return { groupWinners, finalists, champion };
   }
 
+  // PROVISIONAL outcomes for the live/engagement standing: the CURRENT leader of
+  // every group that has played at least one game (no "all 6 played" gate), plus
+  // any genuinely resolved finalists/champion. Scored through scoreEntry exactly
+  // like the official table, but it moves on every result instead of only when a
+  // group finishes. Clearly a projection, NOT the official prize points.
+  function provisionalOutcomes(data, overrides) {
+    const base = resolvedOutcomes(data, overrides);
+    const tables = currentTables(data, overrides);
+    const played = {};
+    for (const m of data.matches) {
+      if (m.stage !== 'group') continue;
+      const done = (overrides && overrides[m.id]) || (m.status === 'completed' && m.score);
+      played[m.group] = (played[m.group] || 0) + (done ? 1 : 0);
+    }
+    const groupWinners = {};
+    for (const g in tables) if ((played[g] || 0) >= 1 && tables[g][0]) groupWinners[g] = tables[g][0].team;
+    return { groupWinners, finalists: base.finalists, champion: base.champion, played };
+  }
+
   return {
     rngFactory, liveRatings, predict, topScorelines, poissonPmf, sampleGoals,
-    simulateTournament, currentTables, scoreEntry, resolvedOutcomes, hostEdge,
+    simulateTournament, currentTables, scoreEntry, resolvedOutcomes, provisionalOutcomes, hostEdge,
     entryHalves, finalFeasible,
     LOGISTIC_DIV, ELO_K, HOST_BONUS, XG_TEMPER,
   };

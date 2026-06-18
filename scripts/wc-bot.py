@@ -90,6 +90,48 @@ def standings(d):
     total = sum(1 for r in rows if not r["e"].get("exhibition"))
     return rows, gw, total
 
+def prov_leaders(d):
+    """Current leader per group that has played >=1 game (no completion gate)."""
+    out = {}
+    groups = sorted({t["group"] for t in d["teams"]})
+    for g in groups:
+        codes = [t["code"] for t in d["teams"] if t["group"] == g]
+        tbl = {c: {"P": 0, "pts": 0, "gf": 0, "ga": 0} for c in codes}
+        for mt in d["matches"]:
+            if mt.get("group") != g:
+                continue
+            sc = mt.get("score")
+            if mt.get("status") == "completed" and sc and mt["team1"] in tbl and mt["team2"] in tbl:
+                a, b, ga, gb = mt["team1"], mt["team2"], sc["team1"], sc["team2"]
+                tbl[a]["P"] += 1; tbl[b]["P"] += 1
+                tbl[a]["gf"] += ga; tbl[a]["ga"] += gb; tbl[b]["gf"] += gb; tbl[b]["ga"] += ga
+                if ga > gb: tbl[a]["pts"] += 3
+                elif gb > ga: tbl[b]["pts"] += 3
+                else: tbl[a]["pts"] += 1; tbl[b]["pts"] += 1
+        if any(tbl[c]["P"] >= 1 for c in codes):
+            order = sorted(codes, key=lambda c: (-tbl[c]["pts"], -(tbl[c]["gf"] - tbl[c]["ga"]), -tbl[c]["gf"], c))
+            out[g] = order[0]
+    return out
+
+def prov_standings(d):
+    """Provisional points/rank per entry from current group leaders (the live table)."""
+    sc = d["league"]["scoring"]; pl = prov_leaders(d)
+    rows = []
+    for e in d["league"]["entries"]:
+        pts = sum(sc["groupWinner"] for g, win in pl.items() if (e.get("w") or {}).get(g) == win)
+        rows.append({"e": e, "pts": pts})
+    rows.sort(key=lambda r: -r["pts"])
+    rank, last, n = 0, None, 0
+    for r in rows:
+        if r["e"].get("exhibition"):
+            r["rank"] = "★"; continue
+        n += 1
+        if r["pts"] != last:
+            rank = n; last = r["pts"]
+        r["rank"] = rank
+    total = sum(1 for r in rows if not r["e"].get("exhibition"))
+    return rows, total
+
 def find_entries(query, d):
     q = (query or "").strip().lower()
     if len(q) < 2:
@@ -140,25 +182,37 @@ def build_reply(text, d=None):
     e = me["e"]
     resolved = len(gw)
     gw_hits = sum(1 for g, win in gw.items() if (e.get("w") or {}).get(g) == win)
-    # Honest rank line. Pre-resolution everyone is level on 0 pts (no group finished
-    # yet), so do NOT tell each person they are "#1" — say the table hasn't started.
-    # Otherwise flag shared ranks as ties rather than implying a sole position.
+    # Two lines: a LIVE provisional standing (current group leaders, moves every
+    # match — the engagement number) and the OFFICIAL points (locked, only from
+    # finished groups + knockouts). Never imply a sole #1 when entries are tied.
     my_rank = me["rank"]; is_exh = bool(e.get("exhibition"))
-    tied = sum(1 for r in rows if not r["e"].get("exhibition") and r.get("rank") == my_rank)
+    prows, ptotal = prov_standings(d)
+    pme = next((r for r in prows if r["e"]["n"] == name), None) or {"rank": my_rank, "pts": 0}
+    p_rank = pme["rank"]
+    p_tied = sum(1 for r in prows if not r["e"].get("exhibition") and r.get("rank") == p_rank)
     if is_exh:
-        rank_en = "Your line: exhibition (not ranked)  ·  %d pts" % me["pts"]
-        rank_ar = "خطّك: استعراضي (خارج الترتيب)  ·  %d نقطة" % me["pts"]
-    elif resolved == 0:
-        rank_en = ("No group has finished yet, so all %d entries are level on 0 pts — "
-                   "nobody is ahead. The table starts moving when the first group completes." % total)
-        rank_ar = ("لم تكتمل أي مجموعة بعد، فجميع المشاركين الـ%d متعادلون على 0 نقطة — "
-                   "لا أحد متقدّم. يبدأ الترتيب بالتحرّك عند اكتمال أول مجموعة." % total)
-    elif tied > 1:
-        rank_en = "Rank: tied #%s of %d (level with %d others)  ·  %d pts so far" % (my_rank, total, tied - 1, me["pts"])
-        rank_ar = "الترتيب: متعادل #%s من %d (مع %d آخرين)  ·  %d نقطة حتى الآن" % (my_rank, total, tied - 1, me["pts"])
+        live_en = "Live: exhibition (not ranked)  ·  %d pts" % pme["pts"]
+        live_ar = "مباشر: استعراضي (خارج الترتيب)  ·  %d نقطة" % pme["pts"]
+    elif p_tied > 1:
+        live_en = "Live: tied #%s of %d (with %d others)  ·  %d pts — provisional, on current group leaders" % (p_rank, ptotal, p_tied - 1, pme["pts"])
+        live_ar = "مباشر: متعادل #%s من %d (مع %d آخرين)  ·  %d نقطة — مبدئي، حسب متصدّري المجموعات الآن" % (p_rank, ptotal, p_tied - 1, pme["pts"])
     else:
-        rank_en = "Rank: #%s of %d  ·  %d pts so far" % (my_rank, total, me["pts"])
-        rank_ar = "الترتيب: #%s من %d  ·  %d نقطة حتى الآن" % (my_rank, total, me["pts"])
+        live_en = "Live: #%s of %d  ·  %d pts — provisional, on current group leaders" % (p_rank, ptotal, pme["pts"])
+        live_ar = "مباشر: #%s من %d  ·  %d نقطة — مبدئي، حسب متصدّري المجموعات الآن" % (p_rank, ptotal, pme["pts"])
+    if is_exh:
+        off_en = "Official: exhibition (not ranked)"
+        off_ar = "الرسمي: استعراضي (خارج الترتيب)"
+    elif resolved == 0:
+        off_en = "Official: 0 pts so far (locked until the first group finishes)"
+        off_ar = "الرسمي: 0 نقطة حتى الآن (يُحتسب عند اكتمال أول مجموعة)"
+    else:
+        tied = sum(1 for r in rows if not r["e"].get("exhibition") and r.get("rank") == my_rank)
+        if tied > 1:
+            off_en = "Official: tied #%s of %d  ·  %d pts" % (my_rank, total, me["pts"])
+            off_ar = "الرسمي: متعادل #%s من %d  ·  %d نقطة" % (my_rank, total, me["pts"])
+        else:
+            off_en = "Official: #%s of %d  ·  %d pts" % (my_rank, total, me["pts"])
+            off_ar = "الرسمي: #%s من %d  ·  %d نقطة" % (my_rank, total, me["pts"])
     champ = e.get("c"); fins = [c for c in (e.get("f") or []) if T.get(c)]
     pe = next((p for p in d["league"].get("props", []) if (p.get("n") or "").lower() == name.lower()), None)
     pl = d.get("propsLive") or {}
@@ -166,7 +220,8 @@ def build_reply(text, d=None):
 
     if ar:
         lines = ["🏆 " + name + " — دوري كأس العالم",
-                 rank_ar,
+                 live_ar,
+                 off_ar,
                  "أبطال المجموعات: %d صحيحة من %d محسومة" % (gw_hits, resolved),
                  "بطلك: %s %s" % (fl(champ), nm(champ)) if champ else "بطلك: —",
                  "نهائيك: " + ("، ".join(fl(c) + " " + nm(c) for c in fins) if fins else "—")]
@@ -179,7 +234,8 @@ def build_reply(text, d=None):
         return "\n".join(lines)
 
     lines = ["🏆 " + name + " — your World Cup league",
-             rank_en,
+             live_en,
+             off_en,
              "Group winners right: %d of %d resolved" % (gw_hits, resolved),
              "Your champion: %s %s" % (fl(champ), nm(champ)) if champ else "Your champion: —",
              "Your finalists: " + (", ".join(fl(c) + " " + nm(c) for c in fins) if fins else "—")]
