@@ -26,11 +26,12 @@ BEFORE build.py (so the movement is bundled into index.html). State persists in
 src/standings-state.json (committed); the movement is written to
 data.league.movement = {entry name: signed places moved, + up / - down}.
 """
-import re, json, pathlib, datetime, sys
+import re, json, pathlib, datetime, sys, subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "src" / "data.js"
 STATE = ROOT / "src" / "standings-state.json"
+RANK_JS = ROOT / "scripts" / "league_rank.js"
 
 def load_data():
     raw = DATA.read_text()
@@ -82,8 +83,24 @@ def prov_ranks(d):
 def started_count(d):
     return sum(1 for m in d["matches"] if m.get("status") == "completed" or m.get("score"))
 
+def board_ranks(d):
+    """Full board rank {name: rank} via the real engine (scripts/league_rank.js):
+    resolved pts -> provisional pts -> expected pts, mirroring ui.js leagueStandings.
+    This is what the board displays and it shifts with every model recompute, so the
+    arrows move as often as the live model does. Falls back to the coarse group-winner
+    rank if Node/the engine is unavailable, so movement degrades rather than breaking."""
+    try:
+        out = subprocess.run(["node", str(RANK_JS)], capture_output=True, text=True, timeout=120, check=True)
+        ranks = json.loads(out.stdout)
+        if ranks:
+            return ranks
+        raise ValueError("empty ranks")
+    except Exception as e:
+        print(f"[standings_movement] board_ranks via node failed ({e}); falling back to coarse group-winner rank", file=sys.stderr)
+        return prov_ranks(d)
+
 def compute(d):
-    cur = prov_ranks(d)
+    cur = board_ranks(d)
     started = started_count(d)
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     baseline = state.get("baseline") or {}
