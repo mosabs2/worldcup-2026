@@ -1131,5 +1131,48 @@
 "red": 0
 }
 }
+},
+"mt_894046992": {
+"scorers": [
+{
+"pid": "pl_72933740",
+"player": "Cyle Larin",
+"team": "CAN",
+"goals": 1,
+"pens": 0
+},
+{
+"pid": "pl_08953283",
+"player": "Jonathan David",
+"team": "CAN",
+"goals": 3,
+"pens": 0
+},
+{
+"pid": "pl_74195557",
+"player": "Nathan-Dylan Saliba",
+"team": "CAN",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [
+{
+"pid": "pl_74195557",
+"player": "Nathan-Dylan Saliba",
+"team": "CAN",
+"assists": 1
+}
+],
+"cards": {
+"CAN": {
+"yellow": 1,
+"red": 0
+},
+"QAT": {
+"yellow": 1,
+"red": 2
+}
+}
 }
 }

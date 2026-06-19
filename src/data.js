@@ -4897,8 +4897,14 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-19",
-  "matchesCounted": 26,
+  "matchesCounted": 27,
   "topScorers": [
+   {
+    "player": "Jonathan David",
+    "team": "CAN",
+    "goals": 3,
+    "pens": 0
+   },
    {
     "player": "Lionel Messi",
     "team": "ARG",
@@ -4916,6 +4922,12 @@ const WC_DATA = {
     "team": "GER",
     "goals": 2,
     "pens": 1
+   },
+   {
+    "player": "Cyle Larin",
+    "team": "CAN",
+    "goals": 2,
+    "pens": 0
    },
    {
     "player": "Elijah Just",
@@ -4976,18 +4988,6 @@ const WC_DATA = {
     "team": "RSA",
     "goals": 1,
     "pens": 1
-   },
-   {
-    "player": "Abbosbek Fayzullaev",
-    "team": "UZB",
-    "goals": 1,
-    "pens": 0
-   },
-   {
-    "player": "Abdulelah Al-Amri",
-    "team": "KSA",
-    "goals": 1,
-    "pens": 0
    }
   ],
   "topAssists": [
@@ -5040,6 +5040,12 @@ const WC_DATA = {
     "goals": 1
    },
    {
+    "player": "Nathan-Dylan Saliba",
+    "team": "CAN",
+    "assists": 1,
+    "goals": 1
+   },
+   {
     "player": "Nathaniel Brown",
     "team": "GER",
     "assists": 1,
@@ -5074,12 +5080,6 @@ const WC_DATA = {
     "team": "USA",
     "assists": 1,
     "goals": 0
-   },
-   {
-    "player": "Alexandr Sojka",
-    "team": "CZE",
-    "assists": 1,
-    "goals": 0
    }
   ],
   "teamCards": [
@@ -5088,6 +5088,12 @@ const WC_DATA = {
     "yellow": 4,
     "red": 2,
     "points": 10
+   },
+   {
+    "team": "QAT",
+    "yellow": 3,
+    "red": 2,
+    "points": 9
    },
    {
     "team": "BIH",
@@ -5126,6 +5132,12 @@ const WC_DATA = {
     "points": 3
    },
    {
+    "team": "CAN",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
     "team": "POR",
     "yellow": 3,
     "red": 0,
@@ -5139,18 +5151,6 @@ const WC_DATA = {
    },
    {
     "team": "EGY",
-    "yellow": 2,
-    "red": 0,
-    "points": 2
-   },
-   {
-    "team": "BRA",
-    "yellow": 2,
-    "red": 0,
-    "points": 2
-   },
-   {
-    "team": "SUI",
     "yellow": 2,
     "red": 0,
     "points": 2
