@@ -1900,7 +1900,11 @@ const WC_DATA = {
      "m": "90'+2'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 5.31,
+    "team2": 0.19
+   }
   },
   {
    "id": "M028",
