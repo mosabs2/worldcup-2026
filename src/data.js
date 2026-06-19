@@ -3,8 +3,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-18",
-  "asOfNote": "Results through 26 matches, auto-synced from the ESPN public feed 2026-06-18 21:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-19",
+  "asOfNote": "Results through 27 matches, auto-synced from the ESPN public feed 2026-06-19 00:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1856,14 +1856,51 @@ const WC_DATA = {
    "team1": "CAN",
    "team2": "QAT",
    "venueId": "BCP",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 6,
+    "team2": 0
+   },
    "market": {
     "h": 0.7319,
     "x": 0.173,
     "a": 0.0951,
     "book": "Bet365"
-   }
+   },
+   "goals": [
+    {
+     "t": "CAN",
+     "p": "Cyle Larin",
+     "m": "16'"
+    },
+    {
+     "t": "CAN",
+     "p": "Jonathan David",
+     "m": "29'"
+    },
+    {
+     "t": "CAN",
+     "p": "Jonathan David",
+     "m": "45'+3'"
+    },
+    {
+     "t": "CAN",
+     "p": "Nathan Saliba",
+     "m": "64'"
+    },
+    {
+     "t": "CAN",
+     "p": "Mohamed Manai",
+     "m": "75'",
+     "og": true
+    },
+    {
+     "t": "CAN",
+     "p": "Jonathan David",
+     "m": "90'+2'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M028",
@@ -4859,7 +4896,7 @@ const WC_DATA = {
   "propsDeadline": "Open — TBC"
  },
  "propsLive": {
-  "asOf": "2026-06-18",
+  "asOf": "2026-06-19",
   "matchesCounted": 26,
   "topScorers": [
    {
@@ -5121,6 +5158,10 @@ const WC_DATA = {
   ],
   "teamGoals": [
    {
+    "team": "CAN",
+    "goals": 7
+   },
+   {
     "team": "GER",
     "goals": 7
    },
@@ -5162,10 +5203,6 @@ const WC_DATA = {
    },
    {
     "team": "MEX",
-    "goals": 2
-   },
-   {
-    "team": "KOR",
     "goals": 2
    }
   ],
