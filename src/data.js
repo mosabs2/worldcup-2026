@@ -4,7 +4,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-19",
-  "asOfNote": "Results through 27 matches, auto-synced from the ESPN public feed 2026-06-19 00:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 28 matches, auto-synced from the ESPN public feed 2026-06-19 03:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1914,14 +1914,25 @@ const WC_DATA = {
    "team1": "MEX",
    "team2": "KOR",
    "venueId": "GDL",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 0
+   },
    "market": {
     "h": 0.4628,
     "x": 0.2875,
     "a": 0.2497,
     "book": "Bet365"
-   }
+   },
+   "goals": [
+    {
+     "t": "MEX",
+     "p": "Luis Romo",
+     "m": "50'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M029",
@@ -5190,6 +5201,10 @@ const WC_DATA = {
     "goals": 4
    },
    {
+    "team": "MEX",
+    "goals": 3
+   },
+   {
     "team": "FRA",
     "goals": 3
    },
@@ -5204,10 +5219,6 @@ const WC_DATA = {
    {
     "team": "COL",
     "goals": 3
-   },
-   {
-    "team": "MEX",
-    "goals": 2
    }
   ],
   "note": "Golden Boot from shot data; assists and cards from official match player stats; team goals from results. MENA and host props resolve on the bracket."
