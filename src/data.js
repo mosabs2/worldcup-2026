@@ -1932,7 +1932,11 @@ const WC_DATA = {
      "m": "50'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.49,
+    "team2": 0.71
+   }
   },
   {
    "id": "M029",
@@ -4912,7 +4916,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-19",
-  "matchesCounted": 27,
+  "matchesCounted": 28,
   "topScorers": [
    {
     "player": "Jonathan David",
@@ -5153,6 +5157,12 @@ const WC_DATA = {
     "points": 3
    },
    {
+    "team": "KOR",
+    "yellow": 3,
+    "red": 0,
+    "points": 3
+   },
+   {
     "team": "POR",
     "yellow": 3,
     "red": 0,
@@ -5160,12 +5170,6 @@ const WC_DATA = {
    },
    {
     "team": "BEL",
-    "yellow": 2,
-    "red": 0,
-    "points": 2
-   },
-   {
-    "team": "EGY",
     "yellow": 2,
     "red": 0,
     "points": 2

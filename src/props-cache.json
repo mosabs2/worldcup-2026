@@ -1174,5 +1174,23 @@
 "red": 2
 }
 }
+},
+"mt_153636108": {
+"scorers": [
+{
+"pid": "pl_58793337",
+"player": "Luis Romo",
+"team": "MEX",
+"goals": 1,
+"pens": 0
+}
+],
+"assists": [],
+"cards": {
+"KOR": {
+"yellow": 2,
+"red": 0
+}
+}
 }
 }
