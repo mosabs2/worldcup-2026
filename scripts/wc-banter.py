@@ -101,6 +101,13 @@ def league_context(d, code_a, code_b, group):
     lead = prov_leader(d)
     if lead:
         lines.append("Live provisional league leader right now: %s on %d pts." % (lead[0], lead[1]))
+    # Position movers since the last completed match (server-computed, in data.league.movement)
+    mv = (d.get("league") or {}).get("movement") or {}
+    movers = sorted(((n, m) for n, m in mv.items() if m), key=lambda x: -abs(x[1]))[:3]
+    if movers:
+        parts = ["%s %s %d place%s" % (n, "up" if m > 0 else "down", abs(m), "" if abs(m) == 1 else "s")
+                 for n, m in movers]
+        lines.append("Biggest provisional-table moves since the last completed match: %s." % ", ".join(parts))
     return " ".join(lines)
 
 def claude_comment(context, angle, recent):

@@ -1016,31 +1016,19 @@
     const { entries, resolved, elim, rows } = leagueStandings();
     if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Make your picks on the Join tab and send the code round.')); return; }
     // exhibition entries (the commissioner) are ranked for display but carry no prize position
-    // Provisional movement: the ▲▼ shows each entry's rank change since the last
-    // published update — compare the current provisional ranks against the snapshot
-    // stored from the previous build. Live points/rank come from current group
-    // leaders; official points only count finished groups + knockouts.
-    const curRanks = {}; let rk = 0;
-    rows.forEach(r => { if (!r.e.exhibition) { rk++; curRanks[r.e.n] = rk; } });
-    let prevRanks = {};
-    // Movement ▲▼ compares against the last PUBLISHED snapshot. In what-if mode the
-    // board reflects hypothetical results, so don't read the baseline from it OR write
-    // it back — that would corrupt the "since last update" diff with imaginary movement.
-    if (!whatIf.on) {
-      const curBuilt = (typeof WC_BUILT_AT !== 'undefined' && WC_BUILT_AT) || '';
-      const snap = lsGet(LS.provSnap, null);
-      if (snap && snap.builtAt && snap.ranks) {
-        if (snap.builtAt !== curBuilt) { prevRanks = snap.ranks; lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: snap.ranks }); }
-        else { prevRanks = snap.prevRanks || {}; }
-      } else { lsSet(LS.provSnap, { builtAt: curBuilt, ranks: curRanks, prevRanks: {} }); }
-    }
+    // Provisional movement ▲▼: server-computed, baked into the published data
+    // (D.league.movement = {name: signed places moved since the last completed match}).
+    // Computed once in the pipeline so the board, the league bot and the Commissioner
+    // all show the SAME movement, and it stays on the board between matches instead of
+    // resetting every publish. Positive = moved up. What-if mode shows no arrows (the
+    // board then reflects hypothetical results, not the real live race).
+    const move = (!whatIf.on && D.league && D.league.movement) || {};
     const moveArrow = name => {
-      const p = prevRanks[name];
-      if (whatIf.on || p == null || curRanks[name] == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
-      const d = p - curRanks[name];
-      if (d > 0) return el('span', { style: 'color:#2e9e5b;font-weight:700;margin-left:4px' }, '▲' + d);
-      if (d < 0) return el('span', { style: 'color:#c0392b;font-weight:700;margin-left:4px' }, '▼' + (-d));
-      return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '–');
+      const d = move[name];
+      if (whatIf.on || d == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
+      if (d > 0) return el('span', { title: 'up ' + d + ' since the last match', style: 'color:#2e9e5b;font-weight:700;margin-left:4px' }, '▲' + d);
+      if (d < 0) return el('span', { title: 'down ' + (-d) + ' since the last match', style: 'color:#c0392b;font-weight:700;margin-left:4px' }, '▼' + (-d));
+      return el('span', { class: 'tiny muted', title: 'no change since the last match', style: 'margin-left:4px' }, '–');
     };
     let rankNo = 0;
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },

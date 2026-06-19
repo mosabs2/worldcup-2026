@@ -82,6 +82,17 @@ jobs:
         continue-on-error: true
         run: python3 scripts/generate_knockout.py --from-feed
 
+      # Provisional-standings movement: recompute each league entry's ▲▼ rank change
+      # since the last completed match and bake it into data.league.movement, so the
+      # board (persistent arrows, same for everyone), the league bot and the Commissioner
+      # all read one consistent set of moves. Baseline rolls forward when a new match
+      # kicks off; state persists in src/standings-state.json. continue-on-error so a
+      # hiccup never blocks the score commit.
+      - name: Recompute provisional-standings movement (since last match)
+        if: steps.fetch.outputs.changed == 'true'
+        continue-on-error: true
+        run: python3 scripts/standings_movement.py
+
       - name: Recompute model and timeline snapshot
         if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
         run: node update.js --date "$(date -u +%F)"
