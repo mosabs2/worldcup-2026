@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-19",
-  "asOfNote": "Results through 28 matches, auto-synced from the ESPN public feed 2026-06-19 03:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 29 matches, auto-synced from the ESPN public feed 2026-06-19 21:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -1945,14 +1945,31 @@ const WC_DATA = {
    "team1": "USA",
    "team2": "AUS",
    "venueId": "SEA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 2,
+    "team2": 0
+   },
    "market": {
     "h": 0.5919,
     "x": 0.2187,
     "a": 0.1894,
     "book": "Bet365"
-   }
+   },
+   "goals": [
+    {
+     "t": "USA",
+     "p": "Cameron Burgess",
+     "m": "11'",
+     "og": true
+    },
+    {
+     "t": "USA",
+     "p": "Alex Freeman",
+     "m": "43'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "M030",
@@ -5239,16 +5256,16 @@ const WC_DATA = {
     "goals": 7
    },
    {
+    "team": "USA",
+    "goals": 6
+   },
+   {
     "team": "SUI",
     "goals": 5
    },
    {
     "team": "SWE",
     "goals": 5
-   },
-   {
-    "team": "USA",
-    "goals": 4
    },
    {
     "team": "NOR",
