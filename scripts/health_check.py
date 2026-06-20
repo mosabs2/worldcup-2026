@@ -48,9 +48,16 @@ else:
     counted = pl.get("matchesCounted", 0)
     lag = ncomp - counted
     if lag > PROPS_LAG_TOLERANCE:
-        fails.append(f"props race is stale: {counted} matches counted but {ncomp} have been "
-                     f"played (lag {lag} > tolerance {PROPS_LAG_TOLERANCE}). The props harvest "
-                     f"is not keeping up — this is the silent-staleness failure the watchdog exists for.")
+        # TEMPORARY (20 Jun 2026): TheStatsAPI Starter monthly request quota is
+        # exhausted (HTTP 429 USAGE_LIMIT_EXCEEDED), so the props/xG harvest
+        # cannot advance until the quota resets or the plan is upgraded. The
+        # staleness is a known, acknowledged external-billing condition, not the
+        # silent-harvest-bug this check guards against, so downgrade it to a WARN
+        # to stop the every-15-min phone-alert storm. RE-HARDEN to a hard FAIL
+        # once the StatsAPI plan decision is made and the feed is live again.
+        warns.append(f"props race is stale: {counted} matches counted but {ncomp} have been "
+                     f"played (lag {lag} > tolerance {PROPS_LAG_TOLERANCE}). StatsAPI monthly "
+                     f"quota exhausted — props/xG frozen until quota reset or plan upgrade.")
     if ncomp > 0 and not pl.get("topScorers"):
         fails.append("matches have been played but the Golden Boot board is empty")
     if ncomp > 0 and not pl.get("teamGoals"):
