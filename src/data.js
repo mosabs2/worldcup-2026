@@ -5340,7 +5340,7 @@ const WC_DATA = {
     "goals": 3
    }
   ],
-  "note": "Golden Boot from shot data; assists and cards from official match player stats; team goals from results. MENA and host props resolve on the bracket."
+  "note": "Golden Boot from shot data; assists and cards from official match player stats; team goals from results. MENA and host props resolve on the bracket. Props race final as of 19 June 2026 (live stats feed retired)."
  }
 };
 if (typeof module !== 'undefined') module.exports = { WC_DATA };

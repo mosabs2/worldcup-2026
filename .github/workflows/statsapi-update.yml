@@ -6,9 +6,12 @@ name: StatsAPI daily enrich
 # race, then recomputes the model (xG-tempered Elo) and republishes.
 # Runs at 08:00 UTC (11:00 Kuwait), after the North American match window.
 
+# DISABLED 20 Jun 2026: TheStatsAPI feed was dropped (Starter monthly quota
+# exhausted; market odds shown by backtest to be no sharper than the model). The
+# daily schedule is removed so this never auto-runs; workflow_dispatch is kept so
+# the job can be triggered manually if the feed is ever revived (also restore the
+# two StatsAPI steps in auto-update.yml and set STATSAPI_ENABLED=True in health_check.py).
 on:
-  schedule:
-    - cron: '0 8 * * *'
   workflow_dispatch: {}
 
 permissions:

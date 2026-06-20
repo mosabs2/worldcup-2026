@@ -45,33 +45,13 @@ jobs:
         continue-on-error: true
         run: python3 scripts/fetch_goals.py
 
-      # Light, self-healing xG enrich: pulls TheStatsAPI shotmap xG for any completed
-      # match that still lacks it (skips the full market sweep and the props harvest).
-      # Makes NO API call when nothing is missing, so it is free to run every cycle;
-      # when a match is missing xG it retries each 15-min cycle until the shotmap is
-      # published, so xG lands within ~15 min of full-time instead of the next morning.
-      # continue-on-error so a StatsAPI hiccup never blocks the score commit; the daily
-      # statsapi-update workflow remains the full-sweep backstop.
-      - name: Enrich newly-completed matches with xG (StatsAPI, light)
-        id: xg
-        continue-on-error: true
-        env:
-          STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
-        run: python3 scripts/fetch_statsapi.py --only-missing-xg
-
-      # Incremental props race: harvest goals/assists/cards for any finished match
-      # not already in src/props-cache.json (~2 API calls per NEW match), then
-      # re-aggregate the boards. Makes no writes and reports no change when nothing
-      # new has finished, so it is safe to run every cycle and keeps the Golden
-      # Boot / assists / cards / team-goals boards current through the day rather
-      # than only on the once-daily statsapi-update job. continue-on-error so a
-      # StatsAPI hiccup never blocks the score commit.
-      - name: Refresh props race (incremental)
-        id: props
-        continue-on-error: true
-        env:
-          STATSAPI_KEY: ${{ secrets.STATSAPI_KEY }}
-        run: python3 scripts/fetch_props.py
+      # TheStatsAPI feed (xG enrich + props harvest) was dropped on 20 Jun 2026:
+      # the Starter monthly quota was exhausted (HTTP 429 USAGE_LIMIT_EXCEEDED) and
+      # the backtest had already shown its market odds were no sharper than the
+      # model, so it was cut rather than upgraded. The props race + xG are frozen at
+      # their 19 Jun final state; the site now runs purely on the free ESPN feed.
+      # To revive: restore the "Enrich xG" and "Refresh props race" steps here and
+      # the statsapi-update.yml schedule, and set STATSAPI_ENABLED=True in health_check.py.
 
       # Once the group stage finishes, build the knockout bracket and resolve each
       # round's teams from completed results. No-ops while groups are in progress.
@@ -94,15 +74,15 @@ jobs:
         run: python3 scripts/standings_movement.py
 
       - name: Recompute model and timeline snapshot
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true'
         run: node update.js --date "$(date -u +%F)"
 
       - name: Rebuild site
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true'
         run: python3 build.py
 
       - name: Commit and publish
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

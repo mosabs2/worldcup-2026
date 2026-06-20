@@ -22,6 +22,14 @@ Stdlib only. Run as the final workflow step, after publish.
 """
 import json, os, re, sys
 
+# TheStatsAPI feed was dropped on 20 Jun 2026 (Starter monthly quota exhausted;
+# the backtest had already shown its market odds were no sharper than the model).
+# The props race + xG are intentionally frozen at their 19 Jun final state, so the
+# freshness checks below (props-lag, propsLive.asOf, missing-xG) no longer apply;
+# the structural checks (propsLive present, boards non-empty) stay armed to protect
+# the frozen panel. Set this True again to re-arm freshness if the feed is revived.
+STATSAPI_ENABLED = False
+
 PROPS_LAG_TOLERANCE = 2          # props may trail scores by up to 2 matches (latest
                                  # match's player-stats can lag the final whistle)
 ASSISTS_EXPECTED_AFTER = 5       # by this many counted matches, assists must be present
@@ -47,29 +55,25 @@ if pl is None:
 else:
     counted = pl.get("matchesCounted", 0)
     lag = ncomp - counted
-    if lag > PROPS_LAG_TOLERANCE:
-        # TEMPORARY (20 Jun 2026): TheStatsAPI Starter monthly request quota is
-        # exhausted (HTTP 429 USAGE_LIMIT_EXCEEDED), so the props/xG harvest
-        # cannot advance until the quota resets or the plan is upgraded. The
-        # staleness is a known, acknowledged external-billing condition, not the
-        # silent-harvest-bug this check guards against, so downgrade it to a WARN
-        # to stop the every-15-min phone-alert storm. RE-HARDEN to a hard FAIL
-        # once the StatsAPI plan decision is made and the feed is live again.
-        warns.append(f"props race is stale: {counted} matches counted but {ncomp} have been "
-                     f"played (lag {lag} > tolerance {PROPS_LAG_TOLERANCE}). StatsAPI monthly "
-                     f"quota exhausted — props/xG frozen until quota reset or plan upgrade.")
+    # Freshness checks apply only while the StatsAPI feed is live.
+    if STATSAPI_ENABLED and lag > PROPS_LAG_TOLERANCE:
+        fails.append(f"props race is stale: {counted} matches counted but {ncomp} have been "
+                     f"played (lag {lag} > tolerance {PROPS_LAG_TOLERANCE}). The props harvest "
+                     f"is not keeping up — this is the silent-staleness failure the watchdog exists for.")
+    # Structural checks stay armed: the frozen props panel must still render.
     if ncomp > 0 and not pl.get("topScorers"):
         fails.append("matches have been played but the Golden Boot board is empty")
     if ncomp > 0 and not pl.get("teamGoals"):
         fails.append("matches have been played but the team-goals board is empty")
     if counted >= ASSISTS_EXPECTED_AFTER and not pl.get("topAssists"):
         fails.append(f"{counted} matches counted but the assists board is empty")
-    if meta_asof and pl.get("asOf") and pl["asOf"] < meta_asof:
+    if STATSAPI_ENABLED and meta_asof and pl.get("asOf") and pl["asOf"] < meta_asof:
         warns.append(f"propsLive.asOf ({pl['asOf']}) is behind meta.asOf ({meta_asof})")
 
-missing_xg = [m for m in completed if not m.get("xg")]
-if missing_xg:
-    warns.append(f"{len(missing_xg)} completed match(es) still lack xG (usually fills within ~15 min)")
+if STATSAPI_ENABLED:
+    missing_xg = [m for m in completed if not m.get("xg")]
+    if missing_xg:
+        warns.append(f"{len(missing_xg)} completed match(es) still lack xG (usually fills within ~15 min)")
 
 for w in warns: print("WARN:", w)
 for f in fails: print("FAIL:", f)
