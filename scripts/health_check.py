@@ -75,6 +75,18 @@ if STATSAPI_ENABLED:
     if missing_xg:
         warns.append(f"{len(missing_xg)} completed match(es) still lack xG (usually fills within ~15 min)")
 
+# xG is now sourced from ESPN's free core API (fetch_xg.py, replacing the dropped
+# StatsAPI feed) and retried every auto-update cycle. This is a WARN, never a hard
+# FAIL: ESPN occasionally never publishes a given match's xG (e.g. TUR-PAR, 19 Jun),
+# and a hard fail would alarm forever on a gap we cannot fill. The WARN surfaces any
+# standing gap in the run log without crying wolf; transient lags self-heal on retry.
+XG_ENABLED = True
+if XG_ENABLED:
+    missing_xg = [f"{m['team1']}-{m['team2']}" for m in completed if not m.get("xg")]
+    if missing_xg:
+        warns.append(f"{len(missing_xg)} completed match(es) lack xG from ESPN "
+                     f"(retried each cycle; some are permanent source gaps): {', '.join(missing_xg)}")
+
 for w in warns: print("WARN:", w)
 for f in fails: print("FAIL:", f)
 
