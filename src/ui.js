@@ -185,7 +185,7 @@
       (sc && m.xg)
         ? el('div', { class: 'xg-line' }, el('span', { class: 'lab' }, 'xG actual '), m.xg.team1.toFixed(2) + ' – ' + m.xg.team2.toFixed(2))
         : sc
-          ? el('div', { class: 'xg-line xg-pending' }, el('span', { class: 'lab' }, 'xG actual '), 'updating…')
+          ? null  // xG feed dropped 20 Jun 2026 (StatsAPI monthly quota); finals after the 19 Jun freeze carry no xG — show nothing rather than a false "updating…"
           : (p && p.xg1 != null)
             ? el('div', { class: 'xg-line xg-exp' }, el('span', { class: 'lab' }, 'xG expected '), p.xg1.toFixed(2) + ' – ' + p.xg2.toFixed(2))
             : null,
