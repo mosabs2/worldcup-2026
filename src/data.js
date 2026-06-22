@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-21",
-  "asOfNote": "Results through 38 matches, auto-synced from the ESPN public feed 2026-06-21 21:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-22",
+  "asOfNote": "Results through 39 matches, auto-synced from the ESPN public feed 2026-06-22 00:10 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -2366,13 +2366,44 @@ const WC_DATA = {
    "team1": "URU",
    "team2": "CPV",
    "venueId": "MIA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 2,
+    "team2": 2
+   },
    "market": {
     "h": 0.6292,
     "x": 0.236,
     "a": 0.1348,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "CPV",
+     "p": "Kevin Pina",
+     "m": "21'"
+    },
+    {
+     "t": "URU",
+     "p": "Maxi Araújo",
+     "m": "44'"
+    },
+    {
+     "t": "URU",
+     "p": "Agustín Cano",
+     "m": "45'+6'"
+    },
+    {
+     "t": "CPV",
+     "p": "Hélio Varela",
+     "m": "61'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.34,
+    "team2": 0.86,
+    "src": "espn"
    }
   },
   {
@@ -5167,11 +5198,11 @@ const WC_DATA = {
    "HMB": 0,
    "Abdullah Khaled": 0,
    "Moblee": 0,
-   "Nasser Talal": 0,
-   "Rashed": 3,
-   "Bader Al Gatheebi": -1,
-   "Faisal Abu Hadida": -1,
-   "Saleh Al Hashash": -1,
+   "Bader Al Gatheebi": 2,
+   "Nasser Talal": -1,
+   "Rashed": -1,
+   "Faisal Abu Hadida": 0,
+   "Saleh Al Hashash": 0,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
    "Khaled Fahad": 0,
@@ -5180,33 +5211,33 @@ const WC_DATA = {
    "Hmoud Al Sabah": 0,
    "Chris Ovenden": 0,
    "AD": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 1,
-   "Ali Ahmed Hmoud Mohammed": -1,
+   "Hani Ibraheam sulaiman abdullah al mawash": 0,
+   "Ali Ahmed Hmoud Mohammed": 0,
    "Khaled Al Qahtani": 0,
    "Mohammad Ahmad": 0,
    "Thamer Fares Alnoon": 0,
-   "Fahad Ali": 2,
-   "JMAMS": 0,
-   "Wahab Bader": -2,
+   "Wahab Bader": 2,
+   "Fahad Ali": -1,
+   "JMAMS": -1,
    "Feras Al Qenaei": 0,
    "Abdulaziz Alsabah": 0,
    "Shamlan Abdulaziz": 0,
    "Gelenn Caley Cale": 0,
    "Khalifa zayed": 0,
-   "Khalifa ali": 0,
-   "Salem Athbi": 0,
+   "Salem Athbi": 1,
+   "Khalifa ali": -1,
    "Sabah Mohammed": 0,
-   "Abdullah Mohammed": 1,
-   "Naser AlQadiri": -1,
-   "Jogs Bonito": 2,
-   "Mohammed Behbehani": -1,
-   "Arsenal #1": -1,
+   "Naser AlQadiri": 1,
+   "Abdullah Mohammed": -1,
+   "Jogs Bonito": 0,
+   "Mohammed Behbehani": 0,
+   "Arsenal #1": 0,
    "Mama Aad": 0,
    "Ahmed Boareki": 0,
    "Syb": 0,
    "Faisal Boodai": 0,
-   "Ahmed Mubarak Al Sabah": 0,
-   "Eric Bartlett": 0,
+   "Eric Bartlett": 1,
+   "Ahmed Mubarak Al Sabah": -1,
    "Essa": 0,
    "Mohammed Jamal": 0,
    "Zuz": 0,
