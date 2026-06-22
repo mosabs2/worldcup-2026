@@ -83,8 +83,39 @@ def standings(data):
     groups = {}
     for c, v in st.items():
         groups.setdefault(v['grp'], []).append(c)
+    # completed group results for the head-to-head tiebreak
+    played = [(m['team1'], m['team2'], m['score']['team1'], m['score']['team2'])
+              for m in data['matches']
+              if m.get('stage') == 'group' and m.get('status') == 'completed' and m.get('score')]
     key = lambda c: (st[c]['Pts'], st[c]['GD'], st[c]['GF'])
-    order = {g: sorted(cs, key=key, reverse=True) for g, cs in groups.items()}
+
+    def h2h_reorder(codes):
+        # After Pts->GD->GF, order any still-level cluster by the head-to-head mini-table
+        # (FIFA: H2H pts -> H2H GD -> H2H GF) over matches among the tied teams only.
+        # Residual ties keep their prior order (fair-play / lots not modelled). Mirrors
+        # engine.js currentTables so the script, the model and the board agree.
+        out, i = [], 0
+        while i < len(codes):
+            j = i
+            while j + 1 < len(codes) and key(codes[j + 1]) == key(codes[i]):
+                j += 1
+            tied = codes[i:j + 1]
+            if len(tied) > 1:
+                s = set(tied)
+                h = {c: {'p': 0, 'gd': 0, 'gf': 0} for c in tied}
+                for a, b, ga, gb in played:
+                    if a in s and b in s:
+                        h[a]['gf'] += ga; h[a]['gd'] += ga - gb
+                        h[b]['gf'] += gb; h[b]['gd'] += gb - ga
+                        if ga > gb: h[a]['p'] += 3
+                        elif gb > ga: h[b]['p'] += 3
+                        else: h[a]['p'] += 1; h[b]['p'] += 1
+                tied.sort(key=lambda c: (h[c]['p'], h[c]['gd'], h[c]['gf']), reverse=True)
+            out.extend(tied)
+            i = j + 1
+        return out
+
+    order = {g: h2h_reorder(sorted(cs, key=key, reverse=True)) for g, cs in groups.items()}
     return st, order
 
 
@@ -272,10 +303,20 @@ def merge_into_data(data, ko):
     prev = {m['id']: m for m in data['matches'] if m.get('stage') != 'group'}
     for m in ko:
         old = prev.get(m['id'])
-        if old and old.get('status') == 'completed' and old.get('score'):
+        if not old:
+            continue
+        if old.get('status') == 'completed' and old.get('score'):
             m['status'] = 'completed'; m['score'] = old['score']
             m['team1'] = old.get('team1', m['team1'])
             m['team2'] = old.get('team2', m['team2'])
+        # Never regress an already-known team back to TBD. A cycle without a third-place
+        # source (e.g. the ESPN feed was momentarily unreachable) rebuilds the eight
+        # "winner vs 3rd" slots as null; keep the previously-assigned opponents instead
+        # of blanking a live bracket. resolve() still fills genuinely-new slots.
+        if not m.get('team1') and old.get('team1'):
+            m['team1'] = old['team1']
+        if not m.get('team2') and old.get('team2'):
+            m['team2'] = old['team2']
     groups = [m for m in data['matches'] if m.get('stage') == 'group']
     data['matches'] = groups + ko
     return data

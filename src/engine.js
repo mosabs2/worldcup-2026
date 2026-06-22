@@ -149,6 +149,26 @@
       const side = slot.a.type === 'third' ? slot.a : slot.b.type === 'third' ? slot.b : null;
       if (side) thirdSlots.push({ i, groups: side.groups || null });
     });
+    // Once the official knockout bracket has been generated into data.matches (after the
+    // group stage), use ITS third-place assignment rather than re-guessing one, so the
+    // published R16-opponent odds — and the pinning of completed R32 results — match the
+    // real draw. Map r32Template slot index -> assigned third team from the generated R32
+    // fixtures. Empty before the bracket exists, so pre-knockout behaviour is unchanged.
+    const officialThirdAt = {};
+    const r32ById = {};
+    for (const m of data.matches) if (m.stage === 'r32' && m.id) r32ById[m.id] = m;
+    data.r32Template.forEach((slot, i) => {
+      const gm = r32ById[slot.id];
+      if (!gm) return;
+      const team = slot.a.type === 'third' ? gm.team1 : slot.b.type === 'third' ? gm.team2 : null;
+      if (team) officialThirdAt[i] = team;
+    });
+    const haveOfficialThirds = thirdSlots.length > 0 && thirdSlots.every(s => officialThirdAt[s.i]);
+    // The official qualifying thirds are exactly those assigned to the slots. When known,
+    // pin the run's qualifiers to this set so the third tally and the R32 placement stay
+    // consistent (the per-run rng tiebreak on the thirds ranking is just noise once the
+    // groups are complete) — and so official and fallback assignment can never mix.
+    const officialThirds = haveOfficialThirds ? thirdSlots.map(s => officialThirdAt[s.i]) : null;
 
     // Pre-split matches: fixed (completed or overridden) vs to-sample
     const fixed = [], open = [];
@@ -195,7 +215,7 @@
       }
       thirds.sort((a, b) =>
         st[b].pts - st[a].pts || st[b].gd - st[a].gd || st[b].gf - st[a].gf || rng() - 0.5);
-      const qualThirds = thirds.slice(0, 8);
+      const qualThirds = officialThirds ? officialThirds.slice() : thirds.slice(0, 8);
       qualThirds.forEach(c => tally[c].third++);
 
       // R32 from template. Third-place qualifiers are assigned to their slots by a
@@ -207,9 +227,13 @@
       if (assigned) thirdSlots.forEach((s, k) => { thirdAt[s.i] = assigned[k]; });
       const pool = qualThirds.slice();
       const r32 = data.r32Template.map((slot, i) => {
-        const resolve = sd => sd.type === 'group'
-          ? rank[sd.group][sd.place - 1]
-          : (assigned ? thirdAt[i] : takeThird(pool, rank, slot, rng));
+        const resolve = sd => {
+          if (sd.type === 'group') return rank[sd.group][sd.place - 1];
+          // use the official assignment when the bracket exists; qualThirds is pinned to
+          // the official set above, so this is collision-free (no mixing with the fallback)
+          if (haveOfficialThirds) return officialThirdAt[i];
+          return assigned ? thirdAt[i] : takeThird(pool, rank, slot, rng);
+        };
         return [resolve(slot.a), resolve(slot.b)];
       });
       r32.flat().forEach(c => tally[c].r32++);
@@ -352,13 +376,48 @@
       else if (sc.team2 > sc.team1) { b.W++; a.L++; b.Pts += 3; }
       else { a.D++; b.D++; a.Pts++; b.Pts++; }
     }
+    // completed group results (respecting overrides) for the head-to-head tiebreak
+    const played = [];
+    for (const m of data.matches) {
+      if (m.stage !== 'group') continue;
+      const ov = overrides && overrides[m.id];
+      const sc = ov || (m.status === 'completed' ? m.score : null);
+      if (sc) played.push({ a: m.team1, b: m.team2, ga: sc.team1, gb: sc.team2 });
+    }
+    // FIFA tiebreak: after Pts->GD->GF, teams still level are ordered by their
+    // head-to-head mini-table (H2H points, H2H GD, H2H GF) over only the matches
+    // among the tied teams. Teams still level after H2H keep their prior order
+    // (fair-play and drawing of lots are not modelled). Only ever refines a tie.
+    function h2hReorder(codes) {
+      const keyOf = c => st[c].Pts + '|' + (st[c].GF - st[c].GA) + '|' + st[c].GF;
+      const ordered = [];
+      for (let i = 0; i < codes.length;) {
+        let j = i;
+        while (j + 1 < codes.length && keyOf(codes[j + 1]) === keyOf(codes[i])) j++;
+        const tied = codes.slice(i, j + 1);
+        if (tied.length > 1) {
+          const set = new Set(tied);
+          const h = {}; tied.forEach(c => { h[c] = { p: 0, gd: 0, gf: 0 }; });
+          for (const r of played) {
+            if (!set.has(r.a) || !set.has(r.b)) continue;
+            h[r.a].gf += r.ga; h[r.a].gd += r.ga - r.gb;
+            h[r.b].gf += r.gb; h[r.b].gd += r.gb - r.ga;
+            if (r.ga > r.gb) h[r.a].p += 3; else if (r.gb > r.ga) h[r.b].p += 3; else { h[r.a].p++; h[r.b].p++; }
+          }
+          tied.sort((x, y) => h[y].p - h[x].p || h[y].gd - h[x].gd || h[y].gf - h[x].gf || 0);
+        }
+        for (const c of tied) ordered.push(c);
+        i = j + 1;
+      }
+      return ordered;
+    }
     const groups = {};
     data.teams.forEach(t => { (groups[t.group] = groups[t.group] || []).push(t.code); });
     const out = {};
     for (const g in groups) {
-      out[g] = groups[g].slice().sort((x, y) =>
-        st[y].Pts - st[x].Pts || (st[y].GF - st[y].GA) - (st[x].GF - st[x].GA) || st[y].GF - st[x].GF)
-        .map(c => ({ team: c, ...st[c], GD: st[c].GF - st[c].GA }));
+      const base = groups[g].slice().sort((x, y) =>
+        st[y].Pts - st[x].Pts || (st[y].GF - st[y].GA) - (st[x].GF - st[x].GA) || st[y].GF - st[x].GF);
+      out[g] = h2hReorder(base).map(c => ({ team: c, ...st[c], GD: st[c].GF - st[c].GA }));
     }
     return out;
   }

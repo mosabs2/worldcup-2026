@@ -169,6 +169,22 @@
   }
 
   function matchCard(m, opts) {
+    // Unresolved knockout fixture: one or both teams not yet decided (R16+ stay TBD
+    // until their feeders finish). Render a placeholder rather than crashing on T[null].
+    if (!T[m.team1] || !T[m.team2]) {
+      const side = c => T[c] ? (T[c].flag + ' ' + T[c].name) : (c || 'TBD');
+      const venue = V[m.venueId];
+      return el('div', { class: 'card match' },
+        el('div', { class: 'row' },
+          el('div', { class: 'team' }, side(m.team1)),
+          el('div', { class: 'vs' }, 'v'),
+          el('div', { class: 'team away' }, side(m.team2))),
+        el('div', { class: 'meta' },
+          el('span', { class: 'tag up' }, (m.round ? String(m.round).toUpperCase() : 'upcoming')),
+          m.label ? el('span', null, m.label) : null,
+          venue ? el('span', null, venue.city) : null,
+          el('span', null, m.dateET ? fmtD(m.dateET, localTZ) : 'date TBC')));
+    }
     const sc = effScore(m);
     const live = !sc && liveNow[m.id];
     const p = odds(m);
@@ -191,8 +207,8 @@
             : null,
       (sc || live) ? null : pbarRow(p),
       el('div', { class: 'meta' }, tag,
-        el('span', null, 'Group ' + m.group),
-        el('span', null, V[m.venueId].city),
+        el('span', null, m.stage === 'group' ? 'Group ' + m.group : (m.label || (m.round ? String(m.round).toUpperCase() : 'Knockout'))),
+        V[m.venueId] ? el('span', null, V[m.venueId].city) : null,
         (!opts || opts.times !== false) ? el('span', null, sc ? fmtD(m.dateET, localTZ) : kt(m.dateET)) : null));
     return card;
   }
@@ -522,6 +538,12 @@
   }
 
   function renderBracket(root) {
+    // Once the official knockout bracket has been generated into the data, show IT
+    // (real teams, real results, official third-place draw) instead of the projected
+    // path below — otherwise the Bracket tab would contradict the Matches results and
+    // could show the wrong R32 pairings. Before that, the projection is all we have.
+    const koMatches = D.matches.filter(m => m.stage && m.stage !== 'group');
+    if (koMatches.length) { renderBracketLive(root, koMatches); return; }
     // most-likely single path
     const VC = Object.fromEntries(D.venues.map(v => [v.id, v.country]));
     const koRoundVenue = {};
@@ -585,6 +607,64 @@
           el('div', { class: 'bk', style: 'border-color:var(--blue)' },
             el('div', { class: 't w', style: 'font-size:15px' }, T[champ].flag, ' ', T[champ].name),
             el('div', { class: 'lbl' }, 'Model title probability ' + pct(SIM.teams[champ].champ))))));
+  }
+
+  // The official bracket once generated: actual teams, actual results where played
+  // (winner in bold), model favourite + chance for ties not yet played, TBD for slots
+  // whose feeders haven't finished. Uses the data's real R32 draw (so the official
+  // third-place assignment is honoured), not a re-guessed one.
+  function renderBracketLive(root, koMatches) {
+    const VC = Object.fromEntries(D.venues.map(v => [v.id, v.country]));
+    const byRound = {};
+    koMatches.forEach(m => { const r = m.round || m.stage; (byRound[r] = byRound[r] || []).push(m); });
+    Object.keys(byRound).forEach(r => byRound[r].sort((a, b) => (a.matchNo || 0) - (b.matchNo || 0)));
+    const ROUNDS = [['r32', 'Round of 32'], ['r16', 'Round of 16'], ['qf', 'Quarter-finals'], ['sf', 'Semi-finals'], ['final', 'Final']];
+    const koWinner = m => {
+      const ov = activeOv()[m.id];
+      if (ov) return ov[2] || (ov[0] > ov[1] ? m.team1 : ov[1] > ov[0] ? m.team2 : null);
+      const sc = (m.status === 'completed' && m.score) ? m.score : null;
+      if (!sc) return null;
+      return sc.winner || (sc.team1 > sc.team2 ? m.team1 : sc.team2 > sc.team1 ? m.team2 : null);
+    };
+    const projFav = (a, b, venueId) => {   // P(a advances); null if either side is TBD
+      if (!T[a] || !T[b]) return null;
+      const ra = RT.ratings[a] + E.hostEdge(a, venueId, VC);
+      const rb = RT.ratings[b] + E.hostEdge(b, venueId, VC);
+      const p = E.predict(ra, rb);
+      const tilt = Math.max(0.35, Math.min(0.65, 0.5 + (ra - rb) / 4000));
+      return p.p1 + p.draw * tilt;
+    };
+    const teamLine = (code, win, right) => el('div', { class: 't ' + (win ? 'w' : '') },
+      (T[code] ? T[code].flag + ' ' + T[code].name : (code || 'TBD')),
+      right != null ? el('span', { class: 'pct' }, right) : null);
+    const card = m => {
+      const sc = effScore(m);
+      if (sc) {                                  // played: actual score, winner bold
+        const w = koWinner(m);
+        const pens = sc.team1 === sc.team2 && w;  // level after ET -> decided on penalties
+        return el('div', { class: 'bk' },
+          (m.label || pens) ? el('div', { class: 'lbl' }, (m.label || '') + (pens ? (m.label ? ' · ' : '') + 'pens' : '')) : null,
+          teamLine(m.team1, w != null && w === m.team1, '' + sc.team1),
+          teamLine(m.team2, w != null && w === m.team2, '' + sc.team2));
+      }
+      const pa = projFav(m.team1, m.team2, m.venueId);   // null if TBD
+      return el('div', { class: 'bk' },
+        m.label ? el('div', { class: 'lbl' }, m.label) : null,
+        teamLine(m.team1, pa != null && pa >= 0.5, pa != null ? pct(pa, 0) : null),
+        teamLine(m.team2, pa != null && pa < 0.5, pa != null ? pct(1 - pa, 0) : null));
+    };
+    const cols = ROUNDS.filter(([r]) => byRound[r]).map(([r, name]) =>
+      el('div', { class: 'round' }, el('h4', null, name), byRound[r].map(card)));
+    const finalM = (byRound['final'] || [])[0];
+    const champ = finalM ? koWinner(finalM) : null;
+    if (champ && T[champ]) cols.push(el('div', { class: 'round' }, el('h4', null, 'Champion'),
+      el('div', { class: 'bk', style: 'border-color:var(--blue)' },
+        el('div', { class: 't w', style: 'font-size:15px' }, T[champ].flag + ' ' + T[champ].name))));
+    root.append(
+      el('p', { class: 'muted', style: 'margin-bottom:12px' },
+        'The official knockout bracket. Played matches show the actual result (winner in bold); '
+        + 'unplayed matches show the model favourite and its chance; a slot awaiting its feeders shows TBD.'),
+      el('div', { class: 'bracket' }, cols));
   }
 
   function renderTeams(root) {
@@ -1259,7 +1339,7 @@
         return el('tr', { class: 'click', onclick: () => matchModal(m) },
           el('td', { style: 'white-space:nowrap' }, fmtD(m.dateET, localTZ)),
           el('td', null, el('span', { class: 'teamcell', style: 'font-weight:500' },
-            T[m.team1].flag + ' ' + T[m.team1].code + (sc ? ' ' + sc.team1 + '–' + sc.team2 + ' ' : ' v ') + T[m.team2].code + ' ' + T[m.team2].flag)),
+            (T[m.team1] ? T[m.team1].flag + ' ' + T[m.team1].code : 'TBD') + (sc ? ' ' + sc.team1 + '–' + sc.team2 + ' ' : ' v ') + (T[m.team2] ? T[m.team2].code + ' ' + T[m.team2].flag : 'TBD'))),
           el('td', { class: 'num tiny' }, sc ? 'FT' : kt(m.dateET)));
       })));
   }
@@ -1424,7 +1504,7 @@
           'A pure rating simulation spreads probability more evenly than markets do; the gap is the model’s scepticism about favourites, not an error. Both columns are kept so you can judge.')));
 
     // update console
-    const sel = el('select', null, D.matches.filter(m => m.status !== 'completed')
+    const sel = el('select', null, D.matches.filter(m => m.status !== 'completed' && T[m.team1] && T[m.team2])
       .sort((a, b) => a.dateET.localeCompare(b.dateET))
       .map(m => el('option', { value: m.id }, m.id + ' · ' + T[m.team1].code + ' v ' + T[m.team2].code + ' · ' + fmtD(m.dateET, localTZ))));
     const a = el('input', { type: 'number', min: 0, max: 9, style: 'width:60px', placeholder: '0' });

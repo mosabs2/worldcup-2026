@@ -94,10 +94,12 @@ def matches_window():
 
 
 def build_message():
+    # returns (message, had_matches). had_matches=False covers BOTH a genuine rest day
+    # and a total feed failure, so the caller can decide not to "lock in" an empty slate.
     rows, now = matches_window()
     today_kwt = now.astimezone(KWT).date()
     if not rows:
-        return "⚽ No World Cup matches today. Back tomorrow."
+        return "⚽ No World Cup matches today. Back tomorrow.", False
     lines = ["⚽ Today's World Cup matches — times in Kuwait (+03)", ""]
     for ko, grp, home, away in rows:
         k = ko.astimezone(KWT)
@@ -107,7 +109,7 @@ def build_message():
         g = "%s: " % grp if grp else ""
         lines.append(" %s  %s%s vs %s" % (t, g, home, away))
     lines += ["", "Live goals & kick-offs drop in the channel as they happen."]
-    return "\n".join(lines)
+    return "\n".join(lines), True
 
 
 def post(text):
@@ -131,18 +133,22 @@ def main():
                 return
         except Exception:
             pass
-    msg = build_message()
+    msg, had_matches = build_message()
     if DRY:
         print(msg)
         return
     try:
         j = post(msg)
-        log("posted ok=%s" % j.get("ok"))
-        try:
-            with open(SENT_FILE, "w") as f:
-                f.write(today_kwt)
-        except Exception:
-            pass
+        log("posted ok=%s had_matches=%s" % (j.get("ok"), had_matches))
+        # Only lock in the day's post when a real slate went out. A "no matches" line
+        # caused by a transient total feed failure is then still correctable by a rerun
+        # (cron is once/day, so a genuine rest day won't double-post anyway).
+        if had_matches:
+            try:
+                with open(SENT_FILE, "w") as f:
+                    f.write(today_kwt)
+            except Exception:
+                pass
     except Exception as e:
         log("post failed: %s" % e)
         sys.exit(1)
