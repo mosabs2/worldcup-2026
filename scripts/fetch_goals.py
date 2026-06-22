@@ -48,8 +48,16 @@ def parse_goals(summary):
         if not code or not scorer:
             continue
         g = {"t": code, "p": scorer, "m": minute}
-        if "Penalty" in ttext: g["pen"] = True
+        is_pen = "Penalty" in ttext
+        if is_pen: g["pen"] = True
         if "Own" in ttext: g["og"] = True
+        # Assister: the second participant on an open-play goal (penalties and own
+        # goals carry no assist). Free, from the same summary feed — feeds the
+        # ESPN props-race Assists board (fetch_props_espn.py).
+        if not is_pen and "Own" not in ttext and len(parts) > 1:
+            assister = (parts[1].get("athlete") or {}).get("displayName")
+            if assister and assister != scorer:
+                g["a"] = assister
         out.append(g)
     return out
 

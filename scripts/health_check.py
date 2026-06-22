@@ -22,13 +22,18 @@ Stdlib only. Run as the final workflow step, after publish.
 """
 import json, os, re, sys
 
-# TheStatsAPI feed was dropped on 20 Jun 2026 (Starter monthly quota exhausted;
-# the backtest had already shown its market odds were no sharper than the model).
-# The props race + xG are intentionally frozen at their 19 Jun final state, so the
-# freshness checks below (props-lag, propsLive.asOf, missing-xG) no longer apply;
-# the structural checks (propsLive present, boards non-empty) stay armed to protect
-# the frozen panel. Set this True again to re-arm freshness if the feed is revived.
+# TheStatsAPI feed was dropped on 20 Jun 2026 (Starter monthly quota exhausted).
+# This flag now only gates the StatsAPI-specific missing-xG warn below; the props
+# race no longer depends on it.
 STATSAPI_ENABLED = False
+
+# The props race was revived from ESPN's free feeds on 22 Jun 2026
+# (fetch_props_espn.py), after the StatsAPI drop left it silently frozen 8 matches
+# behind (28 counted vs 36 played) — the exact silent-staleness this watchdog
+# exists to catch, missed because only the empty-board check was armed, not the
+# lag check. With props live again, the freshness checks (props-lag, propsLive.asOf)
+# are re-armed under this flag instead of the dead StatsAPI one.
+PROPS_ENABLED = True
 
 PROPS_LAG_TOLERANCE = 2          # props may trail scores by up to 2 matches (latest
                                  # match's player-stats can lag the final whistle)
@@ -55,8 +60,8 @@ if pl is None:
 else:
     counted = pl.get("matchesCounted", 0)
     lag = ncomp - counted
-    # Freshness checks apply only while the StatsAPI feed is live.
-    if STATSAPI_ENABLED and lag > PROPS_LAG_TOLERANCE:
+    # Freshness checks are armed whenever the props race is being fed (now ESPN).
+    if PROPS_ENABLED and lag > PROPS_LAG_TOLERANCE:
         fails.append(f"props race is stale: {counted} matches counted but {ncomp} have been "
                      f"played (lag {lag} > tolerance {PROPS_LAG_TOLERANCE}). The props harvest "
                      f"is not keeping up — this is the silent-staleness failure the watchdog exists for.")
@@ -67,7 +72,7 @@ else:
         fails.append("matches have been played but the team-goals board is empty")
     if counted >= ASSISTS_EXPECTED_AFTER and not pl.get("topAssists"):
         fails.append(f"{counted} matches counted but the assists board is empty")
-    if STATSAPI_ENABLED and meta_asof and pl.get("asOf") and pl["asOf"] < meta_asof:
+    if PROPS_ENABLED and meta_asof and pl.get("asOf") and pl["asOf"] < meta_asof:
         warns.append(f"propsLive.asOf ({pl['asOf']}) is behind meta.asOf ({meta_asof})")
 
 if STATSAPI_ENABLED:

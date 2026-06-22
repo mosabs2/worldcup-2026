@@ -56,8 +56,17 @@ jobs:
         continue-on-error: true
         run: python3 scripts/fetch_xg.py
 
-      # NOTE: only xG was revived (via ESPN). The StatsAPI *props* harvest (Golden
-      # Boot, assists, cards) stays dropped and frozen at its 19 Jun final state.
+      # Props race (Golden Boot, assists, Dirty Trophy cards, team goals) rebuilt
+      # entirely from ESPN's free feeds (fetch_props_espn.py, replacing the dropped
+      # StatsAPI fetch_props.py): goals/assists/team-goals aggregate from data already
+      # landed by fetch_scores + fetch_goals (no API); only cards hit ESPN's free core
+      # stats endpoint, cached per match. Runs every cycle (NOT gated on a score
+      # change) so a late card harvest still fills in; near-zero no-op once caught up.
+      # continue-on-error so a feed hiccup never blocks the score commit.
+      - name: Rebuild props race from ESPN (Golden Boot, assists, cards, team goals)
+        id: props
+        continue-on-error: true
+        run: python3 scripts/fetch_props_espn.py
 
       # Once the group stage finishes, build the knockout bracket and resolve each
       # round's teams from completed results. No-ops while groups are in progress.
@@ -84,16 +93,16 @@ jobs:
         run: node update.js --date "$(date -u +%F)"
 
       - name: Rebuild site
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
         run: python3 build.py
 
       - name: Commit and publish
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "auto-update: scores + xG synced from ESPN feed $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git commit -m "auto-update: scores + xG + props synced from ESPN feed $(date -u '+%Y-%m-%d %H:%M UTC')"
           git pull --rebase origin main
           git push
 
