@@ -26,7 +26,7 @@ BEFORE build.py (so the movement is bundled into index.html). State persists in
 src/standings-state.json (committed); the movement is written to
 data.league.movement = {entry name: signed places moved, + up / - down}.
 """
-import re, json, pathlib, datetime, sys, subprocess
+import re, json, os, pathlib, datetime, sys, subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "src" / "data.js"
@@ -87,8 +87,10 @@ def board_ranks(d):
     """Full board rank {name: rank} via the real engine (scripts/league_rank.js):
     resolved pts -> provisional pts -> expected pts, mirroring ui.js leagueStandings.
     This is what the board displays and it shifts with every model recompute, so the
-    arrows move as often as the live model does. Falls back to the coarse group-winner
-    rank if Node/the engine is unavailable, so movement degrades rather than breaking."""
+    arrows move as often as the live model does. Returns None if Node/the engine is
+    unavailable — the caller then leaves the prior movement/baseline untouched. We do
+    NOT fall back to the coarse group-winner rank: mixing two different rank systems
+    into the baseline would publish garbage arrows and poison the next run too."""
     try:
         out = subprocess.run(["node", str(RANK_JS)], capture_output=True, text=True, timeout=120, check=True)
         ranks = json.loads(out.stdout)
@@ -96,11 +98,11 @@ def board_ranks(d):
             return ranks
         raise ValueError("empty ranks")
     except Exception as e:
-        print(f"[standings_movement] board_ranks via node failed ({e}); falling back to coarse group-winner rank", file=sys.stderr)
-        return prov_ranks(d)
+        print(f"[standings_movement] board_ranks via node failed ({e}); "
+              f"leaving prior movement/baseline untouched (no write)", file=sys.stderr)
+        return None
 
-def compute(d):
-    cur = board_ranks(d)
+def compute(d, cur):
     started = started_count(d)
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     baseline = state.get("baseline") or {}
@@ -122,7 +124,13 @@ def compute(d):
 def main():
     dry = "--dry-run" in sys.argv
     raw, m, d = load_data()
-    movement, cur, new_state, rolled, started = compute(d)
+    cur = board_ranks(d)
+    if cur is None:
+        # rank engine unavailable — preserve the prior movement/baseline rather than
+        # poisoning them; the existing data.league.movement stays as last published.
+        print("[standings_movement] rank computation unavailable; left movement/baseline untouched")
+        return
+    movement, cur, new_state, rolled, started = compute(d, cur)
     nonzero = {k: v for k, v in movement.items() if v}
     print(f"[standings_movement] started={started} entries={len(cur)} "
           f"baseline_rolled={rolled} nonzero_moves={len(nonzero)}")
@@ -140,8 +148,14 @@ def main():
     d.setdefault("league", {})["movement"] = movement
     new = "const WC_DATA = " + json.dumps(d, ensure_ascii=False, indent=1) + ";\n"
     new += "if (typeof module !== 'undefined') module.exports = { WC_DATA };\n"
-    DATA.write_text(new)
-    STATE.write_text(json.dumps(new_state, ensure_ascii=False, indent=1) + "\n")
+    # atomic writes (temp + rename) so a crash mid-write can't corrupt either file.
+    # data.js first, then state — if data.js fails we never advance the baseline.
+    data_tmp = DATA.with_name(DATA.name + ".tmp")
+    data_tmp.write_text(new)
+    os.replace(data_tmp, DATA)
+    state_tmp = STATE.with_name(STATE.name + ".tmp")
+    state_tmp.write_text(json.dumps(new_state, ensure_ascii=False, indent=1) + "\n")
+    os.replace(state_tmp, STATE)
     print("[standings_movement] wrote data.js league.movement + standings-state.json")
 
 if __name__ == "__main__":

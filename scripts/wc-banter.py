@@ -47,9 +47,17 @@ def fetch(url):
     return json.load(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "wc-banter/1.0"}), timeout=20))
 
 def get_data():
-    raw = urllib.request.urlopen(urllib.request.Request(DATA_URL, headers={"User-Agent": "wc-banter/1.0"}), timeout=20).read().decode()
     import re
-    return json.loads(re.search(r"const WC_DATA = (\{.*?\});\nif", raw, 16).group(1))
+    try:
+        raw = urllib.request.urlopen(urllib.request.Request(DATA_URL, headers={"User-Agent": "wc-banter/1.0"}), timeout=20).read().decode()
+    except Exception as e:
+        log("data fetch failed: %s" % e)
+        return None
+    m = re.search(r"const WC_DATA = (\{.*?\});\nif", raw, 16)
+    if not m:                       # data.js shape drifted or an error page came back
+        log("could not parse WC_DATA from data.js")
+        return None
+    return json.loads(m.group(1))
 
 def prov_leader(d):
     """Top entrant on the live provisional table (current group leaders -> points)."""
@@ -159,6 +167,8 @@ def load_state():
 
 def pick_match(test=False):
     d = get_data()
+    if not d:                       # data unavailable this cycle; skip quietly, retry next run
+        return None
     now = dt.datetime.now(dt.timezone.utc)
     events = {}
     for dd in [now.strftime("%Y%m%d"), (now - dt.timedelta(days=1)).strftime("%Y%m%d")]:

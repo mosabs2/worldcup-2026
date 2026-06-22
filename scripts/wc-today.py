@@ -19,6 +19,7 @@ import json, os, sys, urllib.request, urllib.parse, urllib.error, datetime as dt
 
 CHAT = "@MoSabsWC26"
 TOKEN_FILE = os.path.expanduser("~/.claude/telegram-bot-token")
+SENT_FILE = os.path.expanduser("~/.claude/jobs/wc-today-last.txt")   # last Kuwait date posted
 LOGDIR = os.path.expanduser("~/.claude/jobs/logs")
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=%s"
 KWT = dt.timezone(dt.timedelta(hours=3))            # Kuwait is UTC+3, no DST
@@ -78,15 +79,16 @@ def matches_window():
                 continue
             try:
                 ko = dt.datetime.fromisoformat(ev["date"].replace("Z", "+00:00"))
-            except Exception:
+                kd = ko.astimezone(KWT)
+                if kd.date() == today_kwt or (kd.date() == tomorrow_kwt and kd.hour < 9):
+                    comp = ev["competitions"][0]["competitors"]
+                    home = next((c["team"]["displayName"] for c in comp if c.get("homeAway") == "home"), "?")
+                    away = next((c["team"]["displayName"] for c in comp if c.get("homeAway") == "away"), "?")
+                    seen.add(eid)
+                    out.append((ko, group_label(ev), home, away))
+            except Exception as e:               # one malformed event must not drop the whole slate
+                log("skip event %s: %s" % (eid, e))
                 continue
-            kd = ko.astimezone(KWT)
-            if kd.date() == today_kwt or (kd.date() == tomorrow_kwt and kd.hour < 9):
-                seen.add(eid)
-                comp = ev["competitions"][0]["competitors"]
-                home = next((c["team"]["displayName"] for c in comp if c.get("homeAway") == "home"), "?")
-                away = next((c["team"]["displayName"] for c in comp if c.get("homeAway") == "away"), "?")
-                out.append((ko, group_label(ev), home, away))
     out.sort(key=lambda r: r[0])
     return out, now
 
@@ -118,6 +120,17 @@ def post(text):
 def main():
     if dt.date.today().isoformat() > LAST_DAY:
         return
+    # Idempotency: post at most once per Kuwait calendar day. A cron double-fire,
+    # catch-up run, or manual invocation on the same day is a no-op rather than a
+    # duplicate channel post. (--dry-run is exempt: it prints and never posts.)
+    today_kwt = dt.datetime.now(dt.timezone.utc).astimezone(KWT).date().isoformat()
+    if not DRY:
+        try:
+            if os.path.exists(SENT_FILE) and open(SENT_FILE).read().strip() == today_kwt:
+                log("already posted for %s; skipping" % today_kwt)
+                return
+        except Exception:
+            pass
     msg = build_message()
     if DRY:
         print(msg)
@@ -125,6 +138,11 @@ def main():
     try:
         j = post(msg)
         log("posted ok=%s" % j.get("ok"))
+        try:
+            with open(SENT_FILE, "w") as f:
+                f.write(today_kwt)
+        except Exception:
+            pass
     except Exception as e:
         log("post failed: %s" % e)
         sys.exit(1)
