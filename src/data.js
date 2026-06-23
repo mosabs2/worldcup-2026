@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-23",
-  "asOfNote": "Results through 42 matches, auto-synced from the ESPN public feed 2026-06-23 00:50 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 43 matches, auto-synced from the ESPN public feed 2026-06-23 02:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -2630,13 +2630,53 @@ const WC_DATA = {
    "team1": "NOR",
    "team2": "SEN",
    "venueId": "NYNJ",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 2
+   },
    "market": {
     "h": 0.4135,
     "x": 0.2797,
     "a": 0.3068,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "NOR",
+     "p": "Marcus Holmgren Pedersen",
+     "m": "43'"
+    },
+    {
+     "t": "NOR",
+     "p": "Erling Haaland",
+     "m": "48'",
+     "a": "Martin Ødegaard"
+    },
+    {
+     "t": "SEN",
+     "p": "Ismaïla Sarr",
+     "m": "53'",
+     "a": "Sadio Mané"
+    },
+    {
+     "t": "NOR",
+     "p": "Erling Haaland",
+     "m": "58'",
+     "a": "Patrick Berg"
+    },
+    {
+     "t": "SEN",
+     "p": "Ismaïla Sarr",
+     "m": "90'+3'",
+     "a": "Nicolas Jackson"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.1,
+    "team2": 1.7,
+    "src": "espn"
    }
   },
   {
@@ -5365,8 +5405,8 @@ const WC_DATA = {
    "Abdullah Khaled": 0,
    "Hani Ibraheam sulaiman abdullah al mawash": 0,
    "Moblee": 0,
-   "Nasser Talal": 0,
-   "Bader Al Gatheebi": 0,
+   "Bader Al Gatheebi": 1,
+   "Nasser Talal": -1,
    "Faisal Abu Hadida": 0,
    "Saleh Al Hashash": 0,
    "Faisal Jaber Al Sabah": 0,
@@ -5375,38 +5415,38 @@ const WC_DATA = {
    "Fahad Ali": 0,
    "Jarah Aladwani": 0,
    "Abdullah Mohammed": 0,
-   "Chris Ovenden": 1,
-   "AD": 1,
-   "Ali Ahmed Hmoud Mohammed": 1,
-   "Mohammad Ahmad": 1,
-   "Khaled Al Qahtani": 1,
-   "Wahab Bader": 1,
-   "Thamer Fares Alnoon": 1,
-   "JMAMS": 3,
-   "Nasser Fahad": 1,
-   "Jogs Bonito": -1,
-   "Feras Al Qenaei": 2,
-   "Abdulaziz Alsabah": 4,
-   "Shamlan Abdulaziz": -1,
-   "Khalifa ali": 4,
-   "Gelenn Caley Cale": -1,
-   "Khalifa zayed": -1,
-   "Salem Athbi": 0,
+   "Chris Ovenden": 0,
+   "AD": 0,
+   "Ali Ahmed Hmoud Mohammed": 0,
+   "Mohammad Ahmad": 0,
+   "Khaled Al Qahtani": 0,
+   "Wahab Bader": 0,
+   "Thamer Fares Alnoon": 0,
+   "Jogs Bonito": 2,
+   "Nasser Fahad": 0,
+   "JMAMS": -2,
+   "Feras Al Qenaei": 0,
+   "Abdulaziz Alsabah": 0,
+   "Shamlan Abdulaziz": 0,
+   "Gelenn Caley Cale": 1,
+   "Khalifa zayed": 1,
+   "Khalifa ali": -2,
    "Sabah Mohammed": 1,
-   "Naser AlQadiri": 1,
-   "Zuz": 1,
-   "Mohammed Behbehani": 1,
-   "Arsenal #1": 1,
-   "Ahmed Boareki": 1,
-   "Mama Aad": 1,
-   "Syb": 1,
-   "Faisal Boodai": 1,
-   "Eric Bartlett": 2,
-   "Fahad Khaled": 0,
-   "Ahmed Mubarak Al Sabah": 1,
-   "Mohammed Jamal": 1,
-   "Essa": 1,
-   "Hmoud Al Sabah": -31,
+   "Salem Athbi": -1,
+   "Naser AlQadiri": 0,
+   "Zuz": 0,
+   "Mohammed Behbehani": 0,
+   "Arsenal #1": 0,
+   "Ahmed Boareki": 0,
+   "Mama Aad": 0,
+   "Syb": 0,
+   "Faisal Boodai": 0,
+   "Fahad Khaled": 1,
+   "Eric Bartlett": -1,
+   "Ahmed Mubarak Al Sabah": 0,
+   "Mohammed Jamal": 0,
+   "Essa": 0,
+   "Hmoud Al Sabah": 0,
    "Saleh Boareki": 0,
    "Abdullah Mubarak": 0,
    "Alibaba": 0,
@@ -5417,12 +5457,18 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-23",
-  "matchesCounted": 42,
+  "matchesCounted": 43,
   "topScorers": [
    {
     "player": "Lionel Messi",
     "team": "ARG",
     "goals": 5,
+    "pens": 0
+   },
+   {
+    "player": "Erling Haaland",
+    "team": "NOR",
+    "goals": 4,
     "pens": 0
    },
    {
@@ -5498,12 +5544,6 @@ const WC_DATA = {
     "pens": 0
    },
    {
-    "player": "Erling Haaland",
-    "team": "NOR",
-    "goals": 2,
-    "pens": 0
-   },
-   {
     "player": "Folarin Balogun",
     "team": "USA",
     "goals": 2,
@@ -5566,6 +5606,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Martin Ødegaard",
+    "team": "NOR",
+    "assists": 2,
+    "goals": 0
+   },
+   {
     "player": "Ryan Gravenberch",
     "team": "NED",
     "assists": 2,
@@ -5592,12 +5638,6 @@ const WC_DATA = {
    {
     "player": "Maxi Araújo",
     "team": "URU",
-    "assists": 1,
-    "goals": 2
-   },
-   {
-    "player": "Mikel Oyarzabal",
-    "team": "ESP",
     "assists": 1,
     "goals": 2
    }
@@ -5690,6 +5730,10 @@ const WC_DATA = {
     "goals": 7
    },
    {
+    "team": "NOR",
+    "goals": 7
+   },
+   {
     "team": "USA",
     "goals": 6
    },
@@ -5719,10 +5763,6 @@ const WC_DATA = {
    },
    {
     "team": "ESP",
-    "goals": 4
-   },
-   {
-    "team": "EGY",
     "goals": 4
    }
   ],
