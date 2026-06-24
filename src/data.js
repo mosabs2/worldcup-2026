@@ -5515,7 +5515,7 @@ const WC_DATA = {
     "locked": "2026-06-17"
    }
   ],
-  "propsDeadline": "Open — TBC",
+  "propsDeadline": "18 June 2026",
   "movement": {
    "HMB": 1,
    "Rashed": -1,
