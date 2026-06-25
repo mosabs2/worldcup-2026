@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-25",
-  "asOfNote": "Results through 54 matches, auto-synced from the ESPN public feed 2026-06-25 03:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 56 matches, auto-synced from the ESPN public feed 2026-06-25 22:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3175,13 +3175,42 @@ const WC_DATA = {
    "team1": "ECU",
    "team2": "GER",
    "venueId": "NYNJ",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 2,
+    "team2": 1
+   },
    "market": {
     "h": 0.1876,
     "x": 0.2606,
     "a": 0.5518,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "GER",
+     "p": "Leroy Sané",
+     "m": "2'",
+     "a": "Florian Wirtz"
+    },
+    {
+     "t": "ECU",
+     "p": "Nilson Angulo",
+     "m": "9'",
+     "a": "Pedro Vite"
+    },
+    {
+     "t": "ECU",
+     "p": "Gonzalo Plata",
+     "m": "77'",
+     "a": "Kevin Rodríguez"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.51,
+    "team2": 0.65,
+    "src": "espn"
    }
   },
   {
@@ -3192,13 +3221,36 @@ const WC_DATA = {
    "team1": "CUW",
    "team2": "CIV",
    "venueId": "PHI",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 0,
+    "team2": 2
+   },
    "market": {
     "h": 0.0554,
     "x": 0.1108,
     "a": 0.8337,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "CIV",
+     "p": "Nicolas Pépé",
+     "m": "7'",
+     "a": "Yan Diomande"
+    },
+    {
+     "t": "CIV",
+     "p": "Nicolas Pépé",
+     "m": "64'",
+     "a": "Ibrahim Sangaré"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.47,
+    "team2": 1.3,
+    "src": "espn"
    }
   },
   {
@@ -5702,63 +5754,63 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Rashed": 0,
-   "Faisal Jaber Al Sabah": 2,
-   "Saleh Al Hashash": 2,
+   "Faisal Jaber Al Sabah": 0,
+   "Saleh Al Hashash": 0,
+   "Bader Al Gatheebi": 1,
    "Nasser Talal": -1,
-   "Bader Al Gatheebi": -3,
-   "Fahad Ali": 1,
-   "Faisal Abu Hadida": -1,
+   "Fahad Ali": 0,
+   "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
    "AD": 0,
    "Chris Ovenden": 0,
-   "Khaled Al Qahtani": 1,
-   "Ali Ahmed Hmoud Mohammed": -1,
+   "Khaled Al Qahtani": 0,
+   "Ali Ahmed Hmoud Mohammed": 0,
    "Jogs Bonito": 0,
    "Wahab Bader": 0,
    "Nasser Fahad": 0,
-   "Sabah Mohammed": 3,
-   "JMAMS": -1,
-   "Shamlan Abdulaziz": 0,
+   "Sabah Mohammed": 0,
+   "Shamlan Abdulaziz": 1,
    "Feras Al Qenaei": 1,
    "Gelenn Caley Cale": 1,
    "Khalifa zayed": 1,
-   "Salem Athbi": 2,
-   "Ahmed Boareki": 2,
-   "Syb": 2,
-   "Mohammed Behbehani": 2,
-   "Faisal Boodai": 2,
-   "Mama Aad": 2,
-   "Hani Ibraheam sulaiman abdullah al mawash": 4,
-   "HMB": 4,
-   "Abdullah Khaled": 4,
-   "Abdulaziz Alsabah": -14,
-   "Khalifa ali": -9,
-   "Abdullah Mohammed": 2,
-   "Moblee": 2,
-   "Khaled Fahad": 2,
-   "Naser AlQadiri": 3,
-   "Thamer Fares Alnoon": 1,
-   "Jarah Aladwani": 2,
-   "Arsenal #1": 2,
-   "Essa": -10,
-   "Mohammad Ahmad": 3,
-   "Eric Bartlett": 3,
-   "Khaled ali": -12,
-   "Ahmed Mubarak Al Sabah": 4,
-   "Hmoud Al Sabah": 4,
-   "Zuz": -4,
-   "Fahad Khaled": -4,
-   "Mohammed Jamal": -2,
-   "Saleh Boareki": -2,
+   "Salem Athbi": 1,
+   "Ahmed Boareki": 1,
+   "Syb": 1,
+   "Mohammed Behbehani": 1,
+   "Faisal Boodai": 1,
+   "Mama Aad": 1,
+   "Hani Ibraheam sulaiman abdullah al mawash": 1,
+   "HMB": 1,
+   "JMAMS": -12,
+   "Abdullah Khaled": 0,
+   "Abdulaziz Alsabah": 0,
+   "Khalifa ali": 0,
+   "Abdullah Mohammed": 0,
+   "Moblee": 0,
+   "Khaled Fahad": 0,
+   "Naser AlQadiri": 0,
+   "Thamer Fares Alnoon": 0,
+   "Jarah Aladwani": 0,
+   "Arsenal #1": 0,
+   "Essa": 0,
+   "Mohammad Ahmad": 0,
+   "Eric Bartlett": 0,
+   "Ahmed Mubarak Al Sabah": 1,
+   "Zuz": 2,
+   "Fahad Khaled": 2,
+   "Mohammed Jamal": 2,
+   "Khaled ali": -4,
+   "Hmoud Al Sabah": -3,
    "Alibaba": 1,
-   "AMAS": 2,
-   "Abdullah Mubarak": -2,
-   "Souad": -1
+   "Saleh Boareki": -1,
+   "Abdullah Mubarak": 1,
+   "Souad": 1,
+   "AMAS": -2
   }
  },
  "propsLive": {
   "asOf": "2026-06-25",
-  "matchesCounted": 54,
+  "matchesCounted": 56,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -5913,6 +5965,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Florian Wirtz",
+    "team": "GER",
+    "assists": 2,
+    "goals": 0
+   },
+   {
     "player": "Joshua Kimmich",
     "team": "GER",
     "assists": 2,
@@ -5933,12 +5991,6 @@ const WC_DATA = {
    {
     "player": "Roberto Alvarado",
     "team": "MEX",
-    "assists": 2,
-    "goals": 0
-   },
-   {
-    "player": "Ryan Gravenberch",
-    "team": "NED",
     "assists": 2,
     "goals": 0
    }
@@ -5975,6 +6027,12 @@ const WC_DATA = {
     "points": 7
    },
    {
+    "team": "CUW",
+    "yellow": 7,
+    "red": 0,
+    "points": 7
+   },
+   {
     "team": "BEL",
     "yellow": 3,
     "red": 1,
@@ -6005,22 +6063,16 @@ const WC_DATA = {
     "points": 5
    },
    {
-    "team": "CUW",
+    "team": "ECU",
     "yellow": 5,
     "red": 0,
     "points": 5
-   },
-   {
-    "team": "KOR",
-    "yellow": 4,
-    "red": 0,
-    "points": 4
    }
   ],
   "teamGoals": [
    {
     "team": "GER",
-    "goals": 9
+    "goals": 10
    },
    {
     "team": "CAN",
