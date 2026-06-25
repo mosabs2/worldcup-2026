@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-24",
-  "asOfNote": "Results through 50 matches, auto-synced from the ESPN public feed 2026-06-24 21:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-25",
+  "asOfNote": "Results through 52 matches, auto-synced from the ESPN public feed 2026-06-25 00:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -2986,13 +2986,42 @@ const WC_DATA = {
    "team1": "SCO",
    "team2": "BRA",
    "venueId": "MIA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 0,
+    "team2": 3
+   },
    "market": {
     "h": 0.1336,
     "x": 0.2078,
     "a": 0.6586,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "BRA",
+     "p": "Vinícius Júnior",
+     "m": "7'",
+     "a": "Rayan"
+    },
+    {
+     "t": "BRA",
+     "p": "Vinícius Júnior",
+     "m": "45'+3'",
+     "a": "Bruno Guimarães"
+    },
+    {
+     "t": "BRA",
+     "p": "Matheus Cunha",
+     "m": "60'",
+     "a": "Bruno Guimarães"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.13,
+    "team2": 4.46,
+    "src": "espn"
    }
   },
   {
@@ -3003,13 +3032,59 @@ const WC_DATA = {
    "team1": "MAR",
    "team2": "HAI",
    "venueId": "ATL",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 4,
+    "team2": 2
+   },
    "market": {
     "h": 0.7242,
     "x": 0.1712,
     "a": 0.1046,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "HAI",
+     "p": "Yassine Bounou",
+     "m": "10'",
+     "og": true
+    },
+    {
+     "t": "MAR",
+     "p": "Achraf Hakimi",
+     "m": "39'"
+    },
+    {
+     "t": "HAI",
+     "p": "Wilson Isidor",
+     "m": "43'",
+     "a": "Jean-Kévin Duverne"
+    },
+    {
+     "t": "MAR",
+     "p": "Ismael Saibari",
+     "m": "45'+1'",
+     "a": "Achraf Hakimi"
+    },
+    {
+     "t": "MAR",
+     "p": "Soufiane Rahimi",
+     "m": "78'",
+     "a": "Chadi Riad"
+    },
+    {
+     "t": "MAR",
+     "p": "Gessime Yassine",
+     "m": "89'",
+     "a": "Soufiane Rahimi"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 3.26,
+    "team2": 0.66,
+    "src": "espn"
    }
   },
   {
@@ -5580,64 +5655,64 @@ const WC_DATA = {
   ],
   "propsDeadline": "18 June 2026",
   "movement": {
-   "Rashed": 1,
-   "Hani Ibraheam sulaiman abdullah al mawash": 2,
-   "Faisal Jaber Al Sabah": 3,
-   "Nasser Talal": 3,
+   "Rashed": 0,
    "Bader Al Gatheebi": 3,
-   "Saleh Al Hashash": 3,
-   "Fahad Ali": 3,
-   "Faisal Abu Hadida": 4,
-   "Bader Mohamad Alnomas": 4,
-   "AD": 7,
-   "Chris Ovenden": 7,
-   "Ali Ahmed Hmoud Mohammed": 7,
-   "Khaled Al Qahtani": 7,
-   "Jogs Bonito": 9,
-   "Wahab Bader": 7,
-   "Nasser Fahad": 9,
-   "Abdulaziz Alsabah": 9,
-   "JMAMS": 9,
-   "Sabah Mohammed": 9,
-   "Khalifa ali": 10,
-   "Feras Al Qenaei": 8,
-   "Shamlan Abdulaziz": 9,
-   "Salem Athbi": 11,
-   "Gelenn Caley Cale": 8,
-   "Khalifa zayed": 8,
-   "Ahmed Boareki": 10,
-   "Syb": 10,
-   "Arsenal #1": 10,
-   "Mohammed Behbehani": 10,
-   "Faisal Boodai": 10,
-   "Mama Aad": 10,
-   "Fahad Khaled": 12,
-   "Essa": 13,
-   "Saleh Boareki": 14,
-   "Khaled ali": 16,
-   "HMB": -35,
-   "Abdullah Khaled": -34,
-   "Abdullah Mohammed": -23,
-   "Moblee": -34,
-   "Khaled Fahad": -29,
-   "Naser AlQadiri": -20,
-   "Thamer Fares Alnoon": -18,
-   "Jarah Aladwani": -29,
-   "Zuz": -9,
-   "Mohammad Ahmad": -29,
-   "Eric Bartlett": -3,
-   "Mohammed Jamal": -2,
-   "Ahmed Mubarak Al Sabah": -6,
-   "Hmoud Al Sabah": -2,
-   "Abdullah Mubarak": -1,
-   "Alibaba": -1,
+   "Nasser Talal": 1,
+   "Faisal Jaber Al Sabah": -1,
+   "Saleh Al Hashash": 1,
+   "Faisal Abu Hadida": 2,
+   "Fahad Ali": 0,
+   "Bader Mohamad Alnomas": 1,
+   "AD": 1,
+   "Chris Ovenden": 1,
+   "Ali Ahmed Hmoud Mohammed": 1,
+   "Khaled Al Qahtani": 1,
+   "Jogs Bonito": 1,
+   "Wahab Bader": 1,
+   "Nasser Fahad": 1,
+   "JMAMS": 2,
+   "Abdulaziz Alsabah": 0,
+   "Shamlan Abdulaziz": 4,
+   "Sabah Mohammed": 0,
+   "Feras Al Qenaei": 1,
+   "Gelenn Caley Cale": 3,
+   "Khalifa zayed": 3,
+   "Khalifa ali": -3,
+   "Salem Athbi": -1,
+   "Ahmed Boareki": 1,
+   "Syb": 1,
+   "Mohammed Behbehani": 2,
+   "Faisal Boodai": 2,
+   "Mama Aad": 2,
+   "Essa": 3,
+   "Khaled ali": 4,
+   "Hani Ibraheam sulaiman abdullah al mawash": -30,
+   "HMB": 3,
+   "Abdullah Khaled": 3,
+   "Abdullah Mohammed": 3,
+   "Moblee": 3,
+   "Khaled Fahad": 3,
+   "Thamer Fares Alnoon": 4,
+   "Naser AlQadiri": 2,
+   "Jarah Aladwani": 3,
+   "Arsenal #1": -13,
+   "Zuz": 2,
+   "Fahad Khaled": -11,
+   "Mohammad Ahmad": 1,
+   "Eric Bartlett": 1,
+   "Mohammed Jamal": 1,
+   "Saleh Boareki": -13,
+   "Ahmed Mubarak Al Sabah": 0,
+   "Hmoud Al Sabah": 0,
+   "Abdullah Mubarak": 0,
+   "Alibaba": 0,
    "Souad": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
-  "asOf": "2026-06-24",
-  "matchesCounted": 50,
+  "asOf": "2026-06-25",
+  "matchesCounted": 52,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -5658,8 +5733,20 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Vinícius Júnior",
+    "team": "BRA",
+    "goals": 4,
+    "pens": 0
+   },
+   {
     "player": "Deniz Undav",
     "team": "GER",
+    "goals": 3,
+    "pens": 0
+   },
+   {
+    "player": "Ismael Saibari",
+    "team": "MAR",
     "goals": 3,
     "pens": 0
    },
@@ -5672,6 +5759,12 @@ const WC_DATA = {
    {
     "player": "Jonathan David",
     "team": "CAN",
+    "goals": 3,
+    "pens": 0
+   },
+   {
+    "player": "Matheus Cunha",
+    "team": "BRA",
     "goals": 3,
     "pens": 0
    },
@@ -5710,24 +5803,6 @@ const WC_DATA = {
     "team": "POR",
     "goals": 2,
     "pens": 0
-   },
-   {
-    "player": "Crysencio Summerville",
-    "team": "NED",
-    "goals": 2,
-    "pens": 0
-   },
-   {
-    "player": "Cyle Larin",
-    "team": "CAN",
-    "goals": 2,
-    "pens": 0
-   },
-   {
-    "player": "Daichi Kamada",
-    "team": "JPN",
-    "goals": 2,
-    "pens": 0
    }
   ],
   "topAssists": [
@@ -5736,6 +5811,12 @@ const WC_DATA = {
     "team": "SWE",
     "assists": 3,
     "goals": 1
+   },
+   {
+    "player": "Bruno Guimarães",
+    "team": "BRA",
+    "assists": 3,
+    "goals": 0
    },
    {
     "player": "Michael Olise",
@@ -5810,16 +5891,10 @@ const WC_DATA = {
     "goals": 0
    },
    {
-    "player": "Johan Manzambi",
-    "team": "SUI",
+    "player": "Vinícius Júnior",
+    "team": "BRA",
     "assists": 1,
-    "goals": 3
-   },
-   {
-    "player": "Ayase Ueda",
-    "team": "JPN",
-    "assists": 1,
-    "goals": 2
+    "goals": 4
    }
   ],
   "teamCards": [
@@ -5848,6 +5923,12 @@ const WC_DATA = {
     "points": 9
    },
    {
+    "team": "HAI",
+    "yellow": 7,
+    "red": 0,
+    "points": 7
+   },
+   {
     "team": "BEL",
     "yellow": 3,
     "red": 1,
@@ -5855,6 +5936,18 @@ const WC_DATA = {
    },
    {
     "team": "CAN",
+    "yellow": 5,
+    "red": 0,
+    "points": 5
+   },
+   {
+    "team": "BRA",
+    "yellow": 5,
+    "red": 0,
+    "points": 5
+   },
+   {
+    "team": "SCO",
     "yellow": 5,
     "red": 0,
     "points": 5
@@ -5876,24 +5969,6 @@ const WC_DATA = {
     "yellow": 4,
     "red": 0,
     "points": 4
-   },
-   {
-    "team": "HAI",
-    "yellow": 4,
-    "red": 0,
-    "points": 4
-   },
-   {
-    "team": "SCO",
-    "yellow": 4,
-    "red": 0,
-    "points": 4
-   },
-   {
-    "team": "AUS",
-    "yellow": 4,
-    "red": 0,
-    "points": 4
    }
   ],
   "teamGoals": [
@@ -5910,6 +5985,10 @@ const WC_DATA = {
     "goals": 7
    },
    {
+    "team": "BRA",
+    "goals": 7
+   },
+   {
     "team": "NED",
     "goals": 7
    },
@@ -5919,6 +5998,10 @@ const WC_DATA = {
    },
    {
     "team": "USA",
+    "goals": 6
+   },
+   {
+    "team": "MAR",
     "goals": 6
    },
    {
@@ -5936,14 +6019,6 @@ const WC_DATA = {
    {
     "team": "POR",
     "goals": 6
-   },
-   {
-    "team": "BIH",
-    "goals": 5
-   },
-   {
-    "team": "ARG",
-    "goals": 5
    }
   ],
   "note": "Golden Boot, assists and team goals from ESPN goal events; cards from ESPN match statistics. MENA and host props resolve on the bracket."
