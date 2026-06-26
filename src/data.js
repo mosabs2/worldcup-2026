@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-26",
-  "asOfNote": "Results through 61 matches, auto-synced from the ESPN public feed 2026-06-26 21:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 62 matches, auto-synced from the ESPN public feed 2026-06-26 21:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3494,13 +3494,54 @@ const WC_DATA = {
    "team1": "SEN",
    "team2": "IRQ",
    "venueId": "TOR",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 5,
+    "team2": 0
+   },
    "market": {
     "h": 0.7159,
     "x": 0.1861,
     "a": 0.098,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "SEN",
+     "p": "Habib Diarra",
+     "m": "4'",
+     "a": "Abdoulaye Seck"
+    },
+    {
+     "t": "SEN",
+     "p": "Ismaïla Sarr",
+     "m": "56'",
+     "a": "Lamine Camara"
+    },
+    {
+     "t": "SEN",
+     "p": "Pape Gueye",
+     "m": "59'",
+     "a": "Ismaïla Sarr"
+    },
+    {
+     "t": "SEN",
+     "p": "Pape Gueye",
+     "m": "71'",
+     "a": "Iliman Ndiaye"
+    },
+    {
+     "t": "SEN",
+     "p": "Iliman Ndiaye",
+     "m": "82'",
+     "a": "Pape Gueye"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 3.1,
+    "team2": 0.18,
+    "src": "espn"
    }
   },
   {
@@ -5902,29 +5943,29 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Rashed": 0,
-   "Faisal Jaber Al Sabah": 1,
-   "Nasser Talal": 1,
+   "Faisal Jaber Al Sabah": 0,
+   "Bader Al Gatheebi": 2,
+   "Saleh Al Hashash": 3,
+   "Nasser Talal": -2,
    "Fahad Ali": -2,
-   "Bader Al Gatheebi": 1,
-   "Faisal Abu Hadida": 1,
-   "Saleh Al Hashash": -2,
+   "Faisal Abu Hadida": -1,
    "Bader Mohamad Alnomas": 0,
    "Hani Ibraheam sulaiman abdullah al mawash": 0,
    "Wahab Bader": 0,
    "AD": 0,
    "Nasser Fahad": 0,
-   "JMAMS": 1,
-   "HMB": -1,
-   "Sabah Mohammed": 2,
-   "Abdullah Khaled": -1,
-   "Shamlan Abdulaziz": -1,
-   "Ali Ahmed Hmoud Mohammed": 2,
-   "Chris Ovenden": 2,
-   "Feras Al Qenaei": -2,
-   "Khaled Al Qahtani": -2,
-   "Abdulaziz Alsabah": 2,
-   "Gelenn Caley Cale": -1,
-   "Khalifa zayed": -1,
+   "HMB": 1,
+   "JMAMS": -1,
+   "Sabah Mohammed": 0,
+   "Abdullah Khaled": 0,
+   "Shamlan Abdulaziz": 0,
+   "Ali Ahmed Hmoud Mohammed": 0,
+   "Chris Ovenden": 0,
+   "Feras Al Qenaei": 0,
+   "Khaled Al Qahtani": 0,
+   "Abdulaziz Alsabah": 0,
+   "Gelenn Caley Cale": 0,
+   "Khalifa zayed": 0,
    "Khalifa ali": 0,
    "Salem Athbi": 0,
    "Ahmed Boareki": 0,
@@ -5938,8 +5979,8 @@ const WC_DATA = {
    "Mohammed Behbehani": 0,
    "Arsenal #1": 0,
    "Moblee": 0,
-   "Mama Aad": 1,
-   "Thamer Fares Alnoon": -1,
+   "Mama Aad": 0,
+   "Thamer Fares Alnoon": 0,
    "Essa": 0,
    "Mohammad Ahmad": 0,
    "Eric Bartlett": 0,
@@ -5948,9 +5989,9 @@ const WC_DATA = {
    "Mohammed Jamal": 0,
    "Khaled ali": 0,
    "Ahmed Mubarak Al Sabah": 0,
-   "Hmoud Al Sabah": 0,
-   "Alibaba": 0,
-   "Saleh Boareki": 0,
+   "Alibaba": 1,
+   "Saleh Boareki": 1,
+   "Hmoud Al Sabah": -2,
    "Abdullah Mubarak": 0,
    "Souad": 0,
    "AMAS": 0
@@ -5958,7 +5999,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-26",
-  "matchesCounted": 61,
+  "matchesCounted": 62,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6009,6 +6050,12 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Ismaïla Sarr",
+    "team": "SEN",
+    "goals": 3,
+    "pens": 0
+   },
+   {
     "player": "Johan Manzambi",
     "team": "SUI",
     "goals": 3,
@@ -6041,12 +6088,6 @@ const WC_DATA = {
    {
     "player": "Anthony Elanga",
     "team": "SWE",
-    "goals": 2,
-    "pens": 0
-   },
-   {
-    "player": "Ayase Ueda",
-    "team": "JPN",
     "goals": 2,
     "pens": 0
    }
@@ -6085,6 +6126,12 @@ const WC_DATA = {
    {
     "player": "Breel Embolo",
     "team": "SUI",
+    "assists": 2,
+    "goals": 1
+   },
+   {
+    "player": "Iliman Ndiaye",
+    "team": "SEN",
     "assists": 2,
     "goals": 1
    },
@@ -6135,12 +6182,6 @@ const WC_DATA = {
     "team": "TUN",
     "assists": 2,
     "goals": 0
-   },
-   {
-    "player": "Joshua Kimmich",
-    "team": "GER",
-    "assists": 2,
-    "goals": 0
    }
   ],
   "teamCards": [
@@ -6181,6 +6222,12 @@ const WC_DATA = {
     "points": 7
    },
    {
+    "team": "IRQ",
+    "yellow": 4,
+    "red": 1,
+    "points": 7
+   },
+   {
     "team": "BEL",
     "yellow": 3,
     "red": 1,
@@ -6209,12 +6256,6 @@ const WC_DATA = {
     "yellow": 5,
     "red": 0,
     "points": 5
-   },
-   {
-    "team": "SCO",
-    "yellow": 5,
-    "red": 0,
-    "points": 5
    }
   ],
   "teamGoals": [
@@ -6239,6 +6280,10 @@ const WC_DATA = {
     "goals": 8
    },
    {
+    "team": "SEN",
+    "goals": 8
+   },
+   {
     "team": "NOR",
     "goals": 8
    },
@@ -6260,10 +6305,6 @@ const WC_DATA = {
    },
    {
     "team": "MEX",
-    "goals": 6
-   },
-   {
-    "team": "MAR",
     "goals": 6
    }
   ],
