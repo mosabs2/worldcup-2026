@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-26",
-  "asOfNote": "Results through 59 matches, auto-synced from the ESPN public feed 2026-06-26 04:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 60 matches, auto-synced from the ESPN public feed 2026-06-26 04:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3353,13 +3353,52 @@ const WC_DATA = {
    "team1": "TUR",
    "team2": "USA",
    "venueId": "LA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 2
+   },
    "market": {
     "h": 0.3478,
     "x": 0.2609,
     "a": 0.3913,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "USA",
+     "p": "Auston Trusty",
+     "m": "3'",
+     "a": "Sebastian Berhalter"
+    },
+    {
+     "t": "TUR",
+     "p": "Arda Güler",
+     "m": "10'",
+     "a": "Baris Alper Yilmaz"
+    },
+    {
+     "t": "TUR",
+     "p": "Baris Alper Yilmaz",
+     "m": "31'",
+     "a": "Orkun Kökçü"
+    },
+    {
+     "t": "USA",
+     "p": "Sebastian Berhalter",
+     "m": "49'"
+    },
+    {
+     "t": "TUR",
+     "p": "Kaan Ayhan",
+     "m": "90'+8'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.71,
+    "team2": 2.06,
+    "src": "espn"
    }
   },
   {
@@ -5822,49 +5861,49 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Rashed": 0,
-   "Fahad Ali": 1,
-   "Faisal Jaber Al Sabah": -1,
-   "Bader Al Gatheebi": 0,
+   "Fahad Ali": 0,
+   "Faisal Jaber Al Sabah": 0,
+   "Nasser Talal": 2,
    "Saleh Al Hashash": 0,
-   "Nasser Talal": 0,
+   "Bader Al Gatheebi": -2,
    "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
-   "Wahab Bader": 0,
-   "Nasser Fahad": 0,
-   "Sabah Mohammed": 1,
-   "Feras Al Qenaei": 1,
-   "Shamlan Abdulaziz": -2,
-   "Gelenn Caley Cale": 0,
-   "Khalifa zayed": 0,
-   "Salem Athbi": 0,
-   "Ahmed Boareki": 0,
-   "Syb": 0,
-   "Faisal Boodai": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 0,
-   "AD": 0,
-   "HMB": 0,
-   "JMAMS": 0,
-   "Ali Ahmed Hmoud Mohammed": 1,
-   "Chris Ovenden": 1,
-   "Khaled Al Qahtani": 1,
-   "Abdullah Khaled": -3,
-   "Abdulaziz Alsabah": 0,
-   "Khalifa ali": 0,
-   "Jogs Bonito": 0,
-   "Abdullah Mohammed": 0,
-   "Khaled Fahad": 0,
-   "Naser AlQadiri": 0,
+   "Hani Ibraheam sulaiman abdullah al mawash": 11,
+   "Wahab Bader": -1,
+   "AD": 10,
+   "Nasser Fahad": -2,
+   "HMB": 9,
+   "JMAMS": 9,
+   "Abdullah Khaled": 12,
+   "Shamlan Abdulaziz": -3,
+   "Sabah Mohammed": -6,
+   "Feras Al Qenaei": -6,
+   "Khaled Al Qahtani": 7,
+   "Ali Ahmed Hmoud Mohammed": 4,
+   "Chris Ovenden": 4,
+   "Gelenn Caley Cale": -8,
+   "Khalifa zayed": -8,
+   "Abdulaziz Alsabah": 4,
+   "Khalifa ali": 4,
+   "Salem Athbi": -10,
+   "Ahmed Boareki": -10,
+   "Syb": -10,
+   "Khaled Fahad": 3,
+   "Faisal Boodai": -11,
+   "Naser AlQadiri": 2,
+   "Jogs Bonito": -2,
+   "Abdullah Mohammed": -2,
    "Jarah Aladwani": 0,
    "Mohammed Behbehani": 0,
    "Arsenal #1": 0,
-   "Mama Aad": 0,
-   "Essa": 0,
-   "Eric Bartlett": 0,
-   "Moblee": 0,
-   "Thamer Fares Alnoon": 0,
-   "Zuz": 0,
-   "Fahad Khaled": 0,
-   "Mohammad Ahmad": 0,
+   "Moblee": 3,
+   "Thamer Fares Alnoon": 3,
+   "Mama Aad": -2,
+   "Essa": -2,
+   "Mohammad Ahmad": 3,
+   "Eric Bartlett": -3,
+   "Zuz": -1,
+   "Fahad Khaled": -1,
    "Mohammed Jamal": 0,
    "Khaled ali": 0,
    "Ahmed Mubarak Al Sabah": 0,
@@ -5878,7 +5917,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-26",
-  "matchesCounted": 59,
+  "matchesCounted": 60,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6119,6 +6158,12 @@ const WC_DATA = {
     "points": 5
    },
    {
+    "team": "USA",
+    "yellow": 5,
+    "red": 0,
+    "points": 5
+   },
+   {
     "team": "BRA",
     "yellow": 5,
     "red": 0,
@@ -6126,12 +6171,6 @@ const WC_DATA = {
    },
    {
     "team": "SCO",
-    "yellow": 5,
-    "red": 0,
-    "points": 5
-   },
-   {
-    "team": "AUS",
     "yellow": 5,
     "red": 0,
     "points": 5
@@ -6148,6 +6187,10 @@ const WC_DATA = {
    },
    {
     "team": "CAN",
+    "goals": 8
+   },
+   {
+    "team": "USA",
     "goals": 8
    },
    {
@@ -6172,10 +6215,6 @@ const WC_DATA = {
    },
    {
     "team": "MEX",
-    "goals": 6
-   },
-   {
-    "team": "USA",
     "goals": 6
    },
    {
