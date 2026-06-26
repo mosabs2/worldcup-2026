@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-26",
-  "asOfNote": "Results through 60 matches, auto-synced from the ESPN public feed 2026-06-26 04:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 61 matches, auto-synced from the ESPN public feed 2026-06-26 21:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3436,13 +3436,54 @@ const WC_DATA = {
    "team1": "NOR",
    "team2": "FRA",
    "venueId": "BOS",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 4
+   },
    "market": {
     "h": 0.217,
     "x": 0.261,
     "a": 0.522,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "FRA",
+     "p": "Ousmane Dembélé",
+     "m": "7'",
+     "a": "Kylian Mbappé"
+    },
+    {
+     "t": "FRA",
+     "p": "Ousmane Dembélé",
+     "m": "20'",
+     "a": "Kylian Mbappé"
+    },
+    {
+     "t": "NOR",
+     "p": "Thelo Aasgaard",
+     "m": "21'",
+     "a": "Andreas Schjelderup"
+    },
+    {
+     "t": "FRA",
+     "p": "Ousmane Dembélé",
+     "m": "32'",
+     "a": "Aurélien Tchouaméni"
+    },
+    {
+     "t": "FRA",
+     "p": "Désiré Doué",
+     "m": "90'+4'",
+     "a": "Bradley Barcola"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.69,
+    "team2": 1.31,
+    "src": "espn"
    }
   },
   {
@@ -5861,49 +5902,49 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Rashed": 0,
-   "Fahad Ali": 0,
-   "Faisal Jaber Al Sabah": 0,
-   "Nasser Talal": 2,
-   "Saleh Al Hashash": 0,
-   "Bader Al Gatheebi": -2,
-   "Faisal Abu Hadida": 0,
+   "Faisal Jaber Al Sabah": 1,
+   "Nasser Talal": 1,
+   "Fahad Ali": -2,
+   "Bader Al Gatheebi": 1,
+   "Faisal Abu Hadida": 1,
+   "Saleh Al Hashash": -2,
    "Bader Mohamad Alnomas": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 11,
-   "Wahab Bader": -1,
-   "AD": 10,
-   "Nasser Fahad": -2,
-   "HMB": 9,
-   "JMAMS": 9,
-   "Abdullah Khaled": 12,
-   "Shamlan Abdulaziz": -3,
-   "Sabah Mohammed": -6,
-   "Feras Al Qenaei": -6,
-   "Khaled Al Qahtani": 7,
-   "Ali Ahmed Hmoud Mohammed": 4,
-   "Chris Ovenden": 4,
-   "Gelenn Caley Cale": -8,
-   "Khalifa zayed": -8,
-   "Abdulaziz Alsabah": 4,
-   "Khalifa ali": 4,
-   "Salem Athbi": -10,
-   "Ahmed Boareki": -10,
-   "Syb": -10,
-   "Khaled Fahad": 3,
-   "Faisal Boodai": -11,
-   "Naser AlQadiri": 2,
-   "Jogs Bonito": -2,
-   "Abdullah Mohammed": -2,
+   "Hani Ibraheam sulaiman abdullah al mawash": 0,
+   "Wahab Bader": 0,
+   "AD": 0,
+   "Nasser Fahad": 0,
+   "JMAMS": 1,
+   "HMB": -1,
+   "Sabah Mohammed": 2,
+   "Abdullah Khaled": -1,
+   "Shamlan Abdulaziz": -1,
+   "Ali Ahmed Hmoud Mohammed": 2,
+   "Chris Ovenden": 2,
+   "Feras Al Qenaei": -2,
+   "Khaled Al Qahtani": -2,
+   "Abdulaziz Alsabah": 2,
+   "Gelenn Caley Cale": -1,
+   "Khalifa zayed": -1,
+   "Khalifa ali": 0,
+   "Salem Athbi": 0,
+   "Ahmed Boareki": 0,
+   "Syb": 0,
+   "Khaled Fahad": 0,
+   "Faisal Boodai": 0,
+   "Naser AlQadiri": 0,
+   "Jogs Bonito": 0,
+   "Abdullah Mohammed": 0,
    "Jarah Aladwani": 0,
    "Mohammed Behbehani": 0,
    "Arsenal #1": 0,
-   "Moblee": 3,
-   "Thamer Fares Alnoon": 3,
-   "Mama Aad": -2,
-   "Essa": -2,
-   "Mohammad Ahmad": 3,
-   "Eric Bartlett": -3,
-   "Zuz": -1,
-   "Fahad Khaled": -1,
+   "Moblee": 0,
+   "Mama Aad": 1,
+   "Thamer Fares Alnoon": -1,
+   "Essa": 0,
+   "Mohammad Ahmad": 0,
+   "Eric Bartlett": 0,
+   "Zuz": 0,
+   "Fahad Khaled": 0,
    "Mohammed Jamal": 0,
    "Khaled ali": 0,
    "Ahmed Mubarak Al Sabah": 0,
@@ -5917,7 +5958,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-26",
-  "matchesCounted": 60,
+  "matchesCounted": 61,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -5933,6 +5974,12 @@ const WC_DATA = {
    },
    {
     "player": "Kylian Mbappé",
+    "team": "FRA",
+    "goals": 4,
+    "pens": 0
+   },
+   {
+    "player": "Ousmane Dembélé",
     "team": "FRA",
     "goals": 4,
     "pens": 0
@@ -6002,12 +6049,6 @@ const WC_DATA = {
     "team": "JPN",
     "goals": 2,
     "pens": 0
-   },
-   {
-    "player": "Cody Gakpo",
-    "team": "NED",
-    "goals": 2,
-    "pens": 0
    }
   ],
   "topAssists": [
@@ -6028,6 +6069,12 @@ const WC_DATA = {
     "team": "FRA",
     "assists": 3,
     "goals": 0
+   },
+   {
+    "player": "Kylian Mbappé",
+    "team": "FRA",
+    "assists": 2,
+    "goals": 4
    },
    {
     "player": "Deniz Undav",
@@ -6092,12 +6139,6 @@ const WC_DATA = {
    {
     "player": "Joshua Kimmich",
     "team": "GER",
-    "assists": 2,
-    "goals": 0
-   },
-   {
-    "player": "Julio Enciso",
-    "team": "PAR",
     "assists": 2,
     "goals": 0
    }
@@ -6186,11 +6227,19 @@ const WC_DATA = {
     "goals": 10
    },
    {
+    "team": "FRA",
+    "goals": 10
+   },
+   {
     "team": "CAN",
     "goals": 8
    },
    {
     "team": "USA",
+    "goals": 8
+   },
+   {
+    "team": "NOR",
     "goals": 8
    },
    {
@@ -6210,19 +6259,11 @@ const WC_DATA = {
     "goals": 7
    },
    {
-    "team": "NOR",
-    "goals": 7
-   },
-   {
     "team": "MEX",
     "goals": 6
    },
    {
     "team": "MAR",
-    "goals": 6
-   },
-   {
-    "team": "FRA",
     "goals": 6
    }
   ],
