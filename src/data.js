@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-27",
-  "asOfNote": "Results through 64 matches, auto-synced from the ESPN public feed 2026-06-27 02:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 65 matches, auto-synced from the ESPN public feed 2026-06-27 05:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3630,13 +3630,57 @@ const WC_DATA = {
    "team1": "NZL",
    "team2": "BEL",
    "venueId": "BCP",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 5
+   },
    "market": {
     "h": 0.0849,
     "x": 0.1495,
     "a": 0.7656,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "BEL",
+     "p": "Leandro Trossard",
+     "m": "28'"
+    },
+    {
+     "t": "BEL",
+     "p": "Leandro Trossard",
+     "m": "50'",
+     "a": "Hans Vanaken"
+    },
+    {
+     "t": "BEL",
+     "p": "Kevin De Bruyne",
+     "m": "66'"
+    },
+    {
+     "t": "NZL",
+     "p": "Elijah Just",
+     "m": "84'"
+    },
+    {
+     "t": "BEL",
+     "p": "Romelu Lukaku",
+     "m": "86'",
+     "a": "Nicolas Raskin"
+    },
+    {
+     "t": "BEL",
+     "p": "Alexis Saelemaekers",
+     "m": "90'+4'",
+     "a": "Romelu Lukaku"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.25,
+    "team2": 3.65,
+    "src": "espn"
    }
   },
   {
@@ -5969,64 +6013,64 @@ const WC_DATA = {
   ],
   "propsDeadline": "18 June 2026",
   "movement": {
-   "Rashed": 0,
-   "Saleh Al Hashash": 4,
+   "Faisal Jaber Al Sabah": 3,
    "Bader Al Gatheebi": 1,
-   "Faisal Jaber Al Sabah": -2,
-   "Fahad Ali": 0,
-   "Nasser Talal": -3,
-   "Faisal Abu Hadida": 0,
-   "Bader Mohamad Alnomas": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 0,
+   "Saleh Al Hashash": -1,
+   "Nasser Talal": 2,
+   "Faisal Abu Hadida": 2,
+   "Bader Mohamad Alnomas": 2,
+   "Rashed": -6,
+   "Fahad Ali": -3,
    "Wahab Bader": 1,
-   "HMB": 3,
-   "Nasser Fahad": 0,
-   "AD": -3,
-   "Feras Al Qenaei": 6,
-   "Khaled Al Qahtani": 6,
-   "Ali Ahmed Hmoud Mohammed": 2,
-   "Chris Ovenden": 2,
-   "Abdullah Khaled": -3,
-   "Shamlan Abdulaziz": -3,
-   "Sabah Mohammed": -3,
-   "JMAMS": -8,
-   "Gelenn Caley Cale": 0,
-   "Khalifa zayed": 0,
-   "Abdulaziz Alsabah": 0,
-   "Khalifa ali": 0,
-   "Salem Athbi": 0,
-   "Ahmed Boareki": 0,
-   "Syb": 0,
-   "Khaled Fahad": 0,
-   "Faisal Boodai": 0,
-   "Naser AlQadiri": 0,
-   "Jogs Bonito": 0,
-   "Abdullah Mohammed": 0,
-   "Jarah Aladwani": 0,
-   "Moblee": 2,
-   "Arsenal #1": 0,
-   "Mohammed Behbehani": -2,
-   "Thamer Fares Alnoon": 0,
-   "Mama Aad": 0,
-   "Essa": 0,
-   "Mohammad Ahmad": 0,
-   "Eric Bartlett": 0,
-   "Zuz": 0,
-   "Fahad Khaled": 0,
-   "Mohammed Jamal": 0,
-   "Khaled ali": 0,
+   "AD": 3,
+   "HMB": 0,
+   "Abdullah Khaled": 6,
+   "Shamlan Abdulaziz": 6,
+   "JMAMS": 7,
+   "Sabah Mohammed": 5,
+   "Ali Ahmed Hmoud Mohammed": 0,
+   "Feras Al Qenaei": -3,
+   "Khaled Al Qahtani": -3,
+   "Chris Ovenden": -2,
+   "Gelenn Caley Cale": 2,
+   "Khalifa zayed": 2,
+   "Abdulaziz Alsabah": 2,
+   "Khalifa ali": 2,
+   "Salem Athbi": 2,
+   "Ahmed Boareki": 2,
+   "Syb": 2,
+   "Hani Ibraheam sulaiman abdullah al mawash": -18,
+   "Khaled Fahad": 1,
+   "Faisal Boodai": 1,
+   "Naser AlQadiri": 1,
+   "Nasser Fahad": -19,
+   "Jarah Aladwani": 2,
+   "Mohammed Behbehani": 4,
+   "Arsenal #1": 2,
+   "Moblee": 0,
+   "Thamer Fares Alnoon": 2,
+   "Mama Aad": 2,
+   "Essa": 2,
+   "Mohammad Ahmad": 2,
+   "Eric Bartlett": 2,
+   "Jogs Bonito": -9,
+   "Abdullah Mohammed": -9,
+   "Mohammed Jamal": 2,
+   "Khaled ali": 2,
+   "Zuz": -2,
+   "Fahad Khaled": -2,
    "Ahmed Mubarak Al Sabah": 0,
-   "Saleh Boareki": 1,
    "Hmoud Al Sabah": 1,
-   "Alibaba": -2,
-   "Souad": 1,
-   "Abdullah Mubarak": -1,
+   "Alibaba": 1,
+   "Saleh Boareki": -2,
+   "Souad": 0,
+   "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
   "asOf": "2026-06-27",
-  "matchesCounted": 64,
+  "matchesCounted": 65,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6071,6 +6115,12 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Elijah Just",
+    "team": "NZL",
+    "goals": 3,
+    "pens": 0
+   },
+   {
     "player": "Ismael Saibari",
     "team": "MAR",
     "goals": 3,
@@ -6111,12 +6161,6 @@ const WC_DATA = {
     "team": "GER",
     "goals": 2,
     "pens": 1
-   },
-   {
-    "player": "Anthony Elanga",
-    "team": "SWE",
-    "goals": 2,
-    "pens": 0
    }
   ],
   "topAssists": [
