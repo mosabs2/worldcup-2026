@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-26",
-  "asOfNote": "Results through 62 matches, auto-synced from the ESPN public feed 2026-06-26 21:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-27",
+  "asOfNote": "Results through 63 matches, auto-synced from the ESPN public feed 2026-06-27 02:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3552,13 +3552,23 @@ const WC_DATA = {
    "team1": "CPV",
    "team2": "KSA",
    "venueId": "HOU",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 0,
+    "team2": 0
+   },
    "market": {
     "h": 0.3432,
     "x": 0.2551,
     "a": 0.4017,
     "book": "Bet365"
+   },
+   "goals": [],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.46,
+    "team2": 0.4,
+    "src": "espn"
    }
   },
   {
@@ -5944,28 +5954,28 @@ const WC_DATA = {
   "movement": {
    "Rashed": 0,
    "Faisal Jaber Al Sabah": 0,
-   "Bader Al Gatheebi": 2,
-   "Saleh Al Hashash": 3,
-   "Nasser Talal": -2,
-   "Fahad Ali": -2,
-   "Faisal Abu Hadida": -1,
+   "Nasser Talal": 2,
+   "Bader Al Gatheebi": -1,
+   "Fahad Ali": 1,
+   "Saleh Al Hashash": -2,
+   "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
    "Hani Ibraheam sulaiman abdullah al mawash": 0,
-   "Wahab Bader": 0,
-   "AD": 0,
+   "AD": 1,
+   "Wahab Bader": -1,
    "Nasser Fahad": 0,
-   "HMB": 1,
-   "JMAMS": -1,
-   "Sabah Mohammed": 0,
-   "Abdullah Khaled": 0,
-   "Shamlan Abdulaziz": 0,
+   "JMAMS": 1,
+   "HMB": -1,
+   "Abdullah Khaled": 1,
+   "Shamlan Abdulaziz": 1,
+   "Sabah Mohammed": -2,
    "Ali Ahmed Hmoud Mohammed": 0,
    "Chris Ovenden": 0,
    "Feras Al Qenaei": 0,
    "Khaled Al Qahtani": 0,
-   "Abdulaziz Alsabah": 0,
-   "Gelenn Caley Cale": 0,
-   "Khalifa zayed": 0,
+   "Gelenn Caley Cale": 1,
+   "Khalifa zayed": 1,
+   "Abdulaziz Alsabah": -2,
    "Khalifa ali": 0,
    "Salem Athbi": 0,
    "Ahmed Boareki": 0,
@@ -5979,8 +5989,8 @@ const WC_DATA = {
    "Mohammed Behbehani": 0,
    "Arsenal #1": 0,
    "Moblee": 0,
-   "Mama Aad": 0,
-   "Thamer Fares Alnoon": 0,
+   "Thamer Fares Alnoon": 1,
+   "Mama Aad": -1,
    "Essa": 0,
    "Mohammad Ahmad": 0,
    "Eric Bartlett": 0,
@@ -5989,17 +5999,17 @@ const WC_DATA = {
    "Mohammed Jamal": 0,
    "Khaled ali": 0,
    "Ahmed Mubarak Al Sabah": 0,
-   "Alibaba": 1,
-   "Saleh Boareki": 1,
-   "Hmoud Al Sabah": -2,
+   "Alibaba": 0,
+   "Saleh Boareki": 0,
+   "Hmoud Al Sabah": 0,
    "Abdullah Mubarak": 0,
    "Souad": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
-  "asOf": "2026-06-26",
-  "matchesCounted": 62,
+  "asOf": "2026-06-27",
+  "matchesCounted": 63,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6234,6 +6244,12 @@ const WC_DATA = {
     "points": 6
    },
    {
+    "team": "KSA",
+    "yellow": 6,
+    "red": 0,
+    "points": 6
+   },
+   {
     "team": "MEX",
     "yellow": 2,
     "red": 1,
@@ -6247,12 +6263,6 @@ const WC_DATA = {
    },
    {
     "team": "USA",
-    "yellow": 5,
-    "red": 0,
-    "points": 5
-   },
-   {
-    "team": "BRA",
     "yellow": 5,
     "red": 0,
     "points": 5
