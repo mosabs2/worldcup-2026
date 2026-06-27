@@ -5548,6 +5548,29 @@ const WC_DATA = {
     ],
     "c": "MAR",
     "locked": "2026-06-17"
+   },
+   {
+    "n": "Dark horse",
+    "w": {
+     "A": "MEX",
+     "B": "SUI",
+     "C": "BRA",
+     "D": "USA",
+     "E": "GER",
+     "F": "NED",
+     "G": "BEL",
+     "H": "ESP",
+     "I": "FRA",
+     "J": "ARG",
+     "K": "COL",
+     "L": "ENG"
+    },
+    "f": [
+     "ARG",
+     "FRA"
+    ],
+    "c": "FRA",
+    "locked": "2026-06-27"
    }
   ],
   "scoring": {
