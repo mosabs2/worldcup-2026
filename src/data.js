@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-27",
-  "asOfNote": "Results through 65 matches, auto-synced from the ESPN public feed 2026-06-27 05:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 66 matches, auto-synced from the ESPN public feed 2026-06-27 05:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3613,13 +3613,35 @@ const WC_DATA = {
    "team1": "EGY",
    "team2": "IRN",
    "venueId": "SEA",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 1
+   },
    "market": {
     "h": 0.4573,
     "x": 0.3024,
     "a": 0.2404,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "EGY",
+     "p": "Mahmoud Saber",
+     "m": "5'",
+     "a": "Trézéguet"
+    },
+    {
+     "t": "IRN",
+     "p": "Ramin Rezaeian",
+     "m": "14'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.81,
+    "team2": 1.83,
+    "src": "espn"
    }
   },
   {
@@ -6013,64 +6035,64 @@ const WC_DATA = {
   ],
   "propsDeadline": "18 June 2026",
   "movement": {
-   "Faisal Jaber Al Sabah": 3,
-   "Bader Al Gatheebi": 1,
-   "Saleh Al Hashash": -1,
-   "Nasser Talal": 2,
-   "Faisal Abu Hadida": 2,
-   "Bader Mohamad Alnomas": 2,
-   "Rashed": -6,
-   "Fahad Ali": -3,
-   "Wahab Bader": 1,
-   "AD": 3,
-   "HMB": 0,
-   "Abdullah Khaled": 6,
-   "Shamlan Abdulaziz": 6,
-   "JMAMS": 7,
-   "Sabah Mohammed": 5,
-   "Ali Ahmed Hmoud Mohammed": 0,
-   "Feras Al Qenaei": -3,
-   "Khaled Al Qahtani": -3,
-   "Chris Ovenden": -2,
-   "Gelenn Caley Cale": 2,
-   "Khalifa zayed": 2,
-   "Abdulaziz Alsabah": 2,
-   "Khalifa ali": 2,
-   "Salem Athbi": 2,
-   "Ahmed Boareki": 2,
-   "Syb": 2,
-   "Hani Ibraheam sulaiman abdullah al mawash": -18,
-   "Khaled Fahad": 1,
-   "Faisal Boodai": 1,
-   "Naser AlQadiri": 1,
-   "Nasser Fahad": -19,
+   "Saleh Al Hashash": 2,
+   "Bader Al Gatheebi": 0,
+   "Faisal Jaber Al Sabah": -2,
+   "Nasser Talal": 0,
+   "Faisal Abu Hadida": 0,
+   "Bader Mohamad Alnomas": 0,
+   "Wahab Bader": 2,
+   "AD": 2,
+   "HMB": 2,
+   "JMAMS": 4,
+   "Abdullah Khaled": 1,
+   "Shamlan Abdulaziz": 1,
+   "Feras Al Qenaei": 4,
+   "Khaled Al Qahtani": 4,
+   "Ali Ahmed Hmoud Mohammed": 1,
+   "Chris Ovenden": 3,
+   "Rashed": -10,
+   "Sabah Mohammed": -3,
+   "Gelenn Caley Cale": 1,
+   "Khalifa zayed": 1,
+   "Abdulaziz Alsabah": 1,
+   "Khalifa ali": 1,
+   "Salem Athbi": 1,
+   "Ahmed Boareki": 1,
+   "Syb": 1,
+   "Khaled Fahad": 2,
+   "Faisal Boodai": 2,
+   "Naser AlQadiri": 2,
+   "Fahad Ali": -21,
    "Jarah Aladwani": 2,
-   "Mohammed Behbehani": 4,
-   "Arsenal #1": 2,
-   "Moblee": 0,
-   "Thamer Fares Alnoon": 2,
-   "Mama Aad": 2,
-   "Essa": 2,
-   "Mohammad Ahmad": 2,
-   "Eric Bartlett": 2,
-   "Jogs Bonito": -9,
-   "Abdullah Mohammed": -9,
+   "Mohammed Behbehani": 2,
+   "Nasser Fahad": -1,
+   "Moblee": 2,
+   "Arsenal #1": 0,
+   "Thamer Fares Alnoon": 1,
+   "Mama Aad": 1,
+   "Hani Ibraheam sulaiman abdullah al mawash": -10,
+   "Essa": 0,
+   "Mohammad Ahmad": 0,
+   "Eric Bartlett": 0,
    "Mohammed Jamal": 2,
-   "Khaled ali": 2,
-   "Zuz": -2,
-   "Fahad Khaled": -2,
-   "Ahmed Mubarak Al Sabah": 0,
+   "Jogs Bonito": -1,
+   "Abdullah Mohammed": -1,
+   "Khaled ali": 0,
+   "Ahmed Mubarak Al Sabah": 2,
+   "Zuz": -1,
    "Hmoud Al Sabah": 1,
-   "Alibaba": 1,
-   "Saleh Boareki": -2,
-   "Souad": 0,
+   "Fahad Khaled": -2,
+   "Alibaba": 0,
+   "Souad": 1,
+   "Saleh Boareki": -1,
    "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
   "asOf": "2026-06-27",
-  "matchesCounted": 65,
+  "matchesCounted": 66,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6311,22 +6333,22 @@ const WC_DATA = {
     "points": 6
    },
    {
+    "team": "EGY",
+    "yellow": 6,
+    "red": 0,
+    "points": 6
+   },
+   {
     "team": "KSA",
     "yellow": 6,
     "red": 0,
     "points": 6
    },
    {
-    "team": "MEX",
-    "yellow": 2,
-    "red": 1,
-    "points": 5
-   },
-   {
-    "team": "CAN",
-    "yellow": 5,
+    "team": "IRN",
+    "yellow": 6,
     "red": 0,
-    "points": 5
+    "points": 6
    }
   ],
   "teamGoals": [
