@@ -364,7 +364,7 @@
 
   // ---------- tabs ----------
   const tabs = [
-    ['today', 'Today'], ['mine', 'My League'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Bracket'],
+    ['today', 'Today'], ['mine', 'My League'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Knockout'],
     ['teams', 'Teams'], ['mena', 'MENA'], ['join', 'Join'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About'], ['geeks', 'For Geeks']];
 

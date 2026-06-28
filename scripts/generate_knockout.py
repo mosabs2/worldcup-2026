@@ -177,6 +177,110 @@ def thirds_from_feed(data, idmap):
     return out
 
 
+# ---------- kickoff schedule from the feed (exact time + venue per match) ----------
+# ESPN venue fullName -> our venue id, for names the venues table does not carry
+# verbatim. Exact-name and substring matches in _venue_id_from_espn handle most; this
+# map covers sponsor renames the substring check cannot (no shared token).
+ESPN_VENUE_ALIASES = {
+    'Estadio Banorte': 'MEX',   # Estadio Azteca's 2025 ESPN-feed sponsor name
+}
+
+
+def _venue_id_from_espn(name, venues):
+    if not name:
+        return None
+    for v in venues:
+        if name == v.get('name') or name == v.get('fifaName'):
+            return v['id']
+    if name in ESPN_VENUE_ALIASES:
+        return ESPN_VENUE_ALIASES[name]
+    for v in venues:  # substring either way, e.g. "GEHA Field at Arrowhead Stadium" -> KC
+        if v.get('name') and (v['name'] in name or name in v['name']):
+            return v['id']
+    return None
+
+
+def _to_et(iso):
+    """Convert an ESPN UTC kickoff ('2026-06-30T01:00Z') to the tournament's ET wall
+    clock with a -04:00 offset ('2026-06-29T21:00:00-04:00'). Storing ET, not UTC, is
+    load-bearing: fetch_scores.py buckets its ESPN query by dateET[:10], which must be
+    the US-Eastern calendar date. EDT is UTC-4 across the whole June-July window."""
+    dt = datetime.datetime.fromisoformat(iso.strip().replace('Z', '+00:00'))
+    et = dt.astimezone(datetime.timezone(datetime.timedelta(hours=-4)))
+    return et.strftime('%Y-%m-%dT%H:%M:%S-04:00')
+
+
+def schedule_from_feed(data, idmap):
+    """Pull the official knockout schedule (exact kickoff + venue) from the ESPN feed.
+    Three lookups: by team-set (any fixture whose teams are decided), by R32-feeder
+    matchNo pair (an R16 game before its teams are known), and a per-round chronological
+    list (a provisional fill for still-TBD later rounds). Empty on a feed miss."""
+    valid = {t['code'] for t in data['teams']}
+    by_teams, by_r32pair, by_round = {}, {}, {}
+    try:
+        req = urllib.request.Request(FEED.format(d="20260628-20260720"),
+                                     headers={'User-Agent': 'worldcup-2026-knockout'})
+        evs = json.load(urllib.request.urlopen(req, timeout=30)).get('events', [])
+    except Exception as e:
+        print(f"  schedule feed unreachable ({e}); kickoff times left as built.")
+        return by_teams, by_r32pair, by_round
+    for e in evs:
+        try:
+            comp = e['competitions'][0]
+            slot = {'dateET': _to_et(e['date']),
+                    'venueId': _venue_id_from_espn((comp.get('venue') or {}).get('fullName'), data['venues'])}
+            names = ' '.join(c['team'].get('displayName', '') for c in comp['competitors'])
+            codes = [c for c in (idmap.get(str(c['team']['id'])) or c['team'].get('abbreviation')
+                                 for c in comp['competitors']) if c in valid]
+            if len(codes) == 2:
+                by_teams[frozenset(codes)] = slot
+            r32nums = [int(x) for x in re.findall(r'Round of 32 (\d+)', names)]
+            if len(r32nums) == 2:  # an R16 fixture: feeders are R32 within-round numbers
+                by_r32pair[frozenset(72 + n for n in r32nums)] = slot
+            sn = e.get('shortName', '')
+            rnd = ('r16' if 'RD32' in sn else 'qf' if 'RD16' in sn
+                   else 'sf' if ('QFW' in sn or 'QW' in sn)
+                   else 'third' if 'SF L' in sn else 'final' if 'SFW' in sn else None)
+            if rnd:
+                by_round.setdefault(rnd, []).append(slot)
+        except Exception:
+            continue
+    for r in by_round:
+        by_round[r].sort(key=lambda s: s['dateET'])
+    return by_teams, by_r32pair, by_round
+
+
+def apply_schedule(ko, sched):
+    """Stamp each knockout match with its exact kickoff time and venue from the feed.
+    Order of preference: (1) both teams known -> match by team-set, always exact; (2) an
+    R16 game -> match by its two R32 feeders' matchNos; (3) a still-TBD later round ->
+    the round's next chronological slot (provisional, self-corrects to exact via (1) once
+    teams resolve). A feed miss leaves the match as built."""
+    by_teams, by_r32pair, by_round = sched
+    by_id = {m['id']: m for m in ko}
+    used = {}
+    changed = 0
+    for m in sorted(ko, key=lambda x: x['matchNo']):
+        slot = None
+        if m.get('team1') and m.get('team2'):
+            slot = by_teams.get(frozenset([m['team1'], m['team2']]))
+        if not slot and m.get('round') == 'r16' and m.get('feeds'):
+            fa, fb = (by_id.get(i) for i in m['feeds'])
+            if fa and fb and fa.get('matchNo') and fb.get('matchNo'):
+                slot = by_r32pair.get(frozenset([fa['matchNo'], fb['matchNo']]))
+        if not slot and m.get('round') in ('qf', 'sf', 'third', 'final'):
+            lst = by_round.get(m['round']) or []
+            i = used.get(m['round'], 0)
+            if i < len(lst):
+                slot = lst[i]; used[m['round']] = i + 1
+        if slot:
+            if slot.get('dateET') and m.get('dateET') != slot['dateET']:
+                m['dateET'] = slot['dateET']; changed += 1
+            if slot.get('venueId') and m.get('venueId') != slot['venueId']:
+                m['venueId'] = slot['venueId']; changed += 1
+    return changed
+
+
 def validate_thirds(data, st, order, assign):
     """Every assigned third must be a genuine qualifying third and in the slot's allow-list."""
     qualifying = set(best_thirds(st, order))
@@ -324,6 +428,15 @@ def merge_into_data(data, ko):
             m['team1'] = old['team1']
         if not m.get('team2') and old.get('team2'):
             m['team2'] = old['team2']
+        # Carry forward a previously-resolved exact kickoff and venue. bracket_skeleton
+        # rebuilds these from the nominal template (flat 16:00 ET, approx R16+ venue)
+        # every cycle; apply_schedule then refreshes them from the feed. Preserving the
+        # old values here means a momentary schedule-feed outage cannot regress a good
+        # exact time back to the nominal 16:00 (same principle as the team carry-forward).
+        if old.get('dateET'):
+            m['dateET'] = old['dateET']
+        if old.get('venueId'):
+            m['venueId'] = old['venueId']
     groups = [m for m in data['matches'] if m.get('stage') == 'group']
     data['matches'] = groups + ko
     return data
@@ -468,6 +581,14 @@ def main():
     # (the old order) left every round past R32 permanently TBD.
     data = merge_into_data(data, ko)
     resolved = resolve(ko)
+
+    # Stamp exact kickoff times and venues from the feed. The shipped template carries
+    # only the R32 date and venue (no time) and nominal R16+ scheduling, so without this
+    # every knockout match would show the placeholder 16:00 ET. --from-feed only.
+    if '--from-feed' in args:
+        scheduled = apply_schedule(ko, schedule_from_feed(data, json.load(open(MAP))['teamIds']))
+        if scheduled:
+            print(f"Applied feed schedule (kickoff/venue) to {scheduled} field(s).")
 
     ko_n = len([m for m in data['matches'] if m['stage'] != 'group'])
     if ko_n != 32:
