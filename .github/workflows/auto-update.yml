@@ -72,8 +72,19 @@ jobs:
       # round's teams from completed results. No-ops while groups are in progress.
       # continue-on-error so a feed hiccup here never blocks the score commit
       # (fetch_scores has already patched the scores into data.js by this point).
+      #
+      # Runs EVERY cycle, NOT gated on a score change. It is idempotent (emits
+      # changed=false when the bracket is unchanged) and self-no-ops until the groups
+      # finish, so the cost is one feed read. The gate used to be
+      # `if: steps.fetch.outputs.changed == 'true'`, which meant the build was only
+      # attempted on the single cycle that landed the last group result. On 28 Jun 2026
+      # that cycle hit a half-published ESPN R32 feed (a placeholder "3RD" code), the
+      # build aborted, and because no later cycle had a new score the step was skipped
+      # for hours — the bracket stayed empty. Running every cycle gives it a retry path:
+      # the next tick rebuilds once the feed is clean. id:ko exposes its changed flag so
+      # the rebuild/commit below fire even on a no-new-score catch-up.
       - name: Build/resolve knockout bracket
-        if: steps.fetch.outputs.changed == 'true'
+        id: ko
         continue-on-error: true
         run: python3 scripts/generate_knockout.py --from-feed
 
@@ -89,15 +100,15 @@ jobs:
         run: python3 scripts/standings_movement.py
 
       - name: Recompute model and timeline snapshot
-        if: steps.fetch.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
         run: node update.js --date "$(date -u +%F)"
 
       - name: Rebuild site
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
         run: python3 build.py
 
       - name: Commit and publish
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

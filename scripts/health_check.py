@@ -55,6 +55,19 @@ ncomp = len(completed)
 meta_asof = (data.get("meta") or {}).get("asOf")
 pl = data.get("propsLive")
 
+# Group stage complete but no knockout bracket built: the 28 Jun 2026 failure, where
+# the bracket build aborted on a half-published feed and the swallowed (continue-on-
+# error) step left the Matches/Bracket tabs empty for hours behind a green check. This
+# is a hard fail so a recurrence turns the run red and fires the phone alert instead of
+# hiding. Self-clears the moment the bracket is built (32 knockout matches appear).
+group_matches = [m for m in data.get("matches", []) if m.get("stage") == "group"]
+groups_done = group_matches and all(m.get("status") == "completed" and m.get("score") for m in group_matches)
+ko_count = len([m for m in data.get("matches", []) if m.get("stage") and m.get("stage") != "group"])
+if groups_done and ko_count == 0:
+    fails.append("group stage is complete but the knockout bracket has not been built "
+                 "(0 knockout matches in the data) — the Matches and Bracket tabs are empty. "
+                 "Run scripts/generate_knockout.py --from-feed.")
+
 if pl is None:
     fails.append("propsLive block is missing entirely")
 else:

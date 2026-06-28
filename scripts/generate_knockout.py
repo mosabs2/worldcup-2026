@@ -143,13 +143,19 @@ def thirds_from_feed(data, idmap):
     except Exception as e:
         print(f"  feed unreachable ({e}); third slots left TBD.")
         return {}
+    # Only real team codes count. A half-published ESPN bracket lists not-yet-decided
+    # sides as placeholders ("3RD", "1A", "TBD"); accepting one poisons the assignment
+    # and (pre-fix) hard-failed the whole build. Filtering to the actual 48-team code
+    # set means a placeholder pairing is simply skipped until the feed fills it in.
+    valid = {t['code'] for t in data['teams']}
     pairs = []
     for e in evs:
         try:
             comp = e['competitions'][0]
             codes = [idmap.get(str(c['team']['id'])) or c['team'].get('abbreviation')
                      for c in comp['competitors']]
-            if len(codes) == 2 and all(codes):
+            codes = [c for c in codes if c in valid]
+            if len(codes) == 2:
                 pairs.append(set(codes))
         except Exception:
             continue
@@ -165,7 +171,8 @@ def thirds_from_feed(data, idmap):
         for p in pairs:
             if known in p:
                 opp = (p - {known}).pop()
-                out[slot['id']] = opp
+                if opp in valid and opp != known:
+                    out[slot['id']] = opp
                 break
     return out
 
@@ -409,6 +416,7 @@ def main():
         done = sum(1 for m in data['matches'] if m.get('stage') == 'group' and m.get('status') == 'completed')
         print(f"Group stage not complete ({done}/72). Nothing to do. Re-run when groups finish, "
               f"or pass --force to build a TBD skeleton.")
+        _emit_changed(False)
         return 0
 
     st, order = (standings(data) if groups_complete(data) else ({}, {}))
@@ -425,12 +433,33 @@ def main():
 
     if order and assign:
         probs = validate_thirds(data, st, order, assign)
-        if probs:
+        if probs and '--thirds' in args:
+            # An explicit human-supplied assignment that fails validation is a real
+            # mistake worth failing loudly on.
             sys.exit("Third assignment rejected:\n  " + "\n  ".join(probs))
+        if probs:
+            # Feed-derived assignment: NEVER abort. A half-published ESPN bracket
+            # (placeholder codes, a duplicate) must not strand the whole build, the
+            # 28 June 2026 failure. Drop the offending slots to TBD and build the rest;
+            # a later cycle fills them once the feed is clean. (The valid-code filter
+            # in thirds_from_feed normally prevents ever reaching here.)
+            bad = {p.split(':', 1)[0].strip() for p in probs if p.startswith('R32-')}
+            for sid in bad:
+                assign.pop(sid, None)
+            if any(not p.startswith('R32-') for p in probs) or validate_thirds(data, st, order, assign):
+                assign = {}  # non-slot-specific problem (e.g. duplicate): drop them all
+            print(f"WARNING: feed third assignment partially invalid; left "
+                  f"{8 - len(assign)} 'winner vs 3rd' slot(s) TBD and continued (not aborting).")
     elif order and not assign:
         print("WARNING: no third-place source (--thirds or --from-feed). The eight "
               "'winner vs 3rd' R32 slots will be left TBD. Group-determined slots and "
               "the full R16..Final routing are still built.")
+
+    # Snapshot the existing knockout matches so we can tell whether this run actually
+    # changes the bracket — the CI signal the workflow gates its rebuild/commit on,
+    # and the guard that keeps idempotent cycles from making empty commits.
+    before = json.dumps([m for m in data['matches'] if m.get('stage') != 'group'],
+                        sort_keys=True, ensure_ascii=False)
 
     ko = bracket_skeleton(data, order, assign)
     # Merge BEFORE resolving: bracket_skeleton builds fresh, score-less match
@@ -443,11 +472,26 @@ def main():
     ko_n = len([m for m in data['matches'] if m['stage'] != 'group'])
     if ko_n != 32:
         sys.exit(f"FATAL: expected 32 knockout matches, built {ko_n}.")
-    save_data(data)
+    after = json.dumps([m for m in data['matches'] if m.get('stage') != 'group'],
+                       sort_keys=True, ensure_ascii=False)
+    changed = before != after
+    if changed:
+        save_data(data)
+    _emit_changed(changed)
     tbd = len([m for m in ko if m['stage'] == 'r32' and (not m['team1'] or not m['team2'])])
-    print(f"Wrote {ko_n} knockout matches (resolved {resolved} team slots from completed feeders). "
-          f"{tbd} R32 slots still TBD." + (" Run build.py to publish." if ko_n == 32 else ""))
+    print(f"{'Wrote' if changed else 'No change to'} {ko_n} knockout matches "
+          f"(resolved {resolved} team slots from completed feeders). {tbd} R32 slots still TBD."
+          + (" Run build.py to publish." if changed else ""))
     return 0
+
+
+def _emit_changed(changed):
+    """Write a changed=true|false line to $GITHUB_OUTPUT so the workflow can gate its
+    rebuild/commit on this step even on a cycle with no new score (the catch-up path)."""
+    gh = os.environ.get('GITHUB_OUTPUT')
+    if gh:
+        with open(gh, 'a') as f:
+            f.write(f"changed={'true' if changed else 'false'}\n")
 
 
 if __name__ == '__main__':
