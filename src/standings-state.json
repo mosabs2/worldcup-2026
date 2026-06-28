@@ -1,8 +1,8 @@
 {
  "baseline": {
   "Dark horse": 1,
-  "Nasser Talal": 2,
-  "Bader Al Gatheebi": 3,
+  "Bader Al Gatheebi": 2,
+  "Nasser Talal": 3,
   "Faisal Abu Hadida": 4,
   "Saleh Al Hashash": 5,
   "Faisal Jaber Al Sabah": 6,
@@ -29,11 +29,11 @@
   "Syb": 27,
   "Mohammed Behbehani": 28,
   "Moblee": 29,
-  "Nasser Fahad": 30,
-  "Khaled Fahad": 31,
-  "Thamer Fares Alnoon": 32,
-  "Arsenal #1": 33,
-  "Hani Ibraheam sulaiman abdullah al mawash": 34,
+  "Khaled Fahad": 30,
+  "Nasser Fahad": 31,
+  "Hani Ibraheam sulaiman abdullah al mawash": 32,
+  "Thamer Fares Alnoon": 33,
+  "Arsenal #1": 34,
   "Mama Aad": 35,
   "Faisal Boodai": 36,
   "Naser AlQadiri": 37,
@@ -55,5 +55,5 @@
   "Abdullah Mubarak": 53,
   "AMAS": 54
  },
- "startedCount": 70
+ "startedCount": 72
 }

@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-06-28",
-  "asOfNote": "Results through 70 matches, auto-synced from the ESPN public feed 2026-06-28 01:35 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 72 matches, auto-synced from the ESPN public feed 2026-06-28 04:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3877,13 +3877,59 @@ const WC_DATA = {
    "team1": "ALG",
    "team2": "AUT",
    "venueId": "KC",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 3,
+    "team2": 3
+   },
    "market": {
     "h": 0.3231,
     "x": 0.3022,
     "a": 0.3747,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "AUT",
+     "p": "Marko Arnautovic",
+     "m": "28'",
+     "a": "David Alaba"
+    },
+    {
+     "t": "ALG",
+     "p": "Rafik Belghali",
+     "m": "45'"
+    },
+    {
+     "t": "AUT",
+     "p": "Marcel Sabitzer",
+     "m": "55'",
+     "a": "Konrad Laimer"
+    },
+    {
+     "t": "ALG",
+     "p": "Riyad Mahrez",
+     "m": "60'",
+     "a": "Houssem Aouar"
+    },
+    {
+     "t": "ALG",
+     "p": "Riyad Mahrez",
+     "m": "90'+3'",
+     "a": "Houssem Aouar"
+    },
+    {
+     "t": "AUT",
+     "p": "Sasa Kalajdzic",
+     "m": "90'+6'",
+     "a": "Michael Gregoritsch"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.62,
+    "team2": 1.44,
+    "src": "espn"
    }
   },
   {
@@ -3894,13 +3940,46 @@ const WC_DATA = {
    "team1": "JOR",
    "team2": "ARG",
    "venueId": "DAL",
-   "status": "scheduled",
-   "score": null,
+   "status": "completed",
+   "score": {
+    "team1": 1,
+    "team2": 3
+   },
    "market": {
     "h": 0.0852,
     "x": 0.1339,
     "a": 0.7809,
     "book": "Bet365"
+   },
+   "goals": [
+    {
+     "t": "ARG",
+     "p": "Giovani Lo Celso",
+     "m": "19'"
+    },
+    {
+     "t": "ARG",
+     "p": "Lautaro Martínez",
+     "m": "31'",
+     "pen": true
+    },
+    {
+     "t": "JOR",
+     "p": "Mousa Al-Tamari",
+     "m": "55'",
+     "a": "Ehsan Haddad"
+    },
+    {
+     "t": "ARG",
+     "p": "Lionel Messi",
+     "m": "80'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.74,
+    "team2": 2.13,
+    "src": "espn"
    }
   }
  ],
@@ -6155,39 +6234,39 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Nasser Talal": 0,
-   "Bader Al Gatheebi": 0,
+   "Bader Al Gatheebi": 1,
+   "Nasser Talal": -1,
    "Faisal Abu Hadida": 0,
    "Saleh Al Hashash": 0,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
    "Wahab Bader": 0,
    "HMB": 0,
-   "AD": 1,
-   "JMAMS": -1,
+   "AD": 0,
+   "JMAMS": 0,
    "Ali Ahmed Hmoud Mohammed": 0,
    "Chris Ovenden": 0,
    "Abdullah Khaled": 0,
    "Shamlan Abdulaziz": 0,
    "Rashed": 0,
-   "Feras Al Qenaei": 2,
-   "Khaled Al Qahtani": 2,
-   "Gelenn Caley Cale": -2,
-   "Khalifa zayed": -2,
+   "Feras Al Qenaei": 0,
+   "Khaled Al Qahtani": 0,
+   "Gelenn Caley Cale": 0,
+   "Khalifa zayed": 0,
    "Sabah Mohammed": 0,
    "Abdulaziz Alsabah": 0,
    "Khalifa ali": 0,
    "Salem Athbi": 0,
    "Ahmed Boareki": 0,
    "Jarah Aladwani": 0,
-   "Syb": 1,
-   "Mohammed Behbehani": -1,
+   "Syb": 0,
+   "Mohammed Behbehani": 0,
    "Moblee": 0,
-   "Nasser Fahad": 2,
-   "Khaled Fahad": 0,
-   "Thamer Fares Alnoon": -2,
-   "Arsenal #1": 1,
-   "Hani Ibraheam sulaiman abdullah al mawash": -1,
+   "Khaled Fahad": 1,
+   "Nasser Fahad": -1,
+   "Hani Ibraheam sulaiman abdullah al mawash": 2,
+   "Thamer Fares Alnoon": -1,
+   "Arsenal #1": -1,
    "Mama Aad": 0,
    "Faisal Boodai": 0,
    "Naser AlQadiri": 0,
@@ -6212,12 +6291,12 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-06-28",
-  "matchesCounted": 70,
+  "matchesCounted": 72,
   "topScorers": [
    {
     "player": "Lionel Messi",
     "team": "ARG",
-    "goals": 5,
+    "goals": 6,
     "pens": 0
    },
    {
@@ -6501,6 +6580,10 @@ const WC_DATA = {
     "goals": 8
    },
    {
+    "team": "ARG",
+    "goals": 8
+   },
+   {
     "team": "SUI",
     "goals": 7
    },
@@ -6515,10 +6598,6 @@ const WC_DATA = {
    {
     "team": "SWE",
     "goals": 7
-   },
-   {
-    "team": "MEX",
-    "goals": 6
    }
   ],
   "note": "Golden Boot, assists and team goals from ESPN goal events; cards from ESPN match statistics. MENA and host props resolve on the bracket."
