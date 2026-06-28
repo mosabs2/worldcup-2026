@@ -1367,6 +1367,7 @@
       })));
   }
 
+  const KO_ROUND = { r32: 'Round of 32', r16: 'Round of 16', qf: 'Quarter-final', sf: 'Semi-final', third: 'Third place', final: 'Final' };
   function renderVenues(root) {
     const P = WC_MAP.proj;
     const px = lon => (lon - P.lon0) * P.k * P.scale;
@@ -1420,12 +1421,18 @@
       el('div', { class: 'grid g3', style: 'margin-top:14px' }, D.venues.map(v => {
         const fixtures = D.matches.filter(m => m.venueId === v.id);
         const next = fixtures.filter(m => !effScore(m)).sort((a, b) => a.dateET.localeCompare(b.dateET))[0];
+        // A venue's next fixture can be a knockout match whose teams are still TBD
+        // (R16+). Fall back to the round name so the lookup never reads T[null].code,
+        // which would throw and blank the whole tab.
+        const nextSides = m => (T[m.team1] && T[m.team2])
+          ? T[m.team1].code + ' v ' + T[m.team2].code
+          : (KO_ROUND[m.round] || 'Knockout');
         return el('div', { class: 'card click', onclick: () => venueModal(v) },
           el('h3', null, v.city, el('span', { class: 'right' }, v.country)),
           el('div', null, el('b', null, v.name)),
           el('div', { class: 'muted' }, v.capacity.toLocaleString() + ' capacity' + (v.elev > 500 ? ' · ' + v.elev + ' m altitude' : '')),
           el('div', { class: 'tiny', style: 'margin-top:4px' }, fixtures.length + ' matches' +
-            (next ? ' · next: ' + T[next.team1].code + ' v ' + T[next.team2].code + ', ' + fmtD(next.dateET, localTZ) : '')));
+            (next ? ' · next: ' + nextSides(next) + ', ' + fmtD(next.dateET, localTZ) : '')));
       })));
   }
 
