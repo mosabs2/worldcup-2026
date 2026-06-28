@@ -1,16 +1,16 @@
 {
  "baseline": {
   "Dark horse": 1,
-  "Bader Al Gatheebi": 2,
-  "Nasser Talal": 3,
+  "Nasser Talal": 2,
+  "Bader Al Gatheebi": 3,
   "Faisal Abu Hadida": 4,
   "Saleh Al Hashash": 5,
   "Faisal Jaber Al Sabah": 6,
   "Bader Mohamad Alnomas": 7,
   "Wahab Bader": 8,
   "HMB": 9,
-  "AD": 10,
-  "JMAMS": 11,
+  "JMAMS": 10,
+  "AD": 11,
   "Ali Ahmed Hmoud Mohammed": 12,
   "Chris Ovenden": 13,
   "Abdullah Khaled": 14,
@@ -26,13 +26,13 @@
   "Salem Athbi": 24,
   "Ahmed Boareki": 25,
   "Jarah Aladwani": 26,
-  "Syb": 27,
-  "Mohammed Behbehani": 28,
+  "Mohammed Behbehani": 27,
+  "Syb": 28,
   "Moblee": 29,
   "Khaled Fahad": 30,
   "Nasser Fahad": 31,
-  "Hani Ibraheam sulaiman abdullah al mawash": 32,
-  "Thamer Fares Alnoon": 33,
+  "Thamer Fares Alnoon": 32,
+  "Hani Ibraheam sulaiman abdullah al mawash": 33,
   "Arsenal #1": 34,
   "Mama Aad": 35,
   "Faisal Boodai": 36,
@@ -55,5 +55,5 @@
   "Abdullah Mubarak": 53,
   "AMAS": 54
  },
- "startedCount": 72
+ "startedCount": 73
 }
