@@ -45,6 +45,19 @@ QF_DATES = ['2026-07-09', '2026-07-10', '2026-07-10', '2026-07-11']
 SF_VENUES = ['DAL', 'ATL']
 SF_DATES = ['2026-07-14', '2026-07-15']
 
+# Official FIFA Round-of-16 match numbers, keyed by the two R32 match numbers whose
+# winners meet (from the published 2026 bracket). The sequential pairing of the bracket
+# template already reproduces the correct R16 *pairings* and the correct QF/SF/Final
+# numbers, but it numbers the R16 games in bracket order; FIFA numbers them in a
+# different order (e.g. winners of 73 & 75 are Match 89, not 90). This restamps the R16
+# matchNos to FIFA's so the bracket reads with the official numbers end to end.
+FIFA_R16_BY_FEEDERS = {
+    frozenset({73, 75}): 89, frozenset({74, 77}): 90,
+    frozenset({76, 78}): 91, frozenset({79, 80}): 92,
+    frozenset({83, 84}): 93, frozenset({81, 82}): 94,
+    frozenset({86, 88}): 95, frozenset({85, 87}): 96,
+}
+
 
 # ---------- data.js I/O (identical conventions to fetch_scores.py) ----------
 def load_data():
@@ -350,6 +363,15 @@ def bracket_skeleton(data, order, thirds_assign):
                'dateET': _date_et('2026-07-19'), 'venueId': 'NYNJ',
                'team1': None, 'team2': None, 'status': 'pending',
                'feeds': sf_ids, 'scheduleApprox': True})
+
+    # Restamp R16 match numbers to the official FIFA numbering (the layer numbered them
+    # sequentially in bracket order). QF/SF/Final already coincide with FIFA's numbers.
+    r32_no = {m['id']: m['matchNo'] for m in ko if m['stage'] == 'r32'}
+    for m in ko:
+        if m['stage'] == 'r16' and m.get('feeds'):
+            pair = frozenset(r32_no.get(f) for f in m['feeds'])
+            if pair in FIFA_R16_BY_FEEDERS:
+                m['matchNo'] = FIFA_R16_BY_FEEDERS[pair]
     return ko
 
 

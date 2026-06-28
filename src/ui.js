@@ -634,8 +634,17 @@
       const tilt = Math.max(0.35, Math.min(0.65, 0.5 + (ra - rb) / 4000));
       return p.p1 + p.draw * tilt;
     };
-    const teamLine = (code, win, right) => el('div', { class: 't ' + (win ? 'w' : '') },
-      (T[code] ? T[code].flag + ' ' + T[code].name : (code || 'TBD')),
+    // Map id -> match so an undecided slot can name the match its team comes from.
+    const byId = Object.fromEntries(koMatches.map(x => [x.id, x]));
+    // FIFA-style feeder label for a slot whose team is not yet decided: the winner
+    // (or loser, for the third-place game) of the feeding match's number, e.g. "W73".
+    const feederRef = (m, i) => {
+      const f = m.feeds && byId[m.feeds[i]];
+      return f ? (m.losers ? 'L' : 'W') + f.matchNo : 'TBD';
+    };
+    const matchLbl = m => 'Match ' + m.matchNo + (m.label ? ' · ' + m.label : '');
+    const teamLine = (code, win, right, fallback) => el('div', { class: 't ' + (win ? 'w' : '') },
+      (T[code] ? T[code].flag + ' ' + T[code].name : (code || fallback || 'TBD')),
       right != null ? el('span', { class: 'pct' }, right) : null);
     const card = m => {
       const sc = effScore(m);
@@ -643,15 +652,15 @@
         const w = koWinner(m);
         const pens = sc.team1 === sc.team2 && w;  // level after ET -> decided on penalties
         return el('div', { class: 'bk' },
-          (m.label || pens) ? el('div', { class: 'lbl' }, (m.label || '') + (pens ? (m.label ? ' · ' : '') + 'pens' : '')) : null,
+          el('div', { class: 'lbl' }, matchLbl(m) + (pens ? ' · pens' : '')),
           teamLine(m.team1, w != null && w === m.team1, '' + sc.team1),
           teamLine(m.team2, w != null && w === m.team2, '' + sc.team2));
       }
       const pa = projFav(m.team1, m.team2, m.venueId);   // null if TBD
       return el('div', { class: 'bk' },
-        m.label ? el('div', { class: 'lbl' }, m.label) : null,
-        teamLine(m.team1, pa != null && pa >= 0.5, pa != null ? pct(pa, 0) : null),
-        teamLine(m.team2, pa != null && pa < 0.5, pa != null ? pct(1 - pa, 0) : null));
+        el('div', { class: 'lbl' }, matchLbl(m)),
+        teamLine(m.team1, pa != null && pa >= 0.5, pa != null ? pct(pa, 0) : null, feederRef(m, 0)),
+        teamLine(m.team2, pa != null && pa < 0.5, pa != null ? pct(1 - pa, 0) : null, feederRef(m, 1)));
     };
     const cols = ROUNDS.filter(([r]) => byRound[r]).map(([r, name]) =>
       el('div', { class: 'round' }, el('h4', null, name), byRound[r].map(card)));
@@ -662,8 +671,9 @@
         el('div', { class: 't w', style: 'font-size:15px' }, T[champ].flag + ' ' + T[champ].name))));
     root.append(
       el('p', { class: 'muted', style: 'margin-bottom:12px' },
-        'The official knockout bracket. Played matches show the actual result (winner in bold); '
-        + 'unplayed matches show the model favourite and its chance; a slot awaiting its feeders shows TBD.'),
+        'The official knockout bracket with FIFA match numbers. Played matches show the actual '
+        + 'result (winner in bold); unplayed matches show the model favourite and its chance; a slot '
+        + 'awaiting its feeders shows the match it comes from (W73 = winner of Match 73, L101 = loser of Match 101).'),
       el('div', { class: 'bracket' }, cols));
   }
 
