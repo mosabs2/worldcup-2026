@@ -646,6 +646,17 @@
     const teamLine = (code, win, right, fallback) => el('div', { class: 't ' + (win ? 'w' : '') },
       (T[code] ? T[code].flag + ' ' + T[code].name : (code || fallback || 'TBD')),
       right != null ? el('span', { class: 'pct' }, right) : null);
+    // Kickoff + venue line: visitor-local date and time, with the metro name (the part
+    // after any "/", e.g. "Inglewood / Los Angeles" -> "Los Angeles"). Times are exact
+    // for every round; venues are exact too once the official schedule is in the data.
+    const VN = Object.fromEntries(D.venues.map(v => [v.id, v]));
+    const schedLine = m => {
+      if (!m.dateET) return null;
+      const v = VN[m.venueId];
+      const city = v ? v.city.split('/').pop().trim() : '';
+      const when = fmtD(m.dateET, localTZ) + ' · ' + fmtT(m.dateET, localTZ);
+      return el('div', { class: 'lbl', style: 'margin:5px 0 0' }, when + (city ? ' · ' + city : ''));
+    };
     const card = m => {
       const sc = effScore(m);
       if (sc) {                                  // played: actual score, winner bold
@@ -654,13 +665,15 @@
         return el('div', { class: 'bk' },
           el('div', { class: 'lbl' }, matchLbl(m) + (pens ? ' · pens' : '')),
           teamLine(m.team1, w != null && w === m.team1, '' + sc.team1),
-          teamLine(m.team2, w != null && w === m.team2, '' + sc.team2));
+          teamLine(m.team2, w != null && w === m.team2, '' + sc.team2),
+          schedLine(m));
       }
       const pa = projFav(m.team1, m.team2, m.venueId);   // null if TBD
       return el('div', { class: 'bk' },
         el('div', { class: 'lbl' }, matchLbl(m)),
         teamLine(m.team1, pa != null && pa >= 0.5, pa != null ? pct(pa, 0) : null, feederRef(m, 0)),
-        teamLine(m.team2, pa != null && pa < 0.5, pa != null ? pct(1 - pa, 0) : null, feederRef(m, 1)));
+        teamLine(m.team2, pa != null && pa < 0.5, pa != null ? pct(1 - pa, 0) : null, feederRef(m, 1)),
+        schedLine(m));
     };
     const cols = ROUNDS.filter(([r]) => byRound[r]).map(([r, name]) =>
       el('div', { class: 'round' }, el('h4', null, name), byRound[r].map(card)));
