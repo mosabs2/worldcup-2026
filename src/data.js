@@ -3,8 +3,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-06-29",
-  "asOfNote": "Results through 74 matches, auto-synced from the ESPN public feed 2026-06-29 19:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-06-30",
+  "asOfNote": "Results through 76 matches, auto-synced from the ESPN public feed 2026-06-30 06:39 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -3992,9 +3992,14 @@ const WC_DATA = {
    "venueId": "BOS",
    "team1": "GER",
    "team2": "PAR",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "E1 vs 3rd A/B/C/D/F"
+   "label": "E1 vs 3rd A/B/C/D/F",
+   "score": {
+    "team1": 1,
+    "team2": 1,
+    "winner": "PAR"
+   }
   },
   {
    "id": "R32-6",
@@ -4035,9 +4040,14 @@ const WC_DATA = {
    "venueId": "MTY",
    "team1": "NED",
    "team2": "MAR",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "F1 vs C2"
+   "label": "F1 vs C2",
+   "score": {
+    "team1": 1,
+    "team2": 1,
+    "winner": "MAR"
+   }
   },
   {
    "id": "R32-12",

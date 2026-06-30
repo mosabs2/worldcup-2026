@@ -56,12 +56,17 @@ try:
 except Exception as e:
     out(False, f"Feed unreachable ({e}); leaving data untouched.")
 
+# Accepted full-match end states: regulation, after extra time, and penalty shootout.
+# Knockout ties decided in ET or on penalties come back as STATUS_FINAL_AET /
+# STATUS_FINAL_PEN, not STATUS_FULL_TIME, so they must be allowed through too or
+# every shootout result is silently skipped.
+FINAL_STATUSES = {'STATUS_FULL_TIME', 'STATUS_FINAL_AET', 'STATUS_FINAL_PEN'}
 bypair = {frozenset([m['team1'], m['team2']]): m for m in pending}
 applied = []
 for e in evs:
     try:
         st = e['status']['type']
-        if st['name'] != 'STATUS_FULL_TIME' or not st.get('completed'):
+        if st['name'] not in FINAL_STATUSES or not st.get('completed'):
             continue
         comp = e['competitions'][0]
         scores, shootout_winner = {}, None
