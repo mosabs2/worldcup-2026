@@ -559,7 +559,13 @@ def main():
     # third assignment, from an authoritative source only
     assign = {}
     if '--thirds' in args:
-        assign = json.loads(args[args.index('--thirds') + 1])
+        ti = args.index('--thirds')
+        if ti + 1 >= len(args):
+            sys.exit("usage: --thirds '<json>'  (e.g. --thirds '{\"R32-3\":\"CRO\"}')")
+        try:
+            assign = json.loads(args[ti + 1])
+        except json.JSONDecodeError as e:
+            sys.exit(f"--thirds: invalid JSON ({e})")
         print(f"Third assignment supplied via --thirds ({len(assign)} slots).")
     elif '--from-feed' in args:
         idmap = json.load(open(MAP))['teamIds']

@@ -12,7 +12,7 @@ Channel is public (@MoSabsWC26). Stdlib only. Deployed copy: ~/.claude/jobs/wc-n
 Cron (mini, London local): * 17-23,0-7 * * *  = every minute across 16:00-06:59 UTC.
 Self-terminates after the 19 July final.
 """
-import json, os, sys, time, urllib.request, urllib.parse, urllib.error, datetime as dt
+import json, os, re, sys, time, urllib.request, urllib.parse, urllib.error, datetime as dt
 
 CHAT = "@MoSabsWC26"
 TOKEN_FILE = os.path.expanduser("~/.claude/telegram-bot-token")
@@ -95,7 +95,13 @@ for eid, e in events.items():
 
         if statename == "in":
             if not prev.get("kickoff"):
-                post("🟢 Kick-off — %s v %s" % (an, bn))
+                # First sighting of this match in-play. Only announce kick-off if we're
+                # genuinely at the start (clock ≤ 2', or no detail yet). A cron gap or a
+                # restart can make us first see an ALREADY-running match — set the baseline
+                # silently then, so we don't post a phantom "kick-off" 60' into the game.
+                mm = re.match(r"\s*(\d+)", clock)
+                if (mm and int(mm.group(1)) <= 2) or clock.strip() == "":
+                    post("🟢 Kick-off — %s v %s" % (an, bn))
                 prev["kickoff"] = True
                 prev["total"] = asc + bsc           # baseline; no phantom goals
             else:

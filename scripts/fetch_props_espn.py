@@ -147,9 +147,17 @@ for d, ms in by_date.items():
             if st is None:                         # fetch failed; retry whole match next run
                 ok = False
                 break
-            y = find_stat(st, "yellowCards") or 0
-            rd = find_stat(st, "redCards") or 0
-            rec[code] = {"y": int(y), "r": int(rd)}
+            yv = find_stat(st, "yellowCards")
+            rv = find_stat(st, "redCards")
+            # Distinguish "stat absent" from "genuinely zero": the per-competitor stats
+            # resource can return 200 before cards populate (or with an empty statistics
+            # array). If NEITHER card stat is present, treat it as a soft failure and retry
+            # next run rather than caching 0/0 forever (which would permanently under-count
+            # the Dirty Trophy board). A real 0-card team still reports the stat as 0.
+            if yv is None and rv is None:
+                ok = False
+                break
+            rec[code] = {"y": int(yv or 0), "r": int(rv or 0)}
         if ok and len(rec) == 2:
             cache[mkey(m)] = rec
             newly += 1

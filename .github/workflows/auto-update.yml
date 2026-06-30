@@ -144,7 +144,12 @@ jobs:
       # is not exposed in this public repo. Never fails the job itself (|| true).
       - name: Alert phone on failure
         if: failure()
+        env:
+          # Pass the secret through env, not templated into the run script: ${{ secrets }}
+          # is interpolated into the shell text BEFORE parsing (the script-injection
+          # anti-pattern). Referencing $NTFY_TOPIC keeps it out of the rendered command.
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
           curl -s -H "Title: ⚠ World Cup site — update failed" -H "Priority: high" -H "Tags: warning" \
             -d "A scheduled update failed (the watchdog caught stale/inconsistent data, or a step errored). Check: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}" || true
+            "https://ntfy.sh/${NTFY_TOPIC}" || true

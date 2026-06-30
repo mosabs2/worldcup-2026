@@ -66,7 +66,11 @@
       const exp = 1 / (1 + Math.pow(10, -((ra + ha) - (rb + hb)) / LOGISTIC_DIV));
       const g1 = m.score.team1, g2 = m.score.team2;
       const w = g1 > g2 ? 1 : g1 < g2 ? 0 : 0.5;
-      const ch = ELO_K * marginMult(effectiveGD(g1, g2, m.xg)) * (w - exp);
+      // A level scoreline is GD 0 (multiplier 1) regardless of xG: World Football Elo
+      // tempers a winner's margin, it does not amplify a draw because one side created
+      // more. Only blend xG into the margin when there is an actual winner.
+      const eff = g1 === g2 ? 0 : effectiveGD(g1, g2, m.xg);
+      const ch = ELO_K * marginMult(eff) * (w - exp);
       r[m.team1] += ch; r[m.team2] -= ch;
       delta[m.team1] += ch; delta[m.team2] -= ch;
     }
@@ -143,6 +147,14 @@
     const koRoundVenue = {};
     (data.koSchedule || []).forEach(k => { if (k.round && !koRoundVenue[k.round]) koRoundVenue[k.round] = k.venueId; });
     const playedRoundVenue = [null, koRoundVenue['Round of 16'], koRoundVenue['Quarter-finals'], koRoundVenue['Semi-finals'], koRoundVenue['Final']];
+    // R16 is per-slot too: R16-6 is in Mexico and R16-8 in Canada, so a host advancing
+    // there must keep its home edge — the single representative R16 venue (a US ground)
+    // would wrongly zero it out. Index the generated R16 fixtures by slot; sequential
+    // pairing sends R16 pair j to R16-(j+1). Empty before the bracket exists -> fall back
+    // to the representative R16 venue, so pre-knockout behaviour is unchanged.
+    const r16ById = {};
+    for (const m of data.matches) if (m.stage === 'r16' && m.id) r16ById[m.id] = m;
+    const r16SlotVenue = Array.from({ length: 8 }, (_, j) => (r16ById['R16-' + (j + 1)] || {}).venueId);
     // Third-place R32 slots and their allowed-group lists, for a legal assignment.
     const thirdSlots = [];
     data.r32Template.forEach((slot, i) => {
@@ -169,6 +181,16 @@
     // consistent (the per-run rng tiebreak on the thirds ranking is just noise once the
     // groups are complete) — and so official and fallback assignment can never mix.
     const officialThirds = haveOfficialThirds ? thirdSlots.map(s => officialThirdAt[s.i]) : null;
+    // Once the bracket exists, pin the ENTIRE R32 (winner, runner-up AND third) to the
+    // generated official fixtures, not just the thirds. The per-run group sort can order
+    // teams level on Pts/GD/GF differently from the FIFA head-to-head tiebreak the real
+    // draw used, which would seat the wrong team in a slot and miss the completed-R32 pins.
+    const officialR32 = {};
+    data.r32Template.forEach((slot, i) => {
+      const gm = r32ById[slot.id];
+      if (gm && gm.team1 && gm.team2) officialR32[i] = [gm.team1, gm.team2];
+    });
+    const haveOfficialR32 = data.r32Template.length > 0 && data.r32Template.every((s, i) => officialR32[i]);
 
     // Pre-split matches: fixed (completed or overridden) vs to-sample
     const fixed = [], open = [];
@@ -194,27 +216,61 @@
       // group stage
       const st = {};
       codes.forEach(c => { st[c] = { pts: 0, gd: 0, gf: 0 }; });
+      const runResults = [];   // this run's group results, for the head-to-head tiebreak
+      // One random key per team per run: a TRANSITIVE final tiebreak (FIFA's drawing of
+      // lots). The old `rng() - 0.5` evaluated inside the comparator is non-transitive and
+      // corrupts the sort; a fixed per-run key compares consistently.
+      const tb = {}; codes.forEach(c => { tb[c] = rng(); });
       const apply = (t1, t2, g1, g2) => {
         st[t1].gf += g1; st[t1].gd += g1 - g2;
         st[t2].gf += g2; st[t2].gd += g2 - g1;
         if (g1 > g2) st[t1].pts += 3; else if (g2 > g1) st[t2].pts += 3;
         else { st[t1].pts++; st[t2].pts++; }
+        runResults.push({ a: t1, b: t2, ga: g1, gb: g2 });
       };
       for (const f of fixed) apply(f.m.team1, f.m.team2, f.g1, f.g2);
       for (const p of openPre) apply(p.m.team1, p.m.team2, sampleGoals(p.xg1, rng), sampleGoals(p.xg2, rng));
 
+      // FIFA group order: Pts -> GD -> GF -> head-to-head mini-table among the still-tied
+      // teams (this run's results) -> drawing of lots (the per-run random key tb). Mirrors
+      // the h2hReorder used by currentTables and generate_knockout, so a simulated group
+      // decided on head-to-head seats the same team the real draw would.
+      const orderGroup = membs => {
+        const keyOf = c => st[c].pts + '|' + st[c].gd + '|' + st[c].gf;
+        const base = membs.slice().sort((a, b) =>
+          st[b].pts - st[a].pts || st[b].gd - st[a].gd || st[b].gf - st[a].gf || tb[a] - tb[b]);
+        const out = [];
+        for (let i = 0; i < base.length;) {
+          let j = i; while (j + 1 < base.length && keyOf(base[j + 1]) === keyOf(base[i])) j++;
+          const tied = base.slice(i, j + 1);
+          if (tied.length > 1) {
+            const set = new Set(tied), h = {}; tied.forEach(c => { h[c] = { p: 0, gd: 0, gf: 0 }; });
+            for (const r of runResults) {
+              if (!set.has(r.a) || !set.has(r.b)) continue;
+              h[r.a].gf += r.ga; h[r.a].gd += r.ga - r.gb;
+              h[r.b].gf += r.gb; h[r.b].gd += r.gb - r.ga;
+              if (r.ga > r.gb) h[r.a].p += 3; else if (r.gb > r.ga) h[r.b].p += 3; else { h[r.a].p++; h[r.b].p++; }
+            }
+            tied.sort((x, y) => h[y].p - h[x].p || h[y].gd - h[x].gd || h[y].gf - h[x].gf || tb[x] - tb[y]);
+          }
+          for (const c of tied) out.push(c);
+          i = j + 1;
+        }
+        return out;
+      };
+
       const rank = {};   // group -> ordered codes
       const thirds = [];
       for (const g of groupNames) {
-        const order = groups[g].slice().sort((a, b) =>
-          st[b].pts - st[a].pts || st[b].gd - st[a].gd || st[b].gf - st[a].gf || rng() - 0.5);
+        const order = orderGroup(groups[g]);
         rank[g] = order;
         tally[order[0]].win++; tally[order[0]].top2++; tally[order[1]].top2++;
         thirds.push(order[2]);
         groups[g].forEach(c => { tally[c].pts += st[c].pts; });
       }
+      // Thirds are cross-group (no head-to-head exists), so Pts -> GD -> GF -> lots.
       thirds.sort((a, b) =>
-        st[b].pts - st[a].pts || st[b].gd - st[a].gd || st[b].gf - st[a].gf || rng() - 0.5);
+        st[b].pts - st[a].pts || st[b].gd - st[a].gd || st[b].gf - st[a].gf || tb[a] - tb[b]);
       const qualThirds = officialThirds ? officialThirds.slice() : thirds.slice(0, 8);
       qualThirds.forEach(c => tally[c].third++);
 
@@ -227,6 +283,9 @@
       if (assigned) thirdSlots.forEach((s, k) => { thirdAt[s.i] = assigned[k]; });
       const pool = qualThirds.slice();
       const r32 = data.r32Template.map((slot, i) => {
+        // Bracket generated: seat the real teams from the official R32 draw (winner,
+        // runner-up and third alike), so a tiebreak-sensitive group can't scramble the slot.
+        if (haveOfficialR32) return officialR32[i];
         const resolve = sd => {
           if (sd.type === 'group') return rank[sd.group][sd.place - 1];
           // use the official assignment when the bracket exists; qualThirds is pinned to
@@ -245,7 +304,9 @@
       let si = 0;
       while (pairs.length >= 1) {
         const winners = pairs.map((p, j) => {
-          const venueId = si === 0 ? r32SlotVenue[j] : playedRoundVenue[si];
+          const venueId = si === 0 ? r32SlotVenue[j]
+            : si === 1 ? (r16SlotVenue[j] || playedRoundVenue[1])
+            : playedRoundVenue[si];
           return koWin(p[0], p[1], ratings, rng, koActuals, venueId, venueCountry);
         });
         const stage = stages[si++];

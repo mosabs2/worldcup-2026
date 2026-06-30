@@ -11,15 +11,16 @@ movement once, server-side, against a stable baseline, and bakes it into the
 published data so the board, the league bot and the Commissioner banter all read
 the SAME numbers, and the arrows stay on the board between matches.
 
-Baseline semantics: "movement since the last completed match."
-The baseline is the provisional ranks snapshot taken at the START of the current
-(or most recent) match — re-baselined each time a new match kicks off. So:
-  - during a live match, arrows show that match's live movement;
-  - after it ends and between matches, the arrows HOLD that match's net effect
-    (constantly on the board) until the next match kicks off and resets them.
+Baseline semantics: "movement since the last result."
+Ranks come from the full board engine (scripts/league_rank.js), recomputed after each
+completed match. The baseline is the board-rank snapshot taken when the match count last
+advanced; movement = baseline rank - current rank (+ = moved up), and it HOLDS on the
+board between matches until a new match advances the count and re-baselines. The ESPN feed
+only writes a score at full-time, so in practice the baseline rolls forward per completed
+match, not mid-play.
 
-A match counts as "started" once it is completed OR carries a score (in-play),
-so the baseline rolls forward exactly when a new game begins.
+A match counts as "started" once it is completed (or, defensively, carries a score), so the
+baseline rolls forward when a new result lands.
 
 Run in the pipeline AFTER fetch_scores (so `status`/`score` are current) and
 BEFORE build.py (so the movement is bundled into index.html). State persists in
@@ -39,46 +40,6 @@ def load_data():
     if not m:
         m = re.search(r"WC_DATA\s*=\s*(\{.*?\});", raw, re.S)
     return raw, m, json.loads(m.group(1))
-
-def prov_leaders(d):
-    """Current leader per group that has played >=1 game (no completion gate)."""
-    out = {}
-    for g in sorted({t["group"] for t in d["teams"] if t.get("group")}):
-        codes = [t["code"] for t in d["teams"] if t.get("group") == g]
-        tbl = {c: {"P": 0, "pts": 0, "gf": 0, "ga": 0} for c in codes}
-        for mt in d["matches"]:
-            if mt.get("group") != g:
-                continue
-            sc = mt.get("score")
-            if mt.get("status") == "completed" and sc and mt["team1"] in tbl and mt["team2"] in tbl:
-                a, b, ga, gb = mt["team1"], mt["team2"], sc["team1"], sc["team2"]
-                tbl[a]["P"] += 1; tbl[b]["P"] += 1
-                tbl[a]["gf"] += ga; tbl[a]["ga"] += gb; tbl[b]["gf"] += gb; tbl[b]["ga"] += ga
-                if ga > gb: tbl[a]["pts"] += 3
-                elif gb > ga: tbl[b]["pts"] += 3
-                else: tbl[a]["pts"] += 1; tbl[b]["pts"] += 1
-        if any(tbl[c]["P"] >= 1 for c in codes):
-            out[g] = sorted(codes, key=lambda c: (-tbl[c]["pts"], -(tbl[c]["gf"] - tbl[c]["ga"]), -tbl[c]["gf"], c))[0]
-    return out
-
-def prov_ranks(d):
-    """{entry name: rank} by provisional points (current group leaders), ties shared.
-    Mirrors wc-bot.py prov_standings so board, bot and banter agree."""
-    sc = d["league"]["scoring"]; pl = prov_leaders(d)
-    rows = []
-    for e in d["league"]["entries"]:
-        if e.get("exhibition"):
-            continue
-        pts = sum(sc["groupWinner"] for g, win in pl.items() if (e.get("w") or {}).get(g) == win)
-        rows.append((e["n"], pts))
-    rows.sort(key=lambda r: -r[1])
-    ranks, rank, last, n = {}, 0, None, 0
-    for name, pts in rows:
-        n += 1
-        if pts != last:
-            rank = n; last = pts
-        ranks[name] = rank
-    return ranks
 
 def started_count(d):
     return sum(1 for m in d["matches"] if m.get("status") == "completed" or m.get("score"))

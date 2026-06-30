@@ -34,8 +34,11 @@ if [ ! -s "$TOKEN_FILE" ]; then
 fi
 
 TOKEN=$(cat "$TOKEN_FILE")
+# Pass the PAT via a curl --config read from a process-substituted FD, NOT as a -H
+# argument: a command-line "-H Authorization: Bearer <token>" is visible in `ps`/proc
+# to any local user. The config content travels over a pipe, never argv.
 CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-  -H "Authorization: Bearer $TOKEN" \
+  --config <(printf 'header = "Authorization: Bearer %s"\n' "$TOKEN") \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   "https://api.github.com/repos/mosabs2/worldcup-2026/actions/workflows/auto-update.yml/dispatches" \

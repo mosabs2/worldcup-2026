@@ -130,7 +130,8 @@
       const ra = r[m.team1] + ha, rb = r[m.team2] + hb;   // post-match update, mirrors liveRatings
       const exp = 1 / (1 + Math.pow(10, -(ra - rb) / E.LOGISTIC_DIV));
       const w = g1 > g2 ? 1 : g1 < g2 ? 0 : 0.5;
-      const ch = E.ELO_K * mMult(eGD(g1, g2, m.xg)) * (w - exp);
+      // mirror liveRatings: a level scoreline uses multiplier 1, no xG amplification
+      const ch = E.ELO_K * mMult(g1 === g2 ? 0 : eGD(g1, g2, m.xg)) * (w - exp);
       r[m.team1] += ch; r[m.team2] -= ch;
     }
     const n = played.length || 1;

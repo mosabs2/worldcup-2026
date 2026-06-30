@@ -75,7 +75,11 @@ jobs:
       # never fails the job itself.
       - name: Alert phone on failure
         if: failure()
+        env:
+          # Pass the secret through env, not templated into the run script (script-injection
+          # anti-pattern); referencing $NTFY_TOPIC keeps it out of the rendered command.
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
           curl -s -H "Title: ⚠ World Cup site — daily enrich failed" -H "Priority: high" -H "Tags: warning" \
             -d "The daily StatsAPI enrich failed (watchdog or a step errored). Check: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}" || true
+            "https://ntfy.sh/${NTFY_TOPIC}" || true

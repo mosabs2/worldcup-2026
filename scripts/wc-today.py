@@ -67,9 +67,11 @@ def matches_window():
     today_kwt = now.astimezone(KWT).date()
     tomorrow_kwt = today_kwt + dt.timedelta(days=1)
     seen, out = set(), []
+    fetched_ok = False                               # did ANY date fetch succeed?
     for d in (now, now + dt.timedelta(days=1)):
         try:
             events = fetch(ESPN % d.strftime("%Y%m%d")).get("events", [])
+            fetched_ok = True
         except Exception as e:
             log("fetch failed for %s: %s" % (d.date(), e))
             continue
@@ -90,16 +92,17 @@ def matches_window():
                 log("skip event %s: %s" % (eid, e))
                 continue
     out.sort(key=lambda r: r[0])
-    return out, now
+    return out, now, fetched_ok
 
 
 def build_message():
-    # returns (message, had_matches). had_matches=False covers BOTH a genuine rest day
-    # and a total feed failure, so the caller can decide not to "lock in" an empty slate.
-    rows, now = matches_window()
+    # returns (message, had_matches, fetched_ok). Distinguishes a genuine rest day
+    # (fetched_ok=True with no rows) from a total feed outage (fetched_ok=False), so the
+    # caller never posts a false "no matches" line when ESPN was simply unreachable.
+    rows, now, fetched_ok = matches_window()
     today_kwt = now.astimezone(KWT).date()
     if not rows:
-        return "⚽ No World Cup matches today. Back tomorrow.", False
+        return "⚽ No World Cup matches today. Back tomorrow.", False, fetched_ok
     lines = ["⚽ Today's World Cup matches — times in Kuwait (+03)", ""]
     for ko, grp, home, away in rows:
         k = ko.astimezone(KWT)
@@ -109,7 +112,7 @@ def build_message():
         g = "%s: " % grp if grp else ""
         lines.append(" %s  %s%s vs %s" % (t, g, home, away))
     lines += ["", "Live goals & kick-offs drop in the channel as they happen."]
-    return "\n".join(lines), True
+    return "\n".join(lines), True, fetched_ok
 
 
 def post(text):
@@ -133,10 +136,16 @@ def main():
                 return
         except Exception:
             pass
-    msg, had_matches = build_message()
+    msg, had_matches, fetched_ok = build_message()
     if DRY:
         print(msg)
         return
+    # Never post a "no matches" line that might be a transient ESPN outage rather than a
+    # real rest day: if zero matches came back AND no date fetch succeeded, treat it as a
+    # feed failure — log, don't post, exit non-zero so a wrapper/cron retry can re-run.
+    if not had_matches and not fetched_ok:
+        log("no matches and all fetches failed — treating as feed outage; not posting")
+        sys.exit(1)
     try:
         j = post(msg)
         log("posted ok=%s had_matches=%s" % (j.get("ok"), had_matches))
