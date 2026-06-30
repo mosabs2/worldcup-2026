@@ -3999,22 +3999,7 @@ const WC_DATA = {
     "team1": 1,
     "team2": 1,
     "winner": "PAR"
-   },
-   "goals": [
-    {
-     "t": "PAR",
-     "p": "Julio Enciso",
-     "m": "42'",
-     "a": "Matías Galarza"
-    },
-    {
-     "t": "GER",
-     "p": "Kai Havertz",
-     "m": "54'",
-     "a": "Florian Wirtz"
-    }
-   ],
-   "goals_src": "espn"
+   }
   },
   {
    "id": "R32-6",
@@ -4044,15 +4029,7 @@ const WC_DATA = {
    "score": {
     "team1": 0,
     "team2": 1
-   },
-   "goals": [
-    {
-     "t": "CAN",
-     "p": "Stephen Eustáquio",
-     "m": "90'+2'"
-    }
-   ],
-   "goals_src": "espn"
+   }
   },
   {
    "id": "R32-4",
@@ -4070,22 +4047,7 @@ const WC_DATA = {
     "team1": 1,
     "team2": 1,
     "winner": "MAR"
-   },
-   "goals": [
-    {
-     "t": "NED",
-     "p": "Cody Gakpo",
-     "m": "72'",
-     "a": "Crysencio Summerville"
-    },
-    {
-     "t": "MAR",
-     "p": "Issa Diop",
-     "m": "90'+1'",
-     "a": "Chemsdine Talbi"
-    }
-   ],
-   "goals_src": "espn"
+   }
   },
   {
    "id": "R32-12",
@@ -4154,27 +4116,7 @@ const WC_DATA = {
    "score": {
     "team1": 2,
     "team2": 1
-   },
-   "goals": [
-    {
-     "t": "JPN",
-     "p": "Kaishu Sano",
-     "m": "29'"
-    },
-    {
-     "t": "BRA",
-     "p": "Casemiro",
-     "m": "56'",
-     "a": "Gabriel Magalhães"
-    },
-    {
-     "t": "BRA",
-     "p": "Gabriel Martinelli",
-     "m": "90'+5'",
-     "a": "Bruno Guimarães"
-    }
-   ],
-   "goals_src": "espn"
+   }
   },
   {
    "id": "R32-5",
