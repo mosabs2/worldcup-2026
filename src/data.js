@@ -4216,7 +4216,7 @@ const WC_DATA = {
    "matchNo": 90,
    "dateET": "2026-07-04T17:00:00-04:00",
    "venueId": "PHI",
-   "team1": null,
+   "team1": "PAR",
    "team2": null,
    "status": "pending",
    "feeds": [
@@ -4233,7 +4233,7 @@ const WC_DATA = {
    "dateET": "2026-07-04T13:00:00-04:00",
    "venueId": "HOU",
    "team1": "CAN",
-   "team2": null,
+   "team2": "MAR",
    "status": "pending",
    "feeds": [
     "R32-1",
