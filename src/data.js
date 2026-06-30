@@ -3998,7 +3998,11 @@ const WC_DATA = {
    "score": {
     "team1": 1,
     "team2": 1,
-    "winner": "PAR"
+    "winner": "PAR",
+    "pens": {
+     "team1": 3,
+     "team2": 4
+    }
    },
    "goals": [
     {
@@ -4069,7 +4073,11 @@ const WC_DATA = {
    "score": {
     "team1": 1,
     "team2": 1,
-    "winner": "MAR"
+    "winner": "MAR",
+    "pens": {
+     "team1": 2,
+     "team2": 3
+    }
    },
    "goals": [
     {

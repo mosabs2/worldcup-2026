@@ -69,10 +69,16 @@ for e in evs:
         if st['name'] not in FINAL_STATUSES or not st.get('completed'):
             continue
         comp = e['competitions'][0]
-        scores, shootout_winner = {}, None
+        scores, shoot, shootout_winner = {}, {}, None
         for c in comp['competitors']:
             code = idmap.get(str(c['team']['id'])) or c['team'].get('abbreviation')
             scores[code] = int(c['score'])
+            sv = c.get('shootoutScore')           # penalty-shootout tally, when decided on pens
+            if sv is not None:
+                try:
+                    shoot[code] = int(sv)
+                except (TypeError, ValueError):
+                    pass
             if c.get('winner'):
                 shootout_winner = code
         match = bypair.get(frozenset(scores.keys()))
@@ -84,9 +90,12 @@ for e in evs:
             continue
         match['status'] = 'completed'
         match['score'] = {'team1': s1, 'team2': s2}
-        # knockout draw decided on penalties: record the winner so the bracket pins correctly
+        # knockout draw decided on penalties: record the winner so the bracket pins correctly,
+        # plus the shootout tally for the scorecard ("1 (3) – (4) 1") when ESPN provides it.
         if match.get('stage') != 'group' and s1 == s2 and shootout_winner:
             match['score']['winner'] = shootout_winner
+            if match['team1'] in shoot and match['team2'] in shoot:
+                match['score']['pens'] = {'team1': shoot[match['team1']], 'team2': shoot[match['team2']]}
         applied.append(f"{match['id']} {match['team1']} {s1}-{s2} {match['team2']}")
     except Exception as ex:
         print(f"Skipped one event on parse error: {ex}")

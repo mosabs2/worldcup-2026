@@ -99,8 +99,27 @@
   }
   function effScore(m) {
     const ov = activeOv()[m.id];
-    if (ov) return { team1: ov[0], team2: ov[1], local: true };
+    if (ov) {
+      const s = { team1: ov[0], team2: ov[1], local: true };
+      if (ov[2]) s.winner = ov[2];                                       // shootout winner code
+      if (ov[3] != null && ov[4] != null) s.pens = { team1: ov[3], team2: ov[4] };
+      return s;
+    }
     return m.status === 'completed' && m.score ? m.score : null;
+  }
+
+  // The finished score as DOM children: a penalty-decided knockout tie renders the
+  // broadcast convention "1 (3) – (4) 1" with the advancing side bolded; any other
+  // score is the plain "1 – 2". Returns an array (el() flattens it into the parent).
+  function scoreParts(m, sc) {
+    if (sc && sc.pens && sc.winner && sc.team1 === sc.team2) {
+      return [
+        el('span', sc.winner === m.team1 ? { class: 'pwin' } : null, sc.team1 + ' (' + sc.pens.team1 + ')'),
+        ' – ',
+        el('span', sc.winner === m.team2 ? { class: 'pwin' } : null, '(' + sc.pens.team2 + ') ' + sc.team2),
+      ];
+    }
+    return [sc.team1 + ' – ' + sc.team2];
   }
 
   // Walk-forward model-vs-market calibration over completed games (mirrors statsapi_backtest.py,
@@ -187,9 +206,8 @@
           el('span', null, m.dateET ? fmtD(m.dateET, localTZ) : 'date TBC')));
     }
     const sc = effScore(m);
-    // Penalty/ET-decided knockout tie: level score but a winner advanced (see matchModal).
-    const penWin = (sc && sc.team1 === sc.team2 && m.stage !== 'group')
-      ? (sc.local ? (activeOv()[m.id] && activeOv()[m.id][2]) : (m.score && m.score.winner)) : null;
+    // Penalty-decided knockout tie: level score, a winner advanced (effScore exposes both).
+    const penWin = (sc && sc.winner && sc.team1 === sc.team2 && m.stage !== 'group') ? sc.winner : null;
     const live = !sc && liveNow[m.id];
     const p = odds(m);
     const tag = sc ? el('span', { class: 'tag ' + (sc.local ? 'whatif' : 'ft') }, sc.local ? (whatIf.on ? 'what-if' : 'local') : 'FT')
@@ -198,7 +216,7 @@
     const card = el('div', { class: 'card match click', onclick: () => matchModal(m) },
       el('div', { class: 'row' },
         el('div', { class: 'team' }, el('span', { class: 'fl' }, T[m.team1].flag), T[m.team1].name),
-        sc ? el('div', { class: 'score' }, sc.team1 + ' – ' + sc.team2)
+        sc ? el('div', { class: 'score' }, scoreParts(m, sc))
            : live ? el('div', { class: 'score' }, live.g1 + ' – ' + live.g2)
            : el('div', { class: 'vs' }, 'v'),
         el('div', { class: 'team away' }, T[m.team2].name, el('span', { class: 'fl' }, T[m.team2].flag))),
@@ -211,7 +229,7 @@
             : null,
       (sc || live) ? null : pbarRow(p),
       el('div', { class: 'meta' }, tag,
-        penWin && T[penWin] ? el('span', null, 'pens: ' + T[penWin].code) : null,
+        penWin ? el('span', null, 'pens') : null,
         el('span', null, m.stage === 'group' ? 'Group ' + m.group : (m.label || (m.round ? String(m.round).toUpperCase() : 'Knockout'))),
         V[m.venueId] ? el('span', null, V[m.venueId].city) : null,
         (!opts || opts.times !== false) ? el('span', null, sc ? fmtD(m.dateET, localTZ) : kt(m.dateET)) : null));
@@ -275,10 +293,8 @@
     }
     const p = odds(m);
     const sc = effScore(m);
-    // Penalty/ET-decided knockout tie: the stored score is level but a winner advanced.
-    // Override winner lives in the local overlay entry; a synced final carries it on score.winner.
-    const penWin = (sc && sc.team1 === sc.team2 && m.stage !== 'group')
-      ? (sc.local ? (activeOv()[m.id] && activeOv()[m.id][2]) : (m.score && m.score.winner)) : null;
+    // Penalty-decided knockout tie: level score, a winner advanced (effScore exposes both).
+    const penWin = (sc && sc.winner && sc.team1 === sc.team2 && m.stage !== 'group') ? sc.winner : null;
     const tops = E.topScorelines(p.xg1, p.xg2, 5);
     const maxp = tops[0].p;
     const v = V[m.venueId];
@@ -287,7 +303,11 @@
     const s1 = el('input', { type: 'number', min: 0, max: 9, style: 'width:62px', value: sc ? sc.team1 : '' });
     const s2 = el('input', { type: 'number', min: 0, max: 9, style: 'width:62px', value: sc ? sc.team2 : '' });
     openModal(
-      el('h2', null, T[m.team1].flag + ' ' + T[m.team1].name + (sc ? ' ' + sc.team1 + ' – ' + sc.team2 + ' ' : ' v ') + T[m.team2].name + ' ' + T[m.team2].flag + (penWin && T[penWin] ? ' · ' + T[penWin].code + ' on pens' : '')),
+      el('h2', null,
+        T[m.team1].flag + ' ' + T[m.team1].name + ' ',
+        sc ? scoreParts(m, sc) : 'v',
+        ' ' + T[m.team2].name + ' ' + T[m.team2].flag,
+        (penWin && sc && !sc.pens && T[penWin]) ? ' · ' + T[penWin].code + ' on pens' : ''),
       el('div', { class: 'muted', style: 'margin-bottom:14px' }, (m.stage === 'group' ? 'Group ' + m.group : (KO_ROUND[m.round] || m.label || 'Knockout')) + (v ? ' · ' + v.name + ', ' + v.city + (v.elev > 800 ? ' (' + v.elev + ' m altitude)' : '') : '') + ' · ' + kickoff(m)),
       (mg && mg.length) ? el('h2', { class: 'section' }, 'Goals') : null,
       (mg && mg.length) ? el('div', { style: 'margin:2px 0 6px' }, mg.map(g =>
@@ -684,8 +704,8 @@
         const pens = sc.team1 === sc.team2 && w;  // level after ET -> decided on penalties
         return el('div', { class: 'bk' },
           el('div', { class: 'lbl' }, matchLbl(m) + (pens ? ' · pens' : '')),
-          teamLine(m.team1, w != null && w === m.team1, '' + sc.team1),
-          teamLine(m.team2, w != null && w === m.team2, '' + sc.team2),
+          teamLine(m.team1, w != null && w === m.team1, sc.team1 + (sc.pens ? ' (' + sc.pens.team1 + ')' : '')),
+          teamLine(m.team2, w != null && w === m.team2, sc.team2 + (sc.pens ? ' (' + sc.pens.team2 + ')' : '')),
           schedLine(m));
       }
       const pa = projFav(m.team1, m.team2, m.venueId);   // null if TBD
@@ -1699,11 +1719,13 @@
   // a level knockout. Returns null for a level KO with no usable winner — better to
   // leave it for manual entry or the published feed than to commit an unresolved draw
   // the bracket cannot advance (mirrors fetch_scores.py's server-side handling).
-  function koOverrideEntry(match, g1, g2, winnerCode) {
+  function koOverrideEntry(match, g1, g2, winnerCode, pens) {
     const entry = [g1, g2];
     if (match.stage !== 'group' && g1 === g2) {
       if (winnerCode === match.team1 || winnerCode === match.team2) entry.push(winnerCode);
       else return null;
+      // optional shootout tally [p1, p2] -> override slots [3],[4] (effScore reads these)
+      if (pens && pens[0] != null && pens[1] != null) { entry.push(pens[0], pens[1]); }
     }
     return entry;
   }
@@ -1755,10 +1777,11 @@
       for (const e of (js.events || [])) {
         const st = e.status && e.status.type;
         if (!st) continue;
-        const sc = {}; let winnerCode = null;
+        const sc = {}, shoot = {}; let winnerCode = null;
         for (const c of e.competitions[0].competitors) {
           const code = ids[String(c.team.id)] || c.team.abbreviation;
           sc[code] = parseInt(c.score, 10);
+          if (c.shootoutScore != null) shoot[code] = parseInt(c.shootoutScore, 10);
           if (c.winner) winnerCode = code;   // ESPN flags the shootout winner on a level KO
         }
         const match = near.find(m => sc[m.team1] != null && sc[m.team2] != null);
@@ -1770,7 +1793,7 @@
         } else if (FINAL_STATES.includes(st.name) && st.completed && !localOv[match.id]) {
           const g1 = sc[match.team1], g2 = sc[match.team2];
           if (g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15) {
-            const entry = koOverrideEntry(match, g1, g2, winnerCode);
+            const entry = koOverrideEntry(match, g1, g2, winnerCode, [shoot[match.team1], shoot[match.team2]]);
             if (entry) { localOv[match.id] = entry; finals++; }
           }
         }
@@ -1824,17 +1847,18 @@
       for (const e of (js.events || [])) {
         const st = e.status && e.status.type;
         if (!st || !FINAL_STATES.includes(st.name) || !st.completed) continue;
-        const sc = {}; let winnerCode = null;
+        const sc = {}, shoot = {}; let winnerCode = null;
         for (const c of e.competitions[0].competitors) {
           const code = ids[String(c.team.id)] || c.team.abbreviation;
           sc[code] = parseInt(c.score, 10);
+          if (c.shootoutScore != null) shoot[code] = parseInt(c.shootoutScore, 10);
           if (c.winner) winnerCode = code;
         }
         const match = pending.find(m => sc[m.team1] != null && sc[m.team2] != null);
         if (!match) continue;
         const g1 = sc[match.team1], g2 = sc[match.team2];
         if (!(g1 >= 0 && g1 <= 15 && g2 >= 0 && g2 <= 15)) continue;
-        const entry = koOverrideEntry(match, g1, g2, winnerCode);   // skip a level KO with no winner
+        const entry = koOverrideEntry(match, g1, g2, winnerCode, [shoot[match.team1], shoot[match.team2]]);   // skip a level KO with no winner
         if (!entry) continue;
         localOv[match.id] = entry; n++;
       }
