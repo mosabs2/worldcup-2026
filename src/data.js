@@ -3999,7 +3999,22 @@ const WC_DATA = {
     "team1": 1,
     "team2": 1,
     "winner": "PAR"
-   }
+   },
+   "goals": [
+    {
+     "t": "PAR",
+     "p": "Julio Enciso",
+     "m": "42'",
+     "a": "Matías Galarza"
+    },
+    {
+     "t": "GER",
+     "p": "Kai Havertz",
+     "m": "54'",
+     "a": "Florian Wirtz"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "R32-6",
@@ -4029,7 +4044,15 @@ const WC_DATA = {
    "score": {
     "team1": 0,
     "team2": 1
-   }
+   },
+   "goals": [
+    {
+     "t": "CAN",
+     "p": "Stephen Eustáquio",
+     "m": "90'+2'"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "R32-4",
@@ -4047,7 +4070,22 @@ const WC_DATA = {
     "team1": 1,
     "team2": 1,
     "winner": "MAR"
-   }
+   },
+   "goals": [
+    {
+     "t": "NED",
+     "p": "Cody Gakpo",
+     "m": "72'",
+     "a": "Crysencio Summerville"
+    },
+    {
+     "t": "MAR",
+     "p": "Issa Diop",
+     "m": "90'+1'",
+     "a": "Chemsdine Talbi"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "R32-12",
@@ -4116,7 +4154,27 @@ const WC_DATA = {
    "score": {
     "team1": 2,
     "team2": 1
-   }
+   },
+   "goals": [
+    {
+     "t": "JPN",
+     "p": "Kaishu Sano",
+     "m": "29'"
+    },
+    {
+     "t": "BRA",
+     "p": "Casemiro",
+     "m": "56'",
+     "a": "Gabriel Magalhães"
+    },
+    {
+     "t": "BRA",
+     "p": "Gabriel Martinelli",
+     "m": "90'+5'",
+     "a": "Bruno Guimarães"
+    }
+   ],
+   "goals_src": "espn"
   },
   {
    "id": "R32-5",
@@ -6774,8 +6832,8 @@ const WC_DATA = {
   }
  },
  "propsLive": {
-  "asOf": "2026-06-29",
-  "matchesCounted": 74,
+  "asOf": "2026-06-30",
+  "matchesCounted": 76,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6814,6 +6872,12 @@ const WC_DATA = {
     "pens": 1
    },
    {
+    "player": "Kai Havertz",
+    "team": "GER",
+    "goals": 3,
+    "pens": 1
+   },
+   {
     "player": "Yoane Wissa",
     "team": "COD",
     "goals": 3,
@@ -6821,6 +6885,12 @@ const WC_DATA = {
    },
    {
     "player": "Brian Brobbey",
+    "team": "NED",
+    "goals": 3,
+    "pens": 0
+   },
+   {
+    "player": "Cody Gakpo",
     "team": "NED",
     "goals": 3,
     "pens": 0
@@ -6854,21 +6924,15 @@ const WC_DATA = {
     "team": "SUI",
     "goals": 3,
     "pens": 0
-   },
-   {
-    "player": "Jonathan David",
-    "team": "CAN",
-    "goals": 3,
-    "pens": 0
-   },
-   {
-    "player": "Matheus Cunha",
-    "team": "BRA",
-    "goals": 3,
-    "pens": 0
    }
   ],
   "topAssists": [
+   {
+    "player": "Bruno Guimarães",
+    "team": "BRA",
+    "assists": 4,
+    "goals": 0
+   },
    {
     "player": "Alexander Isak",
     "team": "SWE",
@@ -6876,8 +6940,8 @@ const WC_DATA = {
     "goals": 1
    },
    {
-    "player": "Bruno Guimarães",
-    "team": "BRA",
+    "player": "Florian Wirtz",
+    "team": "GER",
     "assists": 3,
     "goals": 0
    },
@@ -6900,6 +6964,12 @@ const WC_DATA = {
     "goals": 3
    },
    {
+    "player": "Crysencio Summerville",
+    "team": "NED",
+    "assists": 2,
+    "goals": 2
+   },
+   {
     "player": "Breel Embolo",
     "team": "SUI",
     "assists": 2,
@@ -6908,6 +6978,12 @@ const WC_DATA = {
    {
     "player": "Iliman Ndiaye",
     "team": "SEN",
+    "assists": 2,
+    "goals": 1
+   },
+   {
+    "player": "Julio Enciso",
+    "team": "PAR",
     "assists": 2,
     "goals": 1
    },
@@ -6940,38 +7016,20 @@ const WC_DATA = {
     "team": "ENG",
     "assists": 2,
     "goals": 0
-   },
-   {
-    "player": "Chris Wood",
-    "team": "NZL",
-    "assists": 2,
-    "goals": 0
-   },
-   {
-    "player": "Denzel Dumfries",
-    "team": "NED",
-    "assists": 2,
-    "goals": 0
-   },
-   {
-    "player": "Florian Wirtz",
-    "team": "GER",
-    "assists": 2,
-    "goals": 0
    }
   ],
   "teamCards": [
+   {
+    "team": "PAR",
+    "yellow": 9,
+    "red": 1,
+    "points": 12
+   },
    {
     "team": "RSA",
     "yellow": 5,
     "red": 2,
     "points": 11
-   },
-   {
-    "team": "PAR",
-    "yellow": 7,
-    "red": 1,
-    "points": 10
    },
    {
     "team": "QAT",
@@ -7037,11 +7095,11 @@ const WC_DATA = {
   "teamGoals": [
    {
     "team": "GER",
-    "goals": 10
+    "goals": 11
    },
    {
     "team": "NED",
-    "goals": 10
+    "goals": 11
    },
    {
     "team": "FRA",
@@ -7080,7 +7138,7 @@ const WC_DATA = {
     "goals": 7
    },
    {
-    "team": "SWE",
+    "team": "MAR",
     "goals": 7
    }
   ],

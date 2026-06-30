@@ -40,8 +40,14 @@ jobs:
       # Goal events (scorer, minute, pen/OG) from ESPN's free summary feed, the
       # timely source for the match-modal Goals list. continue-on-error so a feed
       # hiccup never blocks the score commit. No-op once all matches are espn-sourced.
+      #
+      # Runs EVERY cycle, NOT gated on a score change (matched to fetch_xg/props):
+      # a match completed via the knockout/penalty path (generate_knockout) or skipped
+      # by a half-built summary never reports a fetch_scores change, so a gated step
+      # would never backfill its scorers. Idempotent + near-zero once caught up; id:goals
+      # exposes its changed flag so the rebuild/commit fire on a no-new-score catch-up.
       - name: Fetch goal events from ESPN
-        if: steps.fetch.outputs.changed == 'true'
+        id: goals
         continue-on-error: true
         run: python3 scripts/fetch_goals.py
 
@@ -104,18 +110,26 @@ jobs:
         run: node update.js --date "$(date -u +%F)"
 
       - name: Rebuild site
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.goals.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
         run: python3 build.py
 
       - name: Commit and publish
-        if: steps.fetch.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
+        if: steps.fetch.outputs.changed == 'true' || steps.goals.outputs.changed == 'true' || steps.xg.outputs.changed == 'true' || steps.props.outputs.changed == 'true' || steps.ko.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "auto-update: scores + xG + props synced from ESPN feed $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git pull --rebase origin main
-          git push
+          # Guard against an empty commit: a changed=true flag can be a false positive
+          # (e.g. build.py rewrites BUILT_AT only, then nothing else differs) — an empty
+          # `git commit` exits non-zero and would fire a false failure alert. Mirror the
+          # statsapi-update guard: if nothing is staged, skip cleanly.
+          if git diff --cached --quiet; then
+            echo "Nothing to commit; skipping publish."
+          else
+            git commit -m "auto-update: scores + xG + props synced from ESPN feed $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase origin main
+            git push
+          fi
 
       # Watchdog (runs every cycle, NOT swallowed): fails the job red if the
       # published data is internally inconsistent — e.g. the props boards lag the
