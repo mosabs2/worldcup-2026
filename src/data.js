@@ -4014,7 +4014,12 @@ const WC_DATA = {
      "a": "Florian Wirtz"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.57,
+    "team2": 0.35,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-6",
@@ -4052,7 +4057,12 @@ const WC_DATA = {
      "m": "90'+2'"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.14,
+    "team2": 1.38,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-4",
@@ -4085,7 +4095,12 @@ const WC_DATA = {
      "a": "Chemsdine Talbi"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.24,
+    "team2": 1.38,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-12",
@@ -4174,7 +4189,12 @@ const WC_DATA = {
      "a": "Bruno Guimarães"
     }
    ],
-   "goals_src": "espn"
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.07,
+    "team2": 0.33,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-5",
