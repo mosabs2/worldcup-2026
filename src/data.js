@@ -6774,8 +6774,8 @@ const WC_DATA = {
   }
  },
  "propsLive": {
-  "asOf": "2026-06-29",
-  "matchesCounted": 74,
+  "asOf": "2026-06-30",
+  "matchesCounted": 76,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -6962,16 +6962,16 @@ const WC_DATA = {
   ],
   "teamCards": [
    {
+    "team": "PAR",
+    "yellow": 9,
+    "red": 1,
+    "points": 12
+   },
+   {
     "team": "RSA",
     "yellow": 5,
     "red": 2,
     "points": 11
-   },
-   {
-    "team": "PAR",
-    "yellow": 7,
-    "red": 1,
-    "points": 10
    },
    {
     "team": "QAT",
@@ -7037,11 +7037,11 @@ const WC_DATA = {
   "teamGoals": [
    {
     "team": "GER",
-    "goals": 10
+    "goals": 11
    },
    {
     "team": "NED",
-    "goals": 10
+    "goals": 11
    },
    {
     "team": "FRA",
@@ -7080,7 +7080,7 @@ const WC_DATA = {
     "goals": 7
    },
    {
-    "team": "SWE",
+    "team": "MAR",
     "goals": 7
    }
   ],
