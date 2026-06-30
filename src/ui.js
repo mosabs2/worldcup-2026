@@ -859,13 +859,39 @@
     const resolved = E.resolvedOutcomes(effData());
     const prov = E.provisionalOutcomes(effData());
     const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
+    // Teams knocked out in a completed knockout match (the loser of any decided KO tie;
+    // score.winner covers penalty/extra-time results). Without this, a group winner who
+    // then loses in the R32+ is still treated as "alive" on every league surface.
+    const koOut = new Set();
+    effData().matches.filter(m => m.stage !== 'group' && m.status === 'completed' && m.score)
+      .forEach(m => {
+        const w = m.score.winner ||
+          (m.score.team1 > m.score.team2 ? m.team1 : m.score.team2 > m.score.team1 ? m.team2 : null);
+        if (w) koOut.add(w === m.team1 ? m.team2 : m.team1);
+      });
     const elim = c => {
+      if (koOut.has(c)) return true;
       if (!T[c] || !resolved.groupWinners[T[c].group]) return false;
       const posn = TABLES[T[c].group].findIndex(r => r.team === c);
       if (posn === 3) return true;
       if (posn === 2 && allGroupsDone) return SIM.teams[c].r32 === 0;
       return false;
     };
+    // Team -> official bracket half (0 = top/feeds SF1, 1 = bottom/feeds SF2) from the
+    // pinned R32 draw: r32Template slot index < 8 is the top half. Used to cap the finalist
+    // ceiling — two finalist picks in the SAME half can meet before the final, so at most
+    // one can be a finalist. Empty until the bracket is generated (then fall back per-pick).
+    const r32byId = {};
+    effData().matches.forEach(m => { if (m.stage === 'r32') r32byId[m.id] = m; });
+    const teamHalf = {};
+    (D.r32Template || []).forEach((slot, i) => {
+      const gm = r32byId[slot.id]; if (!gm) return;
+      const half = i < 8 ? 0 : 1;
+      if (gm.team1) teamHalf[gm.team1] = half;
+      if (gm.team2) teamHalf[gm.team2] = half;
+    });
+    const bracketPinned = (D.r32Template || []).length > 0 &&
+      (D.r32Template || []).every(s => { const gm = r32byId[s.id]; return gm && gm.team1 && gm.team2; });
     const rows = entries.map(e => {
       let pts = 0, exp = 0, max = 0;
       GROUPS.forEach(g => {
@@ -878,8 +904,19 @@
       (e.f || []).forEach(fc => {
         if (!T[fc]) return;
         if (resolved.finalists) { const hit = resolved.finalists.includes(fc) ? sc.finalist : 0; pts += hit; exp += hit; max += hit; }
-        else { exp += SIM.teams[fc].fin * sc.finalist; if (!elim(fc)) max += sc.finalist; }
+        else { exp += SIM.teams[fc].fin * sc.finalist; }   // ceiling handled below (half-capped)
       });
+      if (!resolved.finalists) {
+        // Ceiling: only ALIVE finalist picks can still score, and at most one per official
+        // bracket half can reach the final, so credit sc.finalist once per DISTINCT half.
+        // Before the bracket is pinned (or for an unseated pick) fall back to per-pick.
+        const aliveF = (e.f || []).filter(fc => T[fc] && !elim(fc));
+        if (bracketPinned && aliveF.every(fc => teamHalf[fc] !== undefined)) {
+          max += (new Set(aliveF.map(fc => teamHalf[fc]))).size * sc.finalist;
+        } else {
+          max += aliveF.length * sc.finalist;
+        }
+      }
       if (e.c && T[e.c]) {
         if (resolved.champion) { const hit = resolved.champion === e.c ? sc.champion : 0; pts += hit; exp += hit; max += hit; }
         else { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
@@ -1567,8 +1604,13 @@
           class: 'btn small', onclick: () => {
             const g1 = parseInt(a.value, 10), g2 = parseInt(b.value, 10);
             if (isNaN(g1) || isNaN(g2)) return;
+            const m = D.matches.find(x => x.id === sel.value);
+            // Route through koOverrideEntry so a level knockout score requires a winner
+            // (matching the match-card path); it returns null for a level KO with none.
+            const entry = m ? koOverrideEntry(m, g1, g2, null) : [g1, g2];
+            if (!entry) { toast('Level knockout score — set it from the match card so you can pick the shootout winner.'); return; }
             const tgt = whatIf.on ? whatIf.ov : localOv;
-            tgt[sel.value] = [g1, g2];
+            tgt[sel.value] = entry;
             if (!whatIf.on) lsSet(LS.ov, localOv);
             refresh();
           }
@@ -1580,7 +1622,14 @@
             try {
               const o = JSON.parse(ta.value);
               const tgt = whatIf.on ? whatIf.ov : localOv;
-              for (const k in o) if (Array.isArray(o[k]) && o[k].length === 2) tgt[k] = o[k];
+              for (const k in o) {
+                const v = o[k];
+                if (!Array.isArray(v) || v.length < 2 || typeof v[0] !== 'number' || typeof v[1] !== 'number') continue;
+                const m = D.matches.find(x => x.id === k);
+                // KO ties accept a 3rd element [g1,g2,winner]; skip a level KO with no valid winner.
+                const entry = m ? koOverrideEntry(m, v[0], v[1], v[2]) : [v[0], v[1]];
+                if (entry) tgt[k] = entry;
+              }
               if (!whatIf.on) lsSet(LS.ov, localOv);
               ta.value = ''; refresh();
             } catch (e) { alert('Could not parse that JSON.'); }

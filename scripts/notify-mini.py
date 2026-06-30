@@ -95,12 +95,14 @@ for eid, e in events.items():
 
         if statename == "in":
             if not prev.get("kickoff"):
-                # First sighting of this match in-play. Only announce kick-off if we're
-                # genuinely at the start (clock ≤ 2', or no detail yet). A cron gap or a
-                # restart can make us first see an ALREADY-running match — set the baseline
-                # silently then, so we don't post a phantom "kick-off" 60' into the game.
+                # First sighting of this match in-play. Suppress the kick-off post ONLY when
+                # the clock positively shows we're already deep in the match (minute > 2) —
+                # a cron gap / restart first seeing an already-running game. An empty or
+                # non-numeric shortDetail ("Live", "KO") is treated as the start and DOES
+                # post, so a real kick-off is never silently dropped.
                 mm = re.match(r"\s*(\d+)", clock)
-                if (mm and int(mm.group(1)) <= 2) or clock.strip() == "":
+                deep = bool(mm and int(mm.group(1)) > 2)
+                if not deep:
                     post("🟢 Kick-off — %s v %s" % (an, bn))
                 prev["kickoff"] = True
                 prev["total"] = asc + bsc           # baseline; no phantom goals

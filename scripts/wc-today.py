@@ -149,15 +149,15 @@ def main():
     try:
         j = post(msg)
         log("posted ok=%s had_matches=%s" % (j.get("ok"), had_matches))
-        # Only lock in the day's post when a real slate went out. A "no matches" line
-        # caused by a transient total feed failure is then still correctable by a rerun
-        # (cron is once/day, so a genuine rest day won't double-post anyway).
-        if had_matches:
-            try:
-                with open(SENT_FILE, "w") as f:
-                    f.write(today_kwt)
-            except Exception:
-                pass
+        # Lock in the day's post once it has actually gone out. The outage case (no matches
+        # AND no fetch succeeded) already exited above without posting, so reaching here means
+        # either a real slate or a genuine rest day — both should record the day so a cron
+        # double-fire / rerun does not re-post a duplicate line.
+        try:
+            with open(SENT_FILE, "w") as f:
+                f.write(today_kwt)
+        except Exception:
+            pass
     except Exception as e:
         log("post failed: %s" % e)
         sys.exit(1)

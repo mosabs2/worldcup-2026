@@ -459,6 +459,14 @@ def merge_into_data(data, ko):
             m['dateET'] = old['dateET']
         if old.get('venueId'):
             m['venueId'] = old['venueId']
+        # Carry forward per-match enrichment that lives ONLY on the match object, never on
+        # the rebuilt skeleton: the scorer list (goals/goals_src, landed by fetch_goals)
+        # and actual xG. Without this, every cycle's rebuild strips the knockout Goals list
+        # — fetch_goals re-adds it, generate_knockout wipes it, and the published match
+        # modal shows no scorers for completed KO ties (and reports a spurious change).
+        for fld in ('goals', 'goals_src', 'xg'):
+            if old.get(fld) is not None:
+                m[fld] = old[fld]
     groups = [m for m in data['matches'] if m.get('stage') == 'group']
     data['matches'] = groups + ko
     return data
@@ -566,6 +574,9 @@ def main():
             assign = json.loads(args[ti + 1])
         except json.JSONDecodeError as e:
             sys.exit(f"--thirds: invalid JSON ({e})")
+        if not isinstance(assign, dict):
+            sys.exit("--thirds: expected a JSON object mapping slot id -> team code, "
+                     "e.g. '{\"R32-3\":\"CRO\"}'")
         print(f"Third assignment supplied via --thirds ({len(assign)} slots).")
     elif '--from-feed' in args:
         idmap = json.load(open(MAP))['teamIds']
