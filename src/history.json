@@ -473,24 +473,24 @@
  },
  {
   "date": "2026-07-01",
-  "label": "Model v1.0 · after 80 matches",
+  "label": "Model v1.0 · after 81 matches",
   "probs": {
-   "FRA": 14.81,
-   "ARG": 9.4,
-   "BRA": 9.11,
-   "ENG": 8.97,
-   "MAR": 7.47,
-   "MEX": 6.56,
-   "ESP": 6.02,
-   "USA": 4.6,
-   "COL": 4.49,
-   "POR": 3.92,
-   "NOR": 3.24,
-   "CAN": 3.12,
-   "BEL": 3.08,
-   "SUI": 2.91,
-   "CRO": 2.09,
-   "PAR": 1.99
+   "FRA": 14.76,
+   "BRA": 9.15,
+   "ARG": 9.14,
+   "ENG": 8.54,
+   "MEX": 6.77,
+   "MAR": 6.75,
+   "ESP": 6.22,
+   "BEL": 6.17,
+   "USA": 4.31,
+   "COL": 4.1,
+   "POR": 4.08,
+   "NOR": 3.97,
+   "SUI": 3.1,
+   "CAN": 2.67,
+   "CRO": 2.07,
+   "PAR": 2
   }
  }
 ]
