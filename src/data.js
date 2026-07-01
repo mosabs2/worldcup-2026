@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-07-01",
-  "asOfNote": "Results through 79 matches, auto-synced from the ESPN public feed 2026-07-01 04:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 80 matches, auto-synced from the ESPN public feed 2026-07-01 18:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4322,9 +4322,39 @@ const WC_DATA = {
    "venueId": "ATL",
    "team1": "ENG",
    "team2": "COD",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "L1 vs 3rd E/H/I/J/K"
+   "label": "L1 vs 3rd E/H/I/J/K",
+   "score": {
+    "team1": 2,
+    "team2": 1
+   },
+   "goals": [
+    {
+     "t": "COD",
+     "p": "Brian Cipenga",
+     "m": "7'",
+     "a": "Chancel Mbemba"
+    },
+    {
+     "t": "ENG",
+     "p": "Harry Kane",
+     "m": "75'",
+     "a": "Anthony Gordon"
+    },
+    {
+     "t": "ENG",
+     "p": "Harry Kane",
+     "m": "86'",
+     "a": "Anthony Gordon"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.04,
+    "team2": 0.81,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-15",
@@ -4466,7 +4496,7 @@ const WC_DATA = {
    "dateET": "2026-07-05T20:00:00-04:00",
    "venueId": "MEX",
    "team1": "MEX",
-   "team2": null,
+   "team2": "ENG",
    "status": "pending",
    "feeds": [
     "R32-7",
@@ -6887,22 +6917,22 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Faisal Jaber Al Sabah": 0,
-   "Bader Al Gatheebi": 1,
-   "Nasser Talal": -1,
-   "Saleh Al Hashash": 0,
-   "Faisal Abu Hadida": 0,
+   "Nasser Talal": 2,
+   "Faisal Jaber Al Sabah": -1,
+   "Bader Al Gatheebi": -1,
+   "Faisal Abu Hadida": 1,
+   "Saleh Al Hashash": -1,
    "Bader Mohamad Alnomas": 0,
    "AD": 0,
    "Abdullah Khaled": 0,
    "Shamlan Abdulaziz": 0,
-   "Gelenn Caley Cale": 1,
-   "Khalifa zayed": 1,
-   "Wahab Bader": -2,
-   "JMAMS": 0,
-   "Sabah Mohammed": 2,
-   "Rashed": -1,
-   "HMB": -1,
+   "JMAMS": 3,
+   "Wahab Bader": 1,
+   "Gelenn Caley Cale": -2,
+   "Khalifa zayed": -2,
+   "Sabah Mohammed": 0,
+   "Rashed": 0,
+   "HMB": 0,
    "Ali Ahmed Hmoud Mohammed": 0,
    "Chris Ovenden": 0,
    "Feras Al Qenaei": 0,
@@ -6913,10 +6943,10 @@ const WC_DATA = {
    "Jarah Aladwani": 0,
    "Ahmed Boareki": 0,
    "Syb": 0,
-   "Thamer Fares Alnoon": 0,
-   "Mohammed Behbehani": 0,
-   "Arsenal #1": 1,
-   "Moblee": -1,
+   "Mohammed Behbehani": 1,
+   "Thamer Fares Alnoon": -1,
+   "Arsenal #1": 0,
+   "Moblee": 0,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Mama Aad": 0,
@@ -6928,8 +6958,8 @@ const WC_DATA = {
    "Mohammed Jamal": 0,
    "Mohammad Ahmad": 0,
    "Eric Bartlett": 0,
-   "Jogs Bonito": 0,
-   "Abdullah Mohammed": 0,
+   "Abdullah Mohammed": 1,
+   "Jogs Bonito": -1,
    "Khaled ali": 0,
    "Zuz": 0,
    "Hmoud Al Sabah": 0,
@@ -6944,7 +6974,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-07-01",
-  "matchesCounted": 79,
+  "matchesCounted": 80,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -6957,6 +6987,12 @@ const WC_DATA = {
     "team": "ARG",
     "goals": 6,
     "pens": 0
+   },
+   {
+    "player": "Harry Kane",
+    "team": "ENG",
+    "goals": 5,
+    "pens": 1
    },
    {
     "player": "Erling Haaland",
@@ -6975,12 +7011,6 @@ const WC_DATA = {
     "team": "BRA",
     "goals": 4,
     "pens": 0
-   },
-   {
-    "player": "Harry Kane",
-    "team": "ENG",
-    "goals": 3,
-    "pens": 1
    },
    {
     "player": "Kai Havertz",
@@ -7249,8 +7279,8 @@ const WC_DATA = {
     "goals": 8
    },
    {
-    "team": "SUI",
-    "goals": 7
+    "team": "ENG",
+    "goals": 8
    }
   ],
   "note": "Golden Boot, assists and team goals from ESPN goal events; cards from ESPN match statistics. MENA and host props resolve on the bracket."
