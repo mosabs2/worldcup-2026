@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-07-01",
-  "asOfNote": "Results through 81 matches, auto-synced from the ESPN public feed 2026-07-01 22:55 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-07-02",
+  "asOfNote": "Results through 82 matches, auto-synced from the ESPN public feed 2026-07-02 02:10 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4174,9 +4174,31 @@ const WC_DATA = {
    "venueId": "SF",
    "team1": "USA",
    "team2": "BIH",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "D1 vs 3rd B/E/F/I/J"
+   "label": "D1 vs 3rd B/E/F/I/J",
+   "score": {
+    "team1": 2,
+    "team2": 0
+   },
+   "goals": [
+    {
+     "t": "USA",
+     "p": "Folarin Balogun",
+     "m": "45'"
+    },
+    {
+     "t": "USA",
+     "p": "Malik Tillman",
+     "m": "82'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.92,
+    "team2": 0.25,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-9",
@@ -4504,7 +4526,7 @@ const WC_DATA = {
    "matchNo": 94,
    "dateET": "2026-07-06T20:00:00-04:00",
    "venueId": "SEA",
-   "team1": null,
+   "team1": "USA",
    "team2": "BEL",
    "status": "pending",
    "feeds": [
@@ -6968,12 +6990,12 @@ const WC_DATA = {
    "Abdullah Khaled": 0,
    "Shamlan Abdulaziz": 0,
    "JMAMS": 0,
-   "Gelenn Caley Cale": 1,
-   "Khalifa zayed": 1,
-   "Wahab Bader": -2,
-   "Rashed": 1,
+   "Wahab Bader": 2,
+   "Gelenn Caley Cale": -1,
+   "Khalifa zayed": -1,
+   "Rashed": 0,
+   "HMB": 1,
    "Sabah Mohammed": -1,
-   "HMB": 0,
    "Ali Ahmed Hmoud Mohammed": 0,
    "Chris Ovenden": 0,
    "Feras Al Qenaei": 0,
@@ -6986,8 +7008,8 @@ const WC_DATA = {
    "Syb": 0,
    "Mohammed Behbehani": 0,
    "Thamer Fares Alnoon": 0,
-   "Moblee": 1,
-   "Arsenal #1": -1,
+   "Moblee": 0,
+   "Arsenal #1": 0,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Mama Aad": 0,
@@ -7014,8 +7036,8 @@ const WC_DATA = {
   }
  },
  "propsLive": {
-  "asOf": "2026-07-01",
-  "matchesCounted": 81,
+  "asOf": "2026-07-02",
+  "matchesCounted": 82,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -7096,14 +7118,14 @@ const WC_DATA = {
     "pens": 0
    },
    {
-    "player": "Ismael Saibari",
-    "team": "MAR",
+    "player": "Folarin Balogun",
+    "team": "USA",
     "goals": 3,
     "pens": 0
    },
    {
-    "player": "Johan Manzambi",
-    "team": "SUI",
+    "player": "Ismael Saibari",
+    "team": "MAR",
     "goals": 3,
     "pens": 0
    }
@@ -7220,16 +7242,22 @@ const WC_DATA = {
     "points": 11
    },
    {
+    "team": "BIH",
+    "yellow": 7,
+    "red": 1,
+    "points": 10
+   },
+   {
     "team": "QAT",
     "yellow": 4,
     "red": 2,
     "points": 10
    },
    {
-    "team": "BIH",
-    "yellow": 6,
+    "team": "USA",
+    "yellow": 5,
     "red": 1,
-    "points": 9
+    "points": 8
    },
    {
     "team": "URU",
@@ -7266,12 +7294,6 @@ const WC_DATA = {
     "yellow": 4,
     "red": 1,
     "points": 7
-   },
-   {
-    "team": "IRQ",
-    "yellow": 4,
-    "red": 1,
-    "points": 7
    }
   ],
   "teamGoals": [
@@ -7286,6 +7308,10 @@ const WC_DATA = {
    {
     "team": "NED",
     "goals": 11
+   },
+   {
+    "team": "USA",
+    "goals": 10
    },
    {
     "team": "SEN",
@@ -7309,10 +7335,6 @@ const WC_DATA = {
    },
    {
     "team": "MEX",
-    "goals": 8
-   },
-   {
-    "team": "USA",
     "goals": 8
    },
    {
