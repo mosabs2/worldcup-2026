@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-07-02",
-  "asOfNote": "Results through 83 matches, auto-synced from the ESPN public feed 2026-07-02 21:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-07-03",
+  "asOfNote": "Results through 84 matches, auto-synced from the ESPN public feed 2026-07-03 01:10 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4148,9 +4148,38 @@ const WC_DATA = {
    "venueId": "TOR",
    "team1": "POR",
    "team2": "CRO",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "K2 vs L2"
+   "label": "K2 vs L2",
+   "score": {
+    "team1": 2,
+    "team2": 1
+   },
+   "goals": [
+    {
+     "t": "CRO",
+     "p": "Ivan Perisic",
+     "m": "53'"
+    },
+    {
+     "t": "POR",
+     "p": "Cristiano Ronaldo",
+     "m": "68'",
+     "pen": true
+    },
+    {
+     "t": "POR",
+     "p": "Gonçalo Ramos",
+     "m": "90'+4'",
+     "a": "Rafael Leão"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.18,
+    "team2": 1.34,
+    "src": "espn"
+   }
   },
   {
    "id": "R32-11",
@@ -4540,7 +4569,7 @@ const WC_DATA = {
    "matchNo": 93,
    "dateET": "2026-07-06T15:00:00-04:00",
    "venueId": "DAL",
-   "team1": null,
+   "team1": "POR",
    "team2": "ESP",
    "status": "pending",
    "feeds": [
@@ -7010,38 +7039,38 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Bader Al Gatheebi": 2,
+   "Bader Al Gatheebi": 0,
+   "Faisal Jaber Al Sabah": 2,
    "Nasser Talal": -1,
-   "Saleh Al Hashash": 2,
-   "Faisal Jaber Al Sabah": -2,
-   "Faisal Abu Hadida": -1,
+   "Saleh Al Hashash": -1,
+   "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
-   "Abdullah Khaled": 1,
-   "Shamlan Abdulaziz": 1,
-   "AD": -2,
-   "Rashed": 4,
-   "HMB": 4,
-   "JMAMS": -2,
-   "Ali Ahmed Hmoud Mohammed": 4,
-   "Chris Ovenden": 4,
-   "Wahab Bader": -4,
-   "Gelenn Caley Cale": -4,
-   "Khalifa zayed": -4,
-   "Feras Al Qenaei": 1,
-   "Khaled Al Qahtani": 1,
-   "Sabah Mohammed": -4,
+   "AD": 2,
+   "Abdullah Khaled": -1,
+   "Shamlan Abdulaziz": -1,
+   "JMAMS": 2,
+   "Rashed": -1,
+   "Gelenn Caley Cale": 4,
+   "Khalifa zayed": 4,
+   "HMB": -3,
+   "Wahab Bader": 0,
+   "Ali Ahmed Hmoud Mohammed": -3,
+   "Chris Ovenden": -3,
+   "Sabah Mohammed": 2,
+   "Feras Al Qenaei": -1,
+   "Khaled Al Qahtani": -1,
    "Abdulaziz Alsabah": 0,
    "Salem Athbi": 0,
    "Khalifa ali": 0,
    "Jarah Aladwani": 0,
    "Ahmed Boareki": 0,
    "Syb": 0,
-   "Moblee": 2,
-   "Mohammed Behbehani": -1,
-   "Thamer Fares Alnoon": -1,
-   "Khaled Fahad": 1,
-   "Nasser Fahad": 1,
-   "Arsenal #1": -2,
+   "Mohammed Behbehani": 1,
+   "Moblee": -1,
+   "Thamer Fares Alnoon": 0,
+   "Arsenal #1": 2,
+   "Khaled Fahad": -1,
+   "Nasser Fahad": -1,
    "Mama Aad": 0,
    "Faisal Boodai": 0,
    "Naser AlQadiri": 0,
@@ -7051,8 +7080,8 @@ const WC_DATA = {
    "Mohammed Jamal": 0,
    "Mohammad Ahmad": 0,
    "Eric Bartlett": 0,
-   "Abdullah Mohammed": 0,
-   "Jogs Bonito": 0,
+   "Jogs Bonito": 1,
+   "Abdullah Mohammed": -1,
    "Khaled ali": 0,
    "Zuz": 0,
    "Hmoud Al Sabah": 0,
@@ -7066,8 +7095,8 @@ const WC_DATA = {
   }
  },
  "propsLive": {
-  "asOf": "2026-07-02",
-  "matchesCounted": 83,
+  "asOf": "2026-07-03",
+  "matchesCounted": 84,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -7118,6 +7147,12 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Cristiano Ronaldo",
+    "team": "POR",
+    "goals": 3,
+    "pens": 1
+   },
+   {
     "player": "Kai Havertz",
     "team": "GER",
     "goals": 3,
@@ -7150,12 +7185,6 @@ const WC_DATA = {
    {
     "player": "Elijah Just",
     "team": "NZL",
-    "goals": 3,
-    "pens": 0
-   },
-   {
-    "player": "Folarin Balogun",
-    "team": "USA",
     "goals": 3,
     "pens": 0
    }
