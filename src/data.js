@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-07-04",
-  "asOfNote": "Results through 87 matches, auto-synced from the ESPN public feed 2026-07-04 00:45 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 88 matches, auto-synced from the ESPN public feed 2026-07-04 03:35 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4620,9 +4620,27 @@ const WC_DATA = {
    "venueId": "KC",
    "team1": "COL",
    "team2": "GHA",
-   "status": "pending",
+   "status": "completed",
    "feeds": null,
-   "label": "K1 vs 3rd D/E/I/J/L"
+   "label": "K1 vs 3rd D/E/I/J/L",
+   "score": {
+    "team1": 1,
+    "team2": 0
+   },
+   "goals": [
+    {
+     "t": "COL",
+     "p": "Jhon Arias",
+     "m": "14'",
+     "a": "Luis Suárez"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.18,
+    "team2": 0.27,
+    "src": "espn"
+   }
   },
   {
    "id": "R16-1",
@@ -4744,7 +4762,7 @@ const WC_DATA = {
    "dateET": "2026-07-07T16:00:00-04:00",
    "venueId": "BCP",
    "team1": "SUI",
-   "team2": null,
+   "team2": "COL",
    "status": "pending",
    "feeds": [
     "R32-13",
@@ -7135,29 +7153,29 @@ const WC_DATA = {
    "Dark horse": 0,
    "Bader Al Gatheebi": 0,
    "Faisal Jaber Al Sabah": 0,
-   "Nasser Talal": 0,
-   "Saleh Al Hashash": 0,
+   "Saleh Al Hashash": 1,
+   "Nasser Talal": -1,
    "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
    "AD": 0,
-   "Wahab Bader": 9,
+   "Wahab Bader": 0,
+   "HMB": 2,
    "Abdullah Khaled": -1,
    "Shamlan Abdulaziz": -1,
-   "HMB": 1,
-   "JMAMS": -2,
-   "Rashed": -2,
-   "Gelenn Caley Cale": 1,
-   "Khalifa zayed": 1,
-   "Ali Ahmed Hmoud Mohammed": -3,
-   "Chris Ovenden": -3,
+   "JMAMS": 0,
+   "Rashed": 0,
+   "Ali Ahmed Hmoud Mohammed": 2,
+   "Chris Ovenden": 2,
+   "Gelenn Caley Cale": -2,
+   "Khalifa zayed": -2,
    "Sabah Mohammed": 0,
    "Feras Al Qenaei": 0,
    "Khaled Al Qahtani": 0,
    "Abdulaziz Alsabah": 0,
    "Salem Athbi": 0,
    "Khalifa ali": 0,
-   "Ahmed Boareki": 1,
-   "Jarah Aladwani": -1,
+   "Ahmed Boareki": 0,
+   "Jarah Aladwani": 0,
    "Syb": 0,
    "Mohammed Behbehani": 0,
    "Moblee": 0,
@@ -7190,7 +7208,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-07-04",
-  "matchesCounted": 87,
+  "matchesCounted": 88,
   "topScorers": [
    {
     "player": "Lionel Messi",
