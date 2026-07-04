@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-07-04",
-  "asOfNote": "Results through 88 matches, auto-synced from the ESPN public feed 2026-07-04 03:35 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 89 matches, auto-synced from the ESPN public feed 2026-07-04 19:05 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4667,12 +4667,42 @@ const WC_DATA = {
    "venueId": "HOU",
    "team1": "CAN",
    "team2": "MAR",
-   "status": "pending",
+   "status": "completed",
    "feeds": [
     "R32-1",
     "R32-4"
    ],
-   "scheduleApprox": true
+   "scheduleApprox": true,
+   "score": {
+    "team1": 0,
+    "team2": 3
+   },
+   "goals": [
+    {
+     "t": "MAR",
+     "p": "Azzedine Ounahi",
+     "m": "50'",
+     "a": "Achraf Hakimi"
+    },
+    {
+     "t": "MAR",
+     "p": "Azzedine Ounahi",
+     "m": "82'",
+     "a": "Brahim Díaz"
+    },
+    {
+     "t": "MAR",
+     "p": "Soufiane Rahimi",
+     "m": "90'+8'",
+     "a": "Brahim Díaz"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.86,
+    "team2": 0.77,
+    "src": "espn"
+   }
   },
   {
    "id": "R16-3",
@@ -4778,7 +4808,7 @@ const WC_DATA = {
    "dateET": "2026-07-09T16:00:00-04:00",
    "venueId": "BOS",
    "team1": null,
-   "team2": null,
+   "team2": "MAR",
    "status": "pending",
    "feeds": [
     "R16-1",
@@ -7153,22 +7183,22 @@ const WC_DATA = {
    "Dark horse": 0,
    "Bader Al Gatheebi": 0,
    "Faisal Jaber Al Sabah": 0,
-   "Saleh Al Hashash": 1,
-   "Nasser Talal": -1,
+   "Saleh Al Hashash": 0,
+   "Nasser Talal": 0,
    "Faisal Abu Hadida": 0,
    "Bader Mohamad Alnomas": 0,
    "AD": 0,
    "Wahab Bader": 0,
-   "HMB": 2,
-   "Abdullah Khaled": -1,
-   "Shamlan Abdulaziz": -1,
+   "HMB": 0,
+   "Abdullah Khaled": 0,
+   "Shamlan Abdulaziz": 0,
    "JMAMS": 0,
    "Rashed": 0,
-   "Ali Ahmed Hmoud Mohammed": 2,
-   "Chris Ovenden": 2,
-   "Gelenn Caley Cale": -2,
-   "Khalifa zayed": -2,
-   "Sabah Mohammed": 0,
+   "Ali Ahmed Hmoud Mohammed": 0,
+   "Chris Ovenden": 0,
+   "Sabah Mohammed": 2,
+   "Gelenn Caley Cale": -1,
+   "Khalifa zayed": -1,
    "Feras Al Qenaei": 0,
    "Khaled Al Qahtani": 0,
    "Abdulaziz Alsabah": 0,
@@ -7179,8 +7209,8 @@ const WC_DATA = {
    "Syb": 0,
    "Mohammed Behbehani": 0,
    "Moblee": 0,
-   "Thamer Fares Alnoon": 0,
-   "Arsenal #1": 0,
+   "Arsenal #1": 1,
+   "Thamer Fares Alnoon": -1,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Mama Aad": 0,
@@ -7208,7 +7238,7 @@ const WC_DATA = {
  },
  "propsLive": {
   "asOf": "2026-07-04",
-  "matchesCounted": 88,
+  "matchesCounted": 89,
   "topScorers": [
    {
     "player": "Lionel Messi",
@@ -7309,6 +7339,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Brahim Díaz",
+    "team": "MAR",
+    "assists": 4,
+    "goals": 0
+   },
+   {
     "player": "Bruno Guimarães",
     "team": "BRA",
     "assists": 4,
@@ -7375,20 +7411,14 @@ const WC_DATA = {
     "goals": 2
    },
    {
+    "player": "Achraf Hakimi",
+    "team": "MAR",
+    "assists": 2,
+    "goals": 1
+   },
+   {
     "player": "Iliman Ndiaye",
     "team": "SEN",
-    "assists": 2,
-    "goals": 1
-   },
-   {
-    "player": "Julio Enciso",
-    "team": "PAR",
-    "assists": 2,
-    "goals": 1
-   },
-   {
-    "player": "Mohamed Salah",
-    "team": "EGY",
     "assists": 2,
     "goals": 1
    }
@@ -7404,6 +7434,12 @@ const WC_DATA = {
     "team": "RSA",
     "yellow": 5,
     "red": 2,
+    "points": 11
+   },
+   {
+    "team": "CAN",
+    "yellow": 11,
+    "red": 0,
     "points": 11
    },
    {
@@ -7441,12 +7477,6 @@ const WC_DATA = {
     "yellow": 5,
     "red": 1,
     "points": 8
-   },
-   {
-    "team": "CAN",
-    "yellow": 7,
-    "red": 0,
-    "points": 7
    },
    {
     "team": "BRA",
@@ -7489,6 +7519,10 @@ const WC_DATA = {
     "goals": 10
    },
    {
+    "team": "MAR",
+    "goals": 10
+   },
+   {
     "team": "SEN",
     "goals": 10
    },
@@ -7511,10 +7545,6 @@ const WC_DATA = {
    {
     "team": "BEL",
     "goals": 9
-   },
-   {
-    "team": "MEX",
-    "goals": 8
    }
   ],
   "note": "Golden Boot, assists and team goals from ESPN goal events; cards from ESPN match statistics. MENA and host props resolve on the bracket."
