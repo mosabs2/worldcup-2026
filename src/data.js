@@ -3,7 +3,7 @@ const WC_DATA = {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
   "asOf": "2026-07-07",
-  "asOfNote": "Results through 94 matches, auto-synced from the ESPN public feed 2026-07-07 02:00 UTC. Probabilities recompute in your browser from this data.",
+  "asOfNote": "Results through 95 matches, auto-synced from the ESPN public feed 2026-07-07 18:10 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -4925,12 +4925,54 @@ const WC_DATA = {
    "venueId": "ATL",
    "team1": "ARG",
    "team2": "EGY",
-   "status": "pending",
+   "status": "completed",
    "feeds": [
     "R32-15",
     "R32-14"
    ],
-   "scheduleApprox": true
+   "scheduleApprox": true,
+   "score": {
+    "team1": 3,
+    "team2": 2
+   },
+   "goals": [
+    {
+     "t": "EGY",
+     "p": "Yasser Ibrahim",
+     "m": "15'",
+     "a": "Marawan Attia"
+    },
+    {
+     "t": "EGY",
+     "p": "Mostafa Zico",
+     "m": "67'",
+     "a": "Haissem Hassan"
+    },
+    {
+     "t": "ARG",
+     "p": "Cristian Romero",
+     "m": "79'",
+     "a": "Lionel Messi"
+    },
+    {
+     "t": "ARG",
+     "p": "Lionel Messi",
+     "m": "83'",
+     "a": "Gonzalo Montiel"
+    },
+    {
+     "t": "ARG",
+     "p": "Enzo Fernández",
+     "m": "90'+2'",
+     "a": "Lautaro Martínez"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.8,
+    "team2": 0.98,
+    "src": "espn"
+   }
   },
   {
    "id": "R16-8",
@@ -5003,7 +5045,7 @@ const WC_DATA = {
    "matchNo": 100,
    "dateET": "2026-07-11T21:00:00-04:00",
    "venueId": "KC",
-   "team1": null,
+   "team1": "ARG",
    "team2": null,
    "status": "pending",
    "feeds": [
@@ -7329,17 +7371,17 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Bader Al Gatheebi": 1,
-   "Nasser Talal": -1,
-   "Faisal Abu Hadida": 0,
-   "Saleh Al Hashash": 0,
+   "Bader Al Gatheebi": 0,
+   "Nasser Talal": 0,
+   "Saleh Al Hashash": 1,
+   "Faisal Abu Hadida": -1,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
-   "Ali Ahmed Hmoud Mohammed": 1,
-   "Chris Ovenden": 1,
+   "Wahab Bader": 4,
+   "HMB": 2,
+   "Ali Ahmed Hmoud Mohammed": -2,
+   "Chris Ovenden": -2,
    "JMAMS": -2,
-   "HMB": 0,
-   "Wahab Bader": 0,
    "AD": 0,
    "Feras Al Qenaei": 0,
    "Rashed": 0,
@@ -7352,42 +7394,48 @@ const WC_DATA = {
    "Abdulaziz Alsabah": 0,
    "Salem Athbi": 0,
    "Khalifa ali": 0,
-   "Mohammed Behbehani": 0,
-   "Ahmed Boareki": 0,
+   "Ahmed Boareki": 1,
+   "Mohammed Behbehani": -1,
    "Jarah Aladwani": 0,
    "Syb": 0,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Moblee": 0,
-   "Arsenal #1": 0,
-   "Thamer Fares Alnoon": 0,
-   "Mama Aad": 0,
-   "Faisal Boodai": 0,
-   "Naser AlQadiri": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 0,
+   "Hani Ibraheam sulaiman abdullah al mawash": 5,
+   "Arsenal #1": -1,
+   "Thamer Fares Alnoon": -1,
+   "Mama Aad": -1,
+   "Faisal Boodai": -1,
+   "Naser AlQadiri": -1,
    "Essa": 0,
    "Fahad Ali": 0,
-   "Eric Bartlett": 0,
-   "Mohammed Jamal": 0,
-   "Mohammad Ahmad": 0,
+   "Mohammed Jamal": 1,
+   "Mohammad Ahmad": 1,
+   "Eric Bartlett": -2,
    "Abdullah Mohammed": 0,
-   "Jogs Bonito": 0,
-   "Khaled ali": 0,
+   "Khaled ali": 1,
+   "Jogs Bonito": -1,
    "Hmoud Al Sabah": 0,
    "Zuz": 0,
    "Ahmed Mubarak Al Sabah": 0,
    "Fahad Khaled": 0,
    "Alibaba": 0,
-   "Souad": 1,
-   "Saleh Boareki": -1,
+   "Souad": 0,
+   "Saleh Boareki": 0,
    "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
   "asOf": "2026-07-07",
-  "matchesCounted": 94,
+  "matchesCounted": 95,
   "topScorers": [
+   {
+    "player": "Lionel Messi",
+    "team": "ARG",
+    "goals": 8,
+    "pens": 0
+   },
    {
     "player": "Kylian Mbappé",
     "team": "FRA",
@@ -7397,12 +7445,6 @@ const WC_DATA = {
    {
     "player": "Erling Haaland",
     "team": "NOR",
-    "goals": 7,
-    "pens": 0
-   },
-   {
-    "player": "Lionel Messi",
-    "team": "ARG",
     "goals": 7,
     "pens": 0
    },
@@ -7579,6 +7621,12 @@ const WC_DATA = {
     "points": 12
    },
    {
+    "team": "EGY",
+    "yellow": 12,
+    "red": 0,
+    "points": 12
+   },
+   {
     "team": "RSA",
     "yellow": 5,
     "red": 2,
@@ -7627,12 +7675,6 @@ const WC_DATA = {
     "points": 8
    },
    {
-    "team": "EGY",
-    "yellow": 8,
-    "red": 0,
-    "points": 8
-   },
-   {
     "team": "URU",
     "yellow": 5,
     "red": 1,
@@ -7648,6 +7690,10 @@ const WC_DATA = {
   "teamGoals": [
    {
     "team": "FRA",
+    "goals": 14
+   },
+   {
+    "team": "ARG",
     "goals": 14
    },
    {
@@ -7668,10 +7714,6 @@ const WC_DATA = {
    },
    {
     "team": "NED",
-    "goals": 11
-   },
-   {
-    "team": "ARG",
     "goals": 11
    },
    {

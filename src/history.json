@@ -605,24 +605,24 @@
  },
  {
   "date": "2026-07-07",
-  "label": "Model v1.0 · after 94 matches",
+  "label": "Model v1.0 · after 95 matches",
   "probs": {
-   "FRA": 17.43,
-   "ESP": 16.95,
-   "ENG": 16.35,
-   "ARG": 10.95,
+   "FRA": 17.04,
+   "ARG": 16.95,
+   "ESP": 16.28,
+   "ENG": 15.42,
    "BEL": 9.8,
-   "MAR": 9.01,
-   "NOR": 8.33,
-   "COL": 5.33,
-   "SUI": 4.1,
-   "EGY": 1.75,
+   "MAR": 9.14,
+   "NOR": 7.66,
+   "COL": 4.16,
+   "SUI": 3.55,
    "MEX": 0,
    "RSA": 0,
    "KOR": 0,
    "CZE": 0,
    "CAN": 0,
-   "BIH": 0
+   "BIH": 0,
+   "QAT": 0
   }
  }
 ]
