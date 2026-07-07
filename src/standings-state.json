@@ -1,15 +1,15 @@
 {
  "baseline": {
   "Dark horse": 1,
-  "Nasser Talal": 2,
-  "Bader Al Gatheebi": 3,
+  "Bader Al Gatheebi": 2,
+  "Nasser Talal": 3,
   "Faisal Abu Hadida": 4,
   "Saleh Al Hashash": 5,
   "Faisal Jaber Al Sabah": 6,
   "Bader Mohamad Alnomas": 7,
-  "JMAMS": 8,
-  "Ali Ahmed Hmoud Mohammed": 9,
-  "Chris Ovenden": 10,
+  "Ali Ahmed Hmoud Mohammed": 8,
+  "Chris Ovenden": 9,
+  "JMAMS": 10,
   "HMB": 11,
   "Wahab Bader": 12,
   "AD": 13,
@@ -50,10 +50,10 @@
   "Ahmed Mubarak Al Sabah": 48,
   "Fahad Khaled": 49,
   "Alibaba": 50,
-  "Saleh Boareki": 51,
-  "Souad": 52,
+  "Souad": 51,
+  "Saleh Boareki": 52,
   "Abdullah Mubarak": 53,
   "AMAS": 54
  },
- "startedCount": 93
+ "startedCount": 94
 }
