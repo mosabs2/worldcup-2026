@@ -624,5 +624,27 @@
    "QAT": 0,
    "BRA": 0
   }
+ },
+ {
+  "date": "2026-07-09",
+  "label": "Model v1.0 · after 97 matches",
+  "probs": {
+   "FRA": 31.58,
+   "ARG": 16.6,
+   "ENG": 14.76,
+   "ESP": 14.49,
+   "BEL": 8.29,
+   "SUI": 7.18,
+   "NOR": 7.1,
+   "MEX": 0,
+   "RSA": 0,
+   "KOR": 0,
+   "CZE": 0,
+   "CAN": 0,
+   "BIH": 0,
+   "QAT": 0,
+   "BRA": 0,
+   "MAR": 0
+  }
  }
 ]
