@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-07-09",
-  "asOfNote": "Results through 97 matches, auto-synced from the ESPN public feed 2026-07-09 22:05 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-07-10",
+  "asOfNote": "Results through 98 matches, auto-synced from the ESPN public feed 2026-07-10 21:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -5055,12 +5055,40 @@ const WC_DATA = {
    "venueId": "LA",
    "team1": "ESP",
    "team2": "BEL",
-   "status": "pending",
+   "status": "completed",
    "feeds": [
     "R16-3",
     "R16-4"
    ],
-   "scheduleApprox": true
+   "scheduleApprox": true,
+   "score": {
+    "team1": 2,
+    "team2": 1
+   },
+   "goals": [
+    {
+     "t": "ESP",
+     "p": "Fabián Ruiz",
+     "m": "30'"
+    },
+    {
+     "t": "BEL",
+     "p": "Charles De Ketelaere",
+     "m": "41'",
+     "a": "Timothy Castagne"
+    },
+    {
+     "t": "ESP",
+     "p": "Mikel Merino",
+     "m": "88'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 2.08,
+    "team2": 0.37,
+    "src": "espn"
+   }
   },
   {
    "id": "QF-3",
@@ -5102,7 +5130,7 @@ const WC_DATA = {
    "dateET": "2026-07-14T15:00:00-04:00",
    "venueId": "DAL",
    "team1": "FRA",
-   "team2": null,
+   "team2": "ESP",
    "status": "pending",
    "feeds": [
     "QF-1",
@@ -7411,18 +7439,18 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Nasser Talal": 1,
-   "Bader Al Gatheebi": -1,
-   "Faisal Abu Hadida": 1,
-   "Saleh Al Hashash": -1,
+   "Bader Al Gatheebi": 1,
+   "Nasser Talal": -1,
+   "Saleh Al Hashash": 1,
+   "Faisal Abu Hadida": -1,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
-   "AD": 5,
-   "JMAMS": 3,
+   "HMB": 3,
+   "Ali Ahmed Hmoud Mohammed": 3,
+   "Chris Ovenden": 3,
+   "AD": -3,
    "Wahab Bader": -2,
-   "HMB": -2,
-   "Ali Ahmed Hmoud Mohammed": -2,
-   "Chris Ovenden": -2,
+   "JMAMS": -4,
    "Feras Al Qenaei": 0,
    "Rashed": 0,
    "Khaled Al Qahtani": 0,
@@ -7435,40 +7463,40 @@ const WC_DATA = {
    "Salem Athbi": 0,
    "Khalifa ali": 0,
    "Ahmed Boareki": 0,
-   "Jarah Aladwani": 1,
-   "Syb": 1,
-   "Mohammed Behbehani": -2,
+   "Jarah Aladwani": 0,
+   "Syb": 0,
+   "Mohammed Behbehani": 0,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Moblee": 0,
-   "Arsenal #1": 1,
-   "Hani Ibraheam sulaiman abdullah al mawash": -1,
-   "Thamer Fares Alnoon": 0,
-   "Mama Aad": 0,
-   "Faisal Boodai": 0,
-   "Naser AlQadiri": 0,
+   "Arsenal #1": 0,
+   "Thamer Fares Alnoon": 1,
+   "Mama Aad": 1,
+   "Faisal Boodai": 1,
+   "Naser AlQadiri": 1,
+   "Hani Ibraheam sulaiman abdullah al mawash": -4,
    "Essa": 0,
    "Fahad Ali": 0,
    "Mohammed Jamal": 0,
    "Mohammad Ahmad": 0,
    "Eric Bartlett": 0,
    "Abdullah Mohammed": 0,
-   "Khaled ali": 0,
-   "Jogs Bonito": 0,
+   "Jogs Bonito": 1,
+   "Khaled ali": -1,
    "Hmoud Al Sabah": 0,
    "Zuz": 0,
    "Ahmed Mubarak Al Sabah": 0,
    "Fahad Khaled": 0,
    "Alibaba": 0,
-   "Saleh Boareki": 1,
-   "Souad": -1,
+   "Souad": 1,
+   "Saleh Boareki": -1,
    "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
-  "asOf": "2026-07-09",
-  "matchesCounted": 97,
+  "asOf": "2026-07-10",
+  "matchesCounted": 98,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -7709,6 +7737,12 @@ const WC_DATA = {
     "points": 10
    },
    {
+    "team": "BEL",
+    "yellow": 6,
+    "red": 1,
+    "points": 9
+   },
+   {
     "team": "BRA",
     "yellow": 8,
     "red": 0,
@@ -7719,12 +7753,6 @@ const WC_DATA = {
     "yellow": 5,
     "red": 1,
     "points": 8
-   },
-   {
-    "team": "COL",
-    "yellow": 8,
-    "red": 0,
-    "points": 8
    }
   ],
   "teamGoals": [
@@ -7733,12 +7761,12 @@ const WC_DATA = {
     "goals": 16
    },
    {
-    "team": "ARG",
+    "team": "BEL",
     "goals": 14
    },
    {
-    "team": "BEL",
-    "goals": 13
+    "team": "ARG",
+    "goals": 14
    },
    {
     "team": "NOR",
@@ -7757,6 +7785,10 @@ const WC_DATA = {
     "goals": 11
    },
    {
+    "team": "ESP",
+    "goals": 11
+   },
+   {
     "team": "ENG",
     "goals": 11
    },
@@ -7770,10 +7802,6 @@ const WC_DATA = {
    },
    {
     "team": "MAR",
-    "goals": 10
-   },
-   {
-    "team": "SEN",
     "goals": 10
    }
   ],
