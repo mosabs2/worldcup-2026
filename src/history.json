@@ -668,5 +668,27 @@
    "MAR": 0,
    "HAI": 0
   }
+ },
+ {
+  "date": "2026-07-11",
+  "label": "Model v1.0 · after 99 matches",
+  "probs": {
+   "FRA": 28.68,
+   "ENG": 25.32,
+   "ESP": 25.24,
+   "ARG": 14.51,
+   "SUI": 6.25,
+   "MEX": 0,
+   "RSA": 0,
+   "KOR": 0,
+   "CZE": 0,
+   "CAN": 0,
+   "BIH": 0,
+   "QAT": 0,
+   "BRA": 0,
+   "MAR": 0,
+   "HAI": 0,
+   "SCO": 0
+  }
  }
 ]
