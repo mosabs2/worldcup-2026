@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-07-11",
-  "asOfNote": "Results through 99 matches, auto-synced from the ESPN public feed 2026-07-11 23:50 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-07-12",
+  "asOfNote": "Results through 100 matches, auto-synced from the ESPN public feed 2026-07-12 03:45 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -5144,12 +5144,47 @@ const WC_DATA = {
    "venueId": "KC",
    "team1": "ARG",
    "team2": "SUI",
-   "status": "pending",
+   "status": "completed",
    "feeds": [
     "R16-7",
     "R16-8"
    ],
-   "scheduleApprox": true
+   "scheduleApprox": true,
+   "score": {
+    "team1": 3,
+    "team2": 1
+   },
+   "goals": [
+    {
+     "t": "ARG",
+     "p": "Alexis Mac Allister",
+     "m": "10'",
+     "a": "Lionel Messi"
+    },
+    {
+     "t": "SUI",
+     "p": "Dan Ndoye",
+     "m": "67'",
+     "a": "Ricardo Rodríguez"
+    },
+    {
+     "t": "ARG",
+     "p": "Julián Álvarez",
+     "m": "112'",
+     "a": "José Manuel López"
+    },
+    {
+     "t": "ARG",
+     "p": "Lautaro Martínez",
+     "m": "120'+1'"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 1.99,
+    "team2": 0.53,
+    "src": "espn"
+   }
   },
   {
    "id": "SF-1",
@@ -5175,7 +5210,7 @@ const WC_DATA = {
    "dateET": "2026-07-15T15:00:00-04:00",
    "venueId": "ATL",
    "team1": "ENG",
-   "team2": null,
+   "team2": "ARG",
    "status": "pending",
    "feeds": [
     "QF-3",
@@ -7468,18 +7503,18 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Nasser Talal": 1,
-   "Bader Al Gatheebi": -1,
-   "Faisal Abu Hadida": 1,
-   "Saleh Al Hashash": -1,
+   "Bader Al Gatheebi": 1,
+   "Nasser Talal": -1,
+   "Saleh Al Hashash": 1,
+   "Faisal Abu Hadida": -1,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
-   "JMAMS": 5,
-   "Ali Ahmed Hmoud Mohammed": 0,
-   "Chris Ovenden": 0,
-   "HMB": -3,
+   "Wahab Bader": 5,
+   "HMB": 2,
+   "Ali Ahmed Hmoud Mohammed": -1,
+   "Chris Ovenden": -1,
+   "JMAMS": -4,
    "AD": -1,
-   "Wahab Bader": -1,
    "Feras Al Qenaei": 0,
    "Rashed": 0,
    "Khaled Al Qahtani": 0,
@@ -7491,41 +7526,41 @@ const WC_DATA = {
    "Abdulaziz Alsabah": 0,
    "Salem Athbi": 0,
    "Khalifa ali": 0,
-   "Mohammed Behbehani": 3,
-   "Ahmed Boareki": -1,
-   "Jarah Aladwani": -1,
-   "Syb": -1,
+   "Ahmed Boareki": 1,
+   "Mohammed Behbehani": -1,
+   "Jarah Aladwani": 0,
+   "Syb": 0,
    "Khaled Fahad": 0,
    "Nasser Fahad": 0,
    "Moblee": 0,
    "Arsenal #1": 0,
-   "Thamer Fares Alnoon": 0,
-   "Mama Aad": 0,
-   "Faisal Boodai": 0,
-   "Naser AlQadiri": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 0,
+   "Hani Ibraheam sulaiman abdullah al mawash": 4,
+   "Thamer Fares Alnoon": -1,
+   "Mama Aad": -1,
+   "Faisal Boodai": -1,
+   "Naser AlQadiri": -1,
    "Essa": 0,
    "Fahad Ali": 0,
-   "Eric Bartlett": 2,
-   "Mohammed Jamal": -1,
-   "Mohammad Ahmad": -1,
+   "Mohammed Jamal": 1,
+   "Mohammad Ahmad": 1,
+   "Eric Bartlett": -2,
    "Abdullah Mohammed": 0,
-   "Jogs Bonito": 0,
-   "Khaled ali": 0,
+   "Khaled ali": 1,
+   "Jogs Bonito": -1,
    "Hmoud Al Sabah": 0,
    "Zuz": 0,
    "Ahmed Mubarak Al Sabah": 0,
    "Fahad Khaled": 0,
    "Alibaba": 0,
-   "Saleh Boareki": 1,
-   "Souad": -1,
+   "Souad": 1,
+   "Saleh Boareki": -1,
    "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
-  "asOf": "2026-07-11",
-  "matchesCounted": 99,
+  "asOf": "2026-07-12",
+  "matchesCounted": 100,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -7686,6 +7721,12 @@ const WC_DATA = {
     "goals": 0
    },
    {
+    "player": "Lionel Messi",
+    "team": "ARG",
+    "assists": 2,
+    "goals": 8
+   },
+   {
     "player": "Ousmane Dembélé",
     "team": "FRA",
     "assists": 2,
@@ -7702,12 +7743,6 @@ const WC_DATA = {
     "team": "SUI",
     "assists": 2,
     "goals": 3
-   },
-   {
-    "player": "Breel Embolo",
-    "team": "SUI",
-    "assists": 2,
-    "goals": 2
    }
   ],
   "teamCards": [
@@ -7760,6 +7795,12 @@ const WC_DATA = {
     "points": 10
    },
    {
+    "team": "SUI",
+    "yellow": 7,
+    "red": 1,
+    "points": 10
+   },
+   {
     "team": "ENG",
     "yellow": 7,
     "red": 1,
@@ -7776,25 +7817,19 @@ const WC_DATA = {
     "yellow": 8,
     "red": 0,
     "points": 8
-   },
-   {
-    "team": "URU",
-    "yellow": 5,
-    "red": 1,
-    "points": 8
    }
   ],
   "teamGoals": [
+   {
+    "team": "ARG",
+    "goals": 17
+   },
    {
     "team": "FRA",
     "goals": 16
    },
    {
     "team": "BEL",
-    "goals": 14
-   },
-   {
-    "team": "ARG",
     "goals": 14
    },
    {
@@ -7826,11 +7861,11 @@ const WC_DATA = {
     "goals": 10
    },
    {
-    "team": "BRA",
+    "team": "SUI",
     "goals": 10
    },
    {
-    "team": "MAR",
+    "team": "BRA",
     "goals": 10
    }
   ],
