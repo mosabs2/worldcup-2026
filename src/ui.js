@@ -1233,6 +1233,63 @@
       el('p', { class: 'tiny', style: 'margin-top:8px' },
         'Live: provisional points from the current group leaders — it moves with every result, and the ▲▼ shows each entry’s rank change since the last update. Points: official, locked in only from finished groups and knockouts (so still 0 until the first group completes). Expected: the model weighs every pick by its current probability. Max: the ceiling if every still-alive pick lands. ★ The commissioner’s exhibition entry is shown for interest only and does not compete for prizes.')));
 
+    // The contenders — who can still win, enumerated over the remaining bracket.
+    // Appears once both semi-final pairings are known; collapses as results land
+    // (8 scenarios → 4 → 2 → the league winner) with no further code changes.
+    // Real results only: what-if overrides do not feed this card.
+    (() => {
+      const sfs = (D.matches || []).filter(m => m.round === 'sf');
+      if (sfs.length !== 2 || sfs.some(m => !m.team1 || !m.team2 || !T[m.team1] || !T[m.team2])) return;
+      const winOf = m => (m.status === 'completed' && m.score)
+        ? (m.score.winner || (m.score.team1 > m.score.team2 ? m.team1
+          : m.score.team2 > m.score.team1 ? m.team2 : null))
+        : null;
+      const finM = (D.matches || []).find(m => m.round === 'final');
+      const champKnown = finM ? winOf(finM) : null;
+      const opts = m => { const w = winOf(m); return w ? [w] : [m.team1, m.team2]; };
+      const scen = [];
+      opts(sfs[0]).forEach(a => opts(sfs[1]).forEach(b =>
+        (champKnown ? [champKnown] : [a, b]).forEach(ch => scen.push({ fin: [a, b], ch }))));
+      const gw = resolved.groupWinners;
+      const comp = rows.filter(r => !r.e.exhibition);
+      const finalPts = (e, s) => {
+        let p = 0;
+        GROUPS.forEach(g => { if (e.w && e.w[g] && gw[g] === e.w[g]) p += sc.groupWinner; });
+        (e.f || []).forEach(fc => { if (s.fin.includes(fc)) p += sc.finalist; });
+        if (e.c === s.ch) p += sc.champion;
+        return p;
+      };
+      const results = scen.map(s => {
+        let top = -1, names = [];
+        comp.forEach(r => {
+          const p = finalPts(r.e, s);
+          if (p > top) { top = p; names = [r.e.n]; }
+          else if (p === top) names.push(r.e.n);
+        });
+        return { s, top, names };
+      });
+      const alive = [...new Set(results.flatMap(r => r.names))];
+      const flagCode = c => el('span', { class: 'teamcell', style: 'font-weight:600' },
+        el('span', { class: 'fl' }, T[c].flag), el('span', { class: 'nm' }, T[c].code));
+      root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
+        el('h3', null, scen.length === 1 ? 'The league is decided' : 'The contenders',
+          el('span', { class: 'right' }, scen.length === 1 ? '' : alive.length + ' of ' + comp.length + ' can still win')),
+        scen.length === 1 ? null : el('p', { class: 'muted', style: 'margin-top:0' }, alive.join(' · ')),
+        el('div', { class: 'chart-wrap' }, el('table', null,
+          el('tr', null, el('th', null, 'Final'), el('th', null, 'Champion'),
+            el('th', null, scen.length === 1 ? 'League winner' : 'League winner if so')),
+          results.map(r => el('tr', null,
+            el('td', null, flagCode(r.s.fin[0]), el('span', { class: 'muted' }, ' v '), flagCode(r.s.fin[1])),
+            el('td', null, flagCode(r.s.ch)),
+            el('td', null, el('b', null, r.names.join(' & ')),
+              el('span', { class: 'muted' }, ' (' + r.top + ' pts)'),
+              r.names.length > 1 ? el('span', { class: 'tiny' }, ' — level: closest-total-goals tiebreaker decides') : null))))),
+        el('p', { class: 'tiny', style: 'margin-top:8px' },
+          scen.length === 1
+            ? 'Every result is in; the board above is final.'
+            : 'Every remaining way the bracket can go, and who lifts the family league in each. Rows drop out as the semis and the final are played; the tiebreaker (closest to the tournament’s total goals) applies only if a scenario ends level.')));
+    })();
+
     // selections board: everyone's picks side by side
     const cell = (code, win) => {
       if (!code || !T[code]) return el('td', { class: 'num muted' }, '—');

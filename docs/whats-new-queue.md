@@ -9,7 +9,7 @@ Add new user-facing changes here as they ship, for the next edition.
 
 ## Queued — to announce next time
 
-_(empty — Telegram channel, bot, My League, share card and self-healing/self-updating all covered by the 17 and 18 June editions)_
+- **The contenders card** (League tab, shipped 13 July 2026): from the semi-finals on, the board shows every remaining way the bracket can go and who wins the family league in each — six of 54 can still win as of shipping. Rows drop out as the semis and final are played; the card collapses to "The league is decided" after the final. Note: the planned Contenders WhatsApp message of 14 July may cover this, in which case fold rather than repeat.
 
 ## Announced log
 
