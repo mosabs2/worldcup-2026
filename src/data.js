@@ -2,8 +2,8 @@ const WC_DATA = {
  "meta": {
   "title": "World Cup 2026 — Probability Centre",
   "version": "1.0",
-  "asOf": "2026-07-12",
-  "asOfNote": "Results through 100 matches, auto-synced from the ESPN public feed 2026-07-12 03:45 UTC. Probabilities recompute in your browser from this data.",
+  "asOf": "2026-07-14",
+  "asOfNote": "Results through 101 matches, auto-synced from the ESPN public feed 2026-07-14 21:00 UTC. Probabilities recompute in your browser from this data.",
   "sources": [
    {
     "name": "FIFA fixtures and standings",
@@ -5195,12 +5195,36 @@ const WC_DATA = {
    "venueId": "DAL",
    "team1": "FRA",
    "team2": "ESP",
-   "status": "pending",
+   "status": "completed",
    "feeds": [
     "QF-1",
     "QF-2"
    ],
-   "scheduleApprox": true
+   "scheduleApprox": true,
+   "score": {
+    "team1": 0,
+    "team2": 2
+   },
+   "goals": [
+    {
+     "t": "ESP",
+     "p": "Mikel Oyarzabal",
+     "m": "22'",
+     "pen": true
+    },
+    {
+     "t": "ESP",
+     "p": "Pedro Porro",
+     "m": "58'",
+     "a": "Dani Olmo"
+    }
+   ],
+   "goals_src": "espn",
+   "xg": {
+    "team1": 0.3,
+    "team2": 1.63,
+    "src": "espn"
+   }
   },
   {
    "id": "SF-2",
@@ -5225,7 +5249,7 @@ const WC_DATA = {
    "matchNo": 103,
    "dateET": "2026-07-18T17:00:00-04:00",
    "venueId": "MIA",
-   "team1": null,
+   "team1": "FRA",
    "team2": null,
    "status": "pending",
    "feeds": [
@@ -5242,7 +5266,7 @@ const WC_DATA = {
    "matchNo": 104,
    "dateET": "2026-07-19T15:00:00-04:00",
    "venueId": "NYNJ",
-   "team1": null,
+   "team1": "ESP",
    "team2": null,
    "status": "pending",
    "feeds": [
@@ -7503,64 +7527,64 @@ const WC_DATA = {
   "propsDeadline": "18 June 2026",
   "movement": {
    "Dark horse": 0,
-   "Bader Al Gatheebi": 1,
-   "Nasser Talal": -1,
+   "Bader Al Gatheebi": 0,
    "Saleh Al Hashash": 1,
-   "Faisal Abu Hadida": -1,
+   "Nasser Talal": -1,
+   "Faisal Abu Hadida": 0,
    "Faisal Jaber Al Sabah": 0,
    "Bader Mohamad Alnomas": 0,
-   "Wahab Bader": 5,
-   "HMB": 2,
-   "Ali Ahmed Hmoud Mohammed": -1,
-   "Chris Ovenden": -1,
-   "JMAMS": -4,
-   "AD": -1,
-   "Feras Al Qenaei": 0,
-   "Rashed": 0,
-   "Khaled Al Qahtani": 0,
-   "Abdullah Khaled": 0,
-   "Shamlan Abdulaziz": 0,
-   "Sabah Mohammed": 0,
-   "Gelenn Caley Cale": 0,
-   "Khalifa zayed": 0,
-   "Abdulaziz Alsabah": 0,
-   "Salem Athbi": 0,
-   "Khalifa ali": 0,
-   "Ahmed Boareki": 1,
-   "Mohammed Behbehani": -1,
-   "Jarah Aladwani": 0,
-   "Syb": 0,
-   "Khaled Fahad": 0,
-   "Nasser Fahad": 0,
-   "Moblee": 0,
-   "Arsenal #1": 0,
-   "Hani Ibraheam sulaiman abdullah al mawash": 4,
-   "Thamer Fares Alnoon": -1,
-   "Mama Aad": -1,
-   "Faisal Boodai": -1,
-   "Naser AlQadiri": -1,
-   "Essa": 0,
-   "Fahad Ali": 0,
-   "Mohammed Jamal": 1,
-   "Mohammad Ahmad": 1,
-   "Eric Bartlett": -2,
-   "Abdullah Mohammed": 0,
-   "Khaled ali": 1,
-   "Jogs Bonito": -1,
+   "HMB": 1,
+   "Ali Ahmed Hmoud Mohammed": 1,
+   "Chris Ovenden": 1,
+   "Feras Al Qenaei": 3,
+   "Rashed": 3,
+   "Khaled Al Qahtani": 3,
+   "Wahab Bader": -6,
+   "JMAMS": -3,
+   "Gelenn Caley Cale": 4,
+   "Khalifa zayed": 4,
+   "Abdulaziz Alsabah": 4,
+   "Abdullah Khaled": -2,
+   "Salem Athbi": 3,
+   "Shamlan Abdulaziz": -3,
+   "Sabah Mohammed": -3,
+   "Khalifa ali": 1,
+   "AD": -11,
+   "Khaled Fahad": 4,
+   "Nasser Fahad": 4,
+   "Moblee": 4,
+   "Mohammed Behbehani": -2,
+   "Thamer Fares Alnoon": 5,
+   "Mama Aad": 5,
+   "Faisal Boodai": 5,
+   "Naser AlQadiri": 5,
+   "Ahmed Boareki": -8,
+   "Hani Ibraheam sulaiman abdullah al mawash": -1,
+   "Essa": 3,
+   "Fahad Ali": 3,
+   "Arsenal #1": -5,
+   "Jarah Aladwani": -11,
+   "Syb": -11,
+   "Abdullah Mohammed": 3,
+   "Jogs Bonito": 4,
+   "Mohammed Jamal": -2,
+   "Mohammad Ahmad": -2,
+   "Khaled ali": 0,
+   "Eric Bartlett": -3,
    "Hmoud Al Sabah": 0,
-   "Zuz": 0,
-   "Ahmed Mubarak Al Sabah": 0,
-   "Fahad Khaled": 0,
-   "Alibaba": 0,
-   "Souad": 1,
-   "Saleh Boareki": -1,
+   "Ahmed Mubarak Al Sabah": 1,
+   "Fahad Khaled": 1,
+   "Alibaba": 1,
+   "Zuz": -3,
+   "Souad": 0,
+   "Saleh Boareki": 0,
    "Abdullah Mubarak": 0,
    "AMAS": 0
   }
  },
  "propsLive": {
-  "asOf": "2026-07-12",
-  "matchesCounted": 100,
+  "asOf": "2026-07-14",
+  "matchesCounted": 101,
   "topScorers": [
    {
     "player": "Kylian Mbappé",
@@ -7593,6 +7617,12 @@ const WC_DATA = {
     "pens": 0
    },
    {
+    "player": "Mikel Oyarzabal",
+    "team": "ESP",
+    "goals": 5,
+    "pens": 1
+   },
+   {
     "player": "Ousmane Dembélé",
     "team": "FRA",
     "goals": 5,
@@ -7607,12 +7637,6 @@ const WC_DATA = {
    {
     "player": "Julián Quiñones",
     "team": "MEX",
-    "goals": 4,
-    "pens": 0
-   },
-   {
-    "player": "Mikel Oyarzabal",
-    "team": "ESP",
     "goals": 4,
     "pens": 0
    },
@@ -7833,6 +7857,10 @@ const WC_DATA = {
     "goals": 14
    },
    {
+    "team": "ESP",
+    "goals": 13
+   },
+   {
     "team": "NOR",
     "goals": 13
    },
@@ -7850,10 +7878,6 @@ const WC_DATA = {
    },
    {
     "team": "NED",
-    "goals": 11
-   },
-   {
-    "team": "ESP",
     "goals": 11
    },
    {
