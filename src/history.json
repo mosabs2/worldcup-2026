@@ -756,5 +756,27 @@
    "USA": 0,
    "PAR": 0
   }
+ },
+ {
+  "date": "2026-07-18",
+  "label": "Model v1.0 · after 103 matches",
+  "probs": {
+   "ESP": 51.27,
+   "ARG": 48.73,
+   "MEX": 0,
+   "RSA": 0,
+   "KOR": 0,
+   "CZE": 0,
+   "CAN": 0,
+   "BIH": 0,
+   "QAT": 0,
+   "SUI": 0,
+   "BRA": 0,
+   "MAR": 0,
+   "HAI": 0,
+   "SCO": 0,
+   "USA": 0,
+   "PAR": 0
+  }
  }
 ]
