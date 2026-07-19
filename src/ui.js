@@ -793,6 +793,87 @@
   function encodeEntry(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, ''); }
   function decodeEntry(s) { return JSON.parse(decodeURIComponent(escape(atob(s.trim())))); }
 
+  // Shared league scoring — used by both the League tab and the My League tab so
+  // they rank identically. Returns the merged entries, resolved outcomes, an
+  // elim() helper and the sorted, scored rows.
+  function leagueStandings() {
+    const sc = D.league.scoring;
+    const pubNames = new Set((D.league.entries || []).map(e => e.n.toLowerCase()));
+    const entries = (D.league.entries || []).map(e => ({ ...e, src: 'published' }))
+      .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())).map(e => ({ ...e, src: 'local' })));
+    const resolved = E.resolvedOutcomes(effData());
+    const prov = E.provisionalOutcomes(effData());
+    const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
+    // Teams knocked out in a completed knockout match (the loser of any decided KO tie;
+    // score.winner covers penalty/extra-time results). Without this, a group winner who
+    // then loses in the R32+ is still treated as "alive" on every league surface.
+    const koOut = new Set();
+    effData().matches.filter(m => m.stage !== 'group' && m.status === 'completed' && m.score)
+      .forEach(m => {
+        const w = m.score.winner ||
+          (m.score.team1 > m.score.team2 ? m.team1 : m.score.team2 > m.score.team1 ? m.team2 : null);
+        if (w) koOut.add(w === m.team1 ? m.team2 : m.team1);
+      });
+    const elim = c => {
+      if (koOut.has(c)) return true;
+      if (!T[c] || !resolved.groupWinners[T[c].group]) return false;
+      const posn = TABLES[T[c].group].findIndex(r => r.team === c);
+      if (posn === 3) return true;
+      if (posn === 2 && allGroupsDone) return SIM.teams[c].r32 === 0;
+      return false;
+    };
+    // Team -> official bracket half (0 = top/feeds SF1, 1 = bottom/feeds SF2) from the
+    // pinned R32 draw: r32Template slot index < 8 is the top half. Used to cap the finalist
+    // ceiling — two finalist picks in the SAME half can meet before the final, so at most
+    // one can be a finalist. Empty until the bracket is generated (then fall back per-pick).
+    const r32byId = {};
+    effData().matches.forEach(m => { if (m.stage === 'r32') r32byId[m.id] = m; });
+    const teamHalf = {};
+    (D.r32Template || []).forEach((slot, i) => {
+      const gm = r32byId[slot.id]; if (!gm) return;
+      const half = i < 8 ? 0 : 1;
+      if (gm.team1) teamHalf[gm.team1] = half;
+      if (gm.team2) teamHalf[gm.team2] = half;
+    });
+    const bracketPinned = (D.r32Template || []).length > 0 &&
+      (D.r32Template || []).every(s => { const gm = r32byId[s.id]; return gm && gm.team1 && gm.team2; });
+    const rows = entries.map(e => {
+      let pts = 0, exp = 0, max = 0;
+      GROUPS.forEach(g => {
+        const pick = e.w && e.w[g];
+        if (!pick || !T[pick]) return;
+        const win = resolved.groupWinners[g];
+        if (win) { const hit = win === pick ? sc.groupWinner : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[pick].groupWin * sc.groupWinner; max += sc.groupWinner; }
+      });
+      (e.f || []).forEach(fc => {
+        if (!T[fc]) return;
+        if (resolved.finalists) { const hit = resolved.finalists.includes(fc) ? sc.finalist : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[fc].fin * sc.finalist; }   // ceiling handled below (half-capped)
+      });
+      if (!resolved.finalists) {
+        // Ceiling: only ALIVE finalist picks can still score, and at most one per official
+        // bracket half can reach the final, so credit sc.finalist once per DISTINCT half.
+        // Before the bracket is pinned (or for an unseated pick) fall back to per-pick.
+        const aliveF = (e.f || []).filter(fc => T[fc] && !elim(fc));
+        if (bracketPinned && aliveF.every(fc => teamHalf[fc] !== undefined)) {
+          max += (new Set(aliveF.map(fc => teamHalf[fc]))).size * sc.finalist;
+        } else {
+          max += aliveF.length * sc.finalist;
+        }
+      }
+      if (e.c && T[e.c]) {
+        if (resolved.champion) { const hit = resolved.champion === e.c ? sc.champion : 0; pts += hit; exp += hit; max += hit; }
+        else { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
+      }
+      const provPts = E.scoreEntry(e, prov, sc).pts;
+      return { e, pts, exp, max, prov: provPts };
+    }).sort((a, b) => b.pts - a.pts || b.prov - a.prov || b.exp - a.exp);
+    return { sc, entries, resolved, prov, allGroupsDone, elim, rows };
+  }
+
+  // My League — a family member taps their name and sees their own standing,
+  // picks, what is still alive for them, their side prizes and a shareable card.
   function renderMine(root) {
     root.append(el('h2', { class: 'section' }, 'My League'));
     const { resolved, elim, rows } = leagueStandings();
