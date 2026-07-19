@@ -405,7 +405,7 @@
   // ---------- tabs ----------
   const tabs = [
     ['today', 'Today'], ['mine', 'My League'], ['matches', 'Matches'], ['groups', 'Groups'], ['bracket', 'Knockout'],
-    ['teams', 'Teams'], ['mena', 'MENA'], ['join', 'Join'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
+    ['teams', 'Teams'], ['mena', 'MENA'], ['league', 'League'], ['compare', 'Compare'], ['timeline', 'Timeline'],
     ['venues', 'Venues'], ['model', 'Model & Updates'], ['about', 'About'], ['geeks', 'For Geeks']];
 
   // In-app control to enable web-push match alerts (goals + kick-offs). Stays quiet
@@ -793,167 +793,11 @@
   function encodeEntry(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, ''); }
   function decodeEntry(s) { return JSON.parse(decodeURIComponent(escape(atob(s.trim())))); }
 
-  function renderJoin(root) {
-    const sc = D.league.scoring;
-    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'How it works'),
-      el('p', { class: 'muted' },
-        'Pick a winner for each of the twelve groups, two finalists, and the champion. Send the code this page generates to Mohammed on WhatsApp; the published leaderboard updates with the site. Scoring: ' +
-        sc.groupWinner + ' points per correct group winner, ' + sc.finalist + ' per correct finalist, ' + sc.champion + ' for the champion. Two rules the form enforces: your champion must be one of your finalists, and your two finalists must be able to reach the final from opposite halves of the official bracket given your own group winners — the form will tell you if a pair cannot meet in the final.')));
-
-    // picks form
-    const name = el('input', { placeholder: 'Your name', style: 'min-width:180px' });
-    const gSel = {};
-    const pickGrid = el('div', { class: 'picks-grid' }, GROUPS.map(g => {
-      gSel[g] = el('select', null,
-        el('option', { value: '' }, '— choose —'),
-        D.teams.filter(t => t.group === g).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
-      return el('div', null, el('label', null, 'Group ' + g + ' winner'), gSel[g]);
-    }));
-    const allOpts = () => [el('option', { value: '' }, '— choose —')]
-      .concat(D.teams.slice().sort((a, b) => a.name.localeCompare(b.name)).map(t => el('option', { value: t.code }, t.flag + ' ' + t.name)));
-    const f1 = el('select', null, allOpts()), f2 = el('select', null, allOpts()), ch = el('select', null, allOpts());
-    const out = el('div');
-    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
-      el('h3', null, 'Make your picks'),
-      el('div', { class: 'formrow' }, name),
-      pickGrid,
-      el('div', { class: 'formrow', style: 'margin-top:10px' },
-        el('div', null, el('label', { class: 'tiny' }, 'Finalist 1'), f1),
-        el('div', null, el('label', { class: 'tiny' }, 'Finalist 2'), f2),
-        el('div', null, el('label', { class: 'tiny' }, 'Champion'), ch),
-        el('button', {
-          class: 'btn', onclick: () => {
-            if (!name.value.trim()) { out.replaceChildren(el('p', { class: 'muted' }, 'Add your name first.')); return; }
-            const unpicked = GROUPS.filter(g => !gSel[g].value);
-            if (unpicked.length) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick a winner for every group — still missing: ' + unpicked.join(', ') + '.')); return; }
-            if (!f1.value || !f2.value || !ch.value) { out.replaceChildren(el('p', { class: 'muted' }, 'Pick both finalists and a champion.')); return; }
-            if (f1.value === f2.value) { out.replaceChildren(el('p', { class: 'muted' }, 'The two finalists must be different teams.')); return; }
-            if (ch.value !== f1.value && ch.value !== f2.value) {
-              out.replaceChildren(el('p', { class: 'muted' }, 'Your champion has to be one of your two finalists — a team cannot win the cup without reaching the final.'));
-              return;
-            }
-            const w = {}; GROUPS.forEach(g => w[g] = gSel[g].value);
-            const fz = E.finalFeasible({ w, f: [f1.value, f2.value] }, D);
-            if (!fz.ok) {
-              const sameHalf = (fz.h1[0] === 0 && fz.h2[0] === 0) ? 'top' : 'bottom';
-              out.replaceChildren(el('p', { class: 'muted' },
-                T[f1.value].name + ' and ' + T[f2.value].name + ' cannot meet in the final on your own picks: given your group winners, both sides of that pairing land in the ' + sameHalf + ' half of the official bracket, so they would knock each other out before the final. Change one finalist, or change a group winner so they end up on opposite sides of the draw.'));
-              return;
-            }
-            const code = encodeEntry({ v: 1, n: name.value.trim(), w, f: [f1.value, f2.value], c: ch.value });
-            out.replaceChildren(
-              el('code', { class: 'codebox' }, code),
-              el('div', { class: 'formrow', style: 'margin-top:8px' },
-                el('button', { class: 'btn small ghost', onclick: () => navigator.clipboard.writeText(code) }, 'Copy code'),
-                el('a', { class: 'btn small', href: 'https://wa.me/?text=' + encodeURIComponent('My World Cup picks: ' + code), target: '_blank', style: 'display:inline-block;text-decoration:none' }, 'Share on WhatsApp')));
-          }
-        }, 'Generate code')),
-      out));
-
-    // ---------- round 2: the props ----------
-    root.append(el('h2', { class: 'section' }, 'Round 2 — The Props'));
-    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Six side prizes', el('span', { class: 'right' }, 'entries closed')),
-      el('p', { class: 'muted' },
-        'Separate from the main league, separate prizes, everyone started equal: the Golden Boot winner, the top assist provider, the team that collects the most cards (the Dirty Trophy), the team that scores the most goals, the MENA side that goes furthest, and the host nation that survives longest. Each entrant\'s total-goals number doubles as the official tiebreaker for the main league. Entries are now closed.')));
-
-    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Props entries are closed'),
-      el('p', { class: 'muted' },
-        'The side-prizes competition is now closed to new entries — the ' + (D.league.props || []).length
-        + ' props entries already in are locked. Follow the live props race on the ', el('b', null, 'League'), ' tab.')));
-
-    root.append(el('p', { class: 'muted', style: 'margin-top:14px' },
-      'Sent your code? Watch the standings, the selections board and the live props race on the ', el('b', null, 'League'), ' tab.'));
-  }
-
-  // Shared league scoring — used by both the League tab and the My League tab so
-  // they rank identically. Returns the merged entries, resolved outcomes, an
-  // elim() helper and the sorted, scored rows.
-  function leagueStandings() {
-    const sc = D.league.scoring;
-    const pubNames = new Set((D.league.entries || []).map(e => e.n.toLowerCase()));
-    const entries = (D.league.entries || []).map(e => ({ ...e, src: 'published' }))
-      .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())).map(e => ({ ...e, src: 'local' })));
-    const resolved = E.resolvedOutcomes(effData());
-    const prov = E.provisionalOutcomes(effData());
-    const allGroupsDone = Object.keys(resolved.groupWinners).length === 12;
-    // Teams knocked out in a completed knockout match (the loser of any decided KO tie;
-    // score.winner covers penalty/extra-time results). Without this, a group winner who
-    // then loses in the R32+ is still treated as "alive" on every league surface.
-    const koOut = new Set();
-    effData().matches.filter(m => m.stage !== 'group' && m.status === 'completed' && m.score)
-      .forEach(m => {
-        const w = m.score.winner ||
-          (m.score.team1 > m.score.team2 ? m.team1 : m.score.team2 > m.score.team1 ? m.team2 : null);
-        if (w) koOut.add(w === m.team1 ? m.team2 : m.team1);
-      });
-    const elim = c => {
-      if (koOut.has(c)) return true;
-      if (!T[c] || !resolved.groupWinners[T[c].group]) return false;
-      const posn = TABLES[T[c].group].findIndex(r => r.team === c);
-      if (posn === 3) return true;
-      if (posn === 2 && allGroupsDone) return SIM.teams[c].r32 === 0;
-      return false;
-    };
-    // Team -> official bracket half (0 = top/feeds SF1, 1 = bottom/feeds SF2) from the
-    // pinned R32 draw: r32Template slot index < 8 is the top half. Used to cap the finalist
-    // ceiling — two finalist picks in the SAME half can meet before the final, so at most
-    // one can be a finalist. Empty until the bracket is generated (then fall back per-pick).
-    const r32byId = {};
-    effData().matches.forEach(m => { if (m.stage === 'r32') r32byId[m.id] = m; });
-    const teamHalf = {};
-    (D.r32Template || []).forEach((slot, i) => {
-      const gm = r32byId[slot.id]; if (!gm) return;
-      const half = i < 8 ? 0 : 1;
-      if (gm.team1) teamHalf[gm.team1] = half;
-      if (gm.team2) teamHalf[gm.team2] = half;
-    });
-    const bracketPinned = (D.r32Template || []).length > 0 &&
-      (D.r32Template || []).every(s => { const gm = r32byId[s.id]; return gm && gm.team1 && gm.team2; });
-    const rows = entries.map(e => {
-      let pts = 0, exp = 0, max = 0;
-      GROUPS.forEach(g => {
-        const pick = e.w && e.w[g];
-        if (!pick || !T[pick]) return;
-        const win = resolved.groupWinners[g];
-        if (win) { const hit = win === pick ? sc.groupWinner : 0; pts += hit; exp += hit; max += hit; }
-        else { exp += SIM.teams[pick].groupWin * sc.groupWinner; max += sc.groupWinner; }
-      });
-      (e.f || []).forEach(fc => {
-        if (!T[fc]) return;
-        if (resolved.finalists) { const hit = resolved.finalists.includes(fc) ? sc.finalist : 0; pts += hit; exp += hit; max += hit; }
-        else { exp += SIM.teams[fc].fin * sc.finalist; }   // ceiling handled below (half-capped)
-      });
-      if (!resolved.finalists) {
-        // Ceiling: only ALIVE finalist picks can still score, and at most one per official
-        // bracket half can reach the final, so credit sc.finalist once per DISTINCT half.
-        // Before the bracket is pinned (or for an unseated pick) fall back to per-pick.
-        const aliveF = (e.f || []).filter(fc => T[fc] && !elim(fc));
-        if (bracketPinned && aliveF.every(fc => teamHalf[fc] !== undefined)) {
-          max += (new Set(aliveF.map(fc => teamHalf[fc]))).size * sc.finalist;
-        } else {
-          max += aliveF.length * sc.finalist;
-        }
-      }
-      if (e.c && T[e.c]) {
-        if (resolved.champion) { const hit = resolved.champion === e.c ? sc.champion : 0; pts += hit; exp += hit; max += hit; }
-        else { exp += SIM.teams[e.c].champ * sc.champion; if (!elim(e.c)) max += sc.champion; }
-      }
-      const provPts = E.scoreEntry(e, prov, sc).pts;
-      return { e, pts, exp, max, prov: provPts };
-    }).sort((a, b) => b.pts - a.pts || b.prov - a.prov || b.exp - a.exp);
-    return { sc, entries, resolved, prov, allGroupsDone, elim, rows };
-  }
-
-  // My League — a family member taps their name and sees their own standing,
-  // picks, what is still alive for them, their side prizes and a shareable card.
   function renderMine(root) {
     root.append(el('h2', { class: 'section' }, 'My League'));
     const { resolved, elim, rows } = leagueStandings();
     if (!rows.length) {
-      root.append(el('p', { class: 'muted' }, 'No entries on the board yet. Make your picks on the ', el('b', null, 'Join'), ' tab.'));
+      root.append(el('p', { class: 'muted' }, 'No entries on the board — the league has concluded and entries are closed.'));
       return;
     }
     const names = rows.map(r => r.e.n);
@@ -981,9 +825,10 @@
     const me = rows.find(r => r.e.n === mine);
     let myRank = '★';
     if (me && !me.e.exhibition) {
-      const provOrder = rows.filter(r => !r.e.exhibition).slice()
-        .sort((a, b) => b.prov - a.prov || b.exp - a.exp || b.pts - a.pts);
-      myRank = provOrder.findIndex(r => r.e.n === mine) + 1;
+      const rankedRows = rows.filter(r => !r.e.exhibition);
+      const better = rankedRows.filter(r => r.pts > me.pts).length;
+      const tied = rankedRows.filter(r => r.pts === me.pts).length;
+      myRank = (tied > 1 ? 'T' : '') + (better + 1);
     }
     const champ = me.e.c;
     const champCls = resolved.champion ? (resolved.champion === champ ? 'st-hit' : 'st-miss') : (champ && elim(champ) ? 'st-miss' : 'st-live');
@@ -992,7 +837,7 @@
 
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
       el('div', { class: 'mine-hero' },
-        el('div', null, el('div', { class: 'big' }, '#' + myRank), el('div', { class: 'lab' }, 'live rank, of ' + total)),
+        el('div', null, el('div', { class: 'big' }, '#' + myRank), el('div', { class: 'lab' }, 'final rank, of ' + total)),
         el('div', null, el('div', { class: 'big' }, '' + me.prov), el('div', { class: 'lab' }, 'live pts')),
         el('div', null, el('div', { class: 'big' }, me.exp.toFixed(1)), el('div', { class: 'lab' }, 'expected')),
         el('div', null, el('div', { class: 'big' }, '' + me.max), el('div', { class: 'lab' }, 'ceiling'))),
@@ -1167,34 +1012,10 @@
     const sc = D.league.scoring;
     root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
       el('p', { class: 'muted', style: 'margin:0' },
-        'Not entered yet? Make your picks on the ', el('b', null, 'Join'), ' tab, then send Mohammed the code.')));
-
-    // import + leaderboard
-    const ta = el('textarea', { placeholder: 'Paste one or more codes, one per line' });
-    root.append(el('div', { class: 'card no-print', style: 'margin-bottom:14px' },
-      el('h3', null, 'Add entries'),
-      ta,
-      el('div', { class: 'formrow', style: 'margin-top:8px' },
-        el('button', {
-          class: 'btn small', onclick: () => {
-            let added = 0;
-            ta.value.split(/\s+/).filter(Boolean).forEach(line => {
-              try {
-                const e = decodeEntry(line);
-                if (e && e.n && e.w) {
-                  leagueLocal = leagueLocal.filter(x => x.n !== e.n).concat([e]);
-                  added++;
-                }
-              } catch (err) {}
-            });
-            lsSet(LS.league, leagueLocal); ta.value = '';
-            if (added) refresh();
-          }
-        }, 'Add to leaderboard'),
-        leagueLocal.length ? el('button', { class: 'btn small ghost', onclick: () => { leagueLocal = []; lsSet(LS.league, leagueLocal); refresh(); } }, 'Clear local entries') : null)));
+        'The tournament is over and the league is closed — the board below is final. Thank you all for playing; see you in 2030.')));
 
     const { entries, resolved, elim, rows } = leagueStandings();
-    if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries yet. Make your picks on the Join tab and send the code round.')); return; }
+    if (!entries.length) { root.append(el('p', { class: 'muted' }, 'No entries — the league has concluded.')); return; }
     // exhibition entries (the commissioner) are ranked for display but carry no prize position
     // Provisional movement ▲▼: server-computed, baked into the published data
     // (D.league.movement = {name: signed places moved since the last completed match}).
@@ -1202,36 +1023,34 @@
     // all show the SAME movement, and it stays on the board between matches instead of
     // resetting every publish. Positive = moved up. What-if mode shows no arrows (the
     // board then reflects hypothetical results, not the real live race).
-    const move = (!whatIf.on && D.league && D.league.movement) || {};
-    const moveArrow = name => {
-      const d = move[name];
-      if (whatIf.on || d == null) return el('span', { class: 'tiny muted', style: 'margin-left:4px' }, '');
-      if (d > 0) return el('span', { title: 'up ' + d + ' since the last match', style: 'color:#2e9e5b;font-weight:700;margin-left:4px' }, '▲' + d);
-      if (d < 0) return el('span', { title: 'down ' + (-d) + ' since the last match', style: 'color:#c0392b;font-weight:700;margin-left:4px' }, '▼' + (-d));
-      return el('span', { class: 'tiny muted', title: 'no change since the last match', style: 'margin-left:4px' }, '–');
+    // FINAL BOARD (tournament complete, 19 July 2026): competition ranking — ties
+    // share a place (T2, T4...), alphabetical within a band, so equal points never
+    // read as different finishes. Live/Expected/Max retired with the last whistle.
+    // Entries are closed; every entry's data stays on the board.
+    const finalRows = rows.slice().sort((a, b) =>
+      b.pts - a.pts || a.e.n.localeCompare(b.e.n, undefined, { sensitivity: 'base' }));
+    const ranked = finalRows.filter(r => !r.e.exhibition);
+    const bandOf = r => {
+      const better = ranked.filter(x => x.pts > r.pts).length;
+      const size = ranked.filter(x => x.pts === r.pts).length;
+      return (size > 1 ? 'T' : '') + (better + 1);
     };
-    let rankNo = 0;
     root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
-      el('h3', null, 'Leaderboard', el('span', { class: 'right' }, Object.keys(resolved.groupWinners).length + ' of 12 groups final')),
+      el('h3', null, 'Final standings', el('span', { class: 'right' }, 'league closed · 19 July 2026')),
       el('table', null,
         el('tr', null,
-          el('th', null, '#'), el('th', null, 'Name'), el('th', null, 'Champion pick'),
-          el('th', { class: 'num' }, 'Live'), el('th', { class: 'num' }, 'Points'), el('th', { class: 'num' }, 'Expected'), el('th', { class: 'num' }, 'Max')),
-        rows.map(r => {
+          el('th', null, '#'), el('th', null, 'Name'), el('th', null, 'Champion pick'), el('th', { class: 'num' }, 'Points')),
+        finalRows.map(r => {
           const exh = r.e.exhibition;
-          if (!exh) rankNo++;
           return el('tr', { class: exh ? 'exhibition-row' : '' },
-            el('td', null, exh ? '★' : rankNo, exh ? '' : moveArrow(r.e.n)),
+            el('td', null, exh ? '★' : bandOf(r)),
             el('td', null, el('b', null, r.e.n),
               exh ? el('span', { class: 'exh-badge' }, 'EXHIBITION') : (r.e.src === 'local' ? el('span', { class: 'tiny' }, ' (local)') : '')),
             el('td', null, el('span', { class: 'teamcell' }, T[r.e.c] ? el('span', { class: 'fl' }, T[r.e.c].flag) : '', el('span', { class: 'nm' }, T[r.e.c] ? T[r.e.c].name : '—'))),
-            el('td', { class: 'num' }, el('b', null, r.prov)),
-            el('td', { class: 'num' }, r.pts),
-            el('td', { class: 'num' }, r.exp.toFixed(1)),
-            el('td', { class: 'num' }, r.max));
+            el('td', { class: 'num' }, el('b', null, r.pts)));
         })),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Live: provisional points from the current group leaders — it moves with every result, and the ▲▼ shows each entry’s rank change since the last update. Points: official, locked in only from finished groups and knockouts (so still 0 until the first group completes). Expected: the model weighs every pick by its current probability. Max: the ceiling if every still-alive pick lands. ★ The commissioner’s exhibition entry is shown for interest only and does not compete for prizes.')));
+        'Final board — Spain won the final on 19 July 2026 and every category is settled. Tied entries share a place (T2, T4\u2026), ordered alphabetically within the tie. \u2605 The commissioner\u2019s exhibition entry is shown for interest only and holds no prize position.')));
 
     // The contenders — who can still win, enumerated over the remaining bracket.
     // Appears once both semi-final pairings are known; collapses as results land
@@ -1371,7 +1190,7 @@
     const pubNames = new Set((D.league.entries || []).map(e => (e.n || '').toLowerCase()));
     const entries = (D.league.entries || []).map(e => ({ ...e }))
       .concat(leagueLocal.filter(e => !pubNames.has((e.n || '').toLowerCase())));
-    if (!entries.length) { root.append(el('h2', { class: 'section' }, 'Compare picks'), el('p', { class: 'muted' }, 'No entries yet. Add yours on the League tab.')); return; }
+    if (!entries.length) { root.append(el('h2', { class: 'section' }, 'Compare picks'), el('p', { class: 'muted' }, 'No entries — the league has concluded.')); return; }
     const n = entries.length;
 
     // pick-frequency maps across the field
@@ -2055,7 +1874,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
     ({
       today: renderToday, mine: renderMine, matches: renderMatches, groups: renderGroups, bracket: renderBracket,
-      teams: renderTeams, mena: renderMena, join: renderJoin, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
+      teams: renderTeams, mena: renderMena, league: renderLeague, compare: renderCompare, timeline: renderTimeline,
       venues: renderVenues, model: renderModel, about: renderAbout, geeks: renderGeeks,
     })[activeTab](root);
     if (bg) window.scrollTo(sx, sy); else window.scrollTo(0, 0);
