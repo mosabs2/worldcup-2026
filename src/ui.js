@@ -1133,6 +1133,27 @@
       el('p', { class: 'tiny', style: 'margin-top:8px' },
         'Final board — Spain won the final on 19 July 2026 and every category is settled. Tied entries share a place (T2, T4\u2026), ordered alphabetically within the tie. \u2605 The commissioner\u2019s exhibition entry is shown for interest only and holds no prize position.')));
 
+    // The awards — final, computed from the resolved tournament and the 28 props entries,
+    // ratified 20 July 2026. Ties stand (the 13 July Boot ruling, applied to every category).
+    const AW = [
+      ['\ud83c\udfc6 League champion', 'HMB — 38 pts'],
+      ['\ud83e\udd48 Joint runners-up', 'Bader Al Gatheebi & Saleh Al Hashash — 36 pts (tie stands; prize pooled and split)'],
+      ['\u26bd Golden Boot', 'Mbapp\u00e9 (10) — won by 12: Fahad Ali, Feras Al Qenaei, Mohammed Jamal, Mama Aad, Nasser Fahad, Ahmed Mubarak Al Sabah, Sabah Mohammed, Saleh Al Hashash, Eric Bartlett, Khalifa zayed, AD, Rashed'],
+      ['\ud83c\udfaf Assists', 'Michael Olise (7) — won by 2: Souad, Nasser Fahad'],
+      ['\ud83d\udfe8 Dirty Trophy (most cards)', 'Argentina (13Y + 1R) — won by 2: Abdullah Mohammed, AD'],
+      ['\ud83d\udd25 Most team goals', 'France & England, tied on 20 — the tie stands; won by 12 (ten France, two England pickers)'],
+      ['\ud83c\uddf2\ud83c\udde6 Best MENA run', 'Morocco (quarter-finalists) — won by 22'],
+      ['\ud83c\udfdf\ufe0f Best host', 'Mexico (ruled 13 July: best run, group record the tie-break) — won by 15'],
+      ['\ud83d\udd22 Total goals (actual: 308)', 'Fahad Ali — called 306, two out (Nasser Talal next on 313)'],
+    ];
+    root.append(el('div', { class: 'card', style: 'margin-bottom:14px' },
+      el('h3', null, 'The awards', el('span', { class: 'right' }, 'ratified 20 July 2026')),
+      el('table', null, AW.map(a => el('tr', null,
+        el('td', { style: 'white-space:nowrap' }, el('b', null, a[0])),
+        el('td', null, a[1])))),
+      el('p', { class: 'tiny', style: 'margin-top:8px' },
+        'Every tie stands — pickers of either side of a tied category share that prize, per the ruling declared before the final. Computed from the locked entries and the completed 104-match record.')));
+
     // The contenders — who can still win, enumerated over the remaining bracket.
     // Appears once both semi-final pairings are known; collapses as results land
     // (8 scenarios → 4 → 2 → the league winner) with no further code changes.
