@@ -1137,7 +1137,7 @@
     // ratified 20 July 2026. Ties stand (the 13 July Boot ruling, applied to every category).
     const AW = [
       ['\ud83c\udfc6 League champion', 'HMB — 38 pts'],
-      ['\ud83e\udd48 Joint runners-up', 'Bader Al Gatheebi & Saleh Al Hashash — 36 pts (tie stands; prize pooled and split)'],
+      ['\ud83e\udd48 Joint runners-up', 'Bader Al Gatheebi & Saleh Al Hashash — 36 pts (tie stands; the silver shared)'],
       ['\u26bd Golden Boot', 'Mbapp\u00e9 (10) — won by 12: Fahad Ali, Feras Al Qenaei, Mohammed Jamal, Mama Aad, Nasser Fahad, Ahmed Mubarak Al Sabah, Sabah Mohammed, Saleh Al Hashash, Eric Bartlett, Khalifa zayed, AD, Rashed'],
       ['\ud83c\udfaf Assists', 'Michael Olise (7) — won by 2: Souad, Nasser Fahad'],
       ['\ud83d\udfe8 Dirty Trophy (most cards)', 'Argentina (13Y + 1R) — won by 2: Abdullah Mohammed, AD'],
@@ -1152,7 +1152,7 @@
         el('td', { style: 'white-space:nowrap' }, el('b', null, a[0])),
         el('td', null, a[1])))),
       el('p', { class: 'tiny', style: 'margin-top:8px' },
-        'Every tie stands — pickers of either side of a tied category share that prize, per the ruling declared before the final. Computed from the locked entries and the completed 104-match record.')));
+        'Every tie stands — pickers of either side of a tied category share that honour, per the ruling declared before the final. The league carried no purse; the honours are the prize, and they are permanent. Computed from the locked entries and the completed 104-match record.')));
 
     // The contenders — who can still win, enumerated over the remaining bracket.
     // Appears once both semi-final pairings are known; collapses as results land
